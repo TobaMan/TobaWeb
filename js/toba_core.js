@@ -247,10 +247,6 @@ function isTouchDevice(){
     if (!isTouchDevice) {result = 0;} 
     else {result = 1;}
     return toTobaMap(result);
-
-    // return toTobaMap((('ontouchstart' in window) ||
-    //    (navigator.maxTouchPoints > 0) ||
-    //    (navigator.msMaxTouchPoints > 0)));
 }
 function SplitItem(item1, item2, split_direction){
     Split([item1, item2], {
@@ -270,6 +266,29 @@ function NumFromId(id){
     id = id.replace("id", "");
     id = parseInt(id);
     return id;
+}
+
+function GetPosition(event){
+    var eventDoc, doc, body;
+    event = event || window.event; // IE-ism
+    if(event.type == 'touchstart' || event.type == 'touchmove' || event.type == 'touchend' || event.type == 'touchcancel'){
+        var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+        event.pageX = touch.pageX;
+        event.pageY = touch.pageY;
+    } else if (event.type == 'mousedown' || event.type == 'mouseup' || event.type == 'mousemove' || event.type == 'mouseover'|| event.type=='mouseout' || event.type=='mouseenter' || event.type=='mouseleave') {
+        if (event.pageX == null && event.clientX != null) {
+            eventDoc = (event.target && event.target.ownerDocument) || document;
+            doc = eventDoc.documentElement;
+            body = eventDoc.body;
+            event.pageX = event.clientX +
+                (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+                (doc && doc.clientLeft || body && body.clientLeft || 0);
+            event.pageY = event.clientY +
+                (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
+                (doc && doc.clientTop  || body && body.clientTop  || 0 );
+        }
+    }
+    return [event.pageX, event.pageY];
 }
 
 function jsOnEvent(id, event, evtype){
@@ -351,24 +370,6 @@ function jsEmFunctionMap(data){
     if(id == index++){DragItem(jsdata[1]);}
     
     return Null();
-}
-
-
-function GetPosition(event){
-    var eventDoc, doc, body;
-    event = event || window.event; // IE-ism
-    if (event.pageX == null && event.clientX != null) {
-        eventDoc = (event.target && event.target.ownerDocument) || document;
-        doc = eventDoc.documentElement;
-        body = eventDoc.body;
-        event.pageX = event.clientX +
-            (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
-            (doc && doc.clientLeft || body && body.clientLeft || 0);
-        event.pageY = event.clientY +
-            (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
-            (doc && doc.clientTop  || body && body.clientTop  || 0 );
-    }
-    return [event.pageX, event.pageY];
 }
 
 function LoadScript() {
