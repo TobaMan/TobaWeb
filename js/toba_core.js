@@ -12,6 +12,10 @@ var jsEvents = [
     "mousemove",
     "mouseup",
     "mousedown",
+    "touchcancel",
+	"touchend",
+	"touchmove",
+	"touchstart",
     "keydown"
 ];
 
@@ -234,6 +238,20 @@ function KeysLocalStorage(){
         return toTobaMap(keys);}
      return Null();
 }
+function isTouchDevice(){
+    var result = 0;
+    var isTouchDevice =
+        (('ontouchstart' in window) ||
+            (navigator.MaxTouchPoints > 0) ||
+            (navigator.msMaxTouchPoints > 0));
+    if (!isTouchDevice) {result = 0;} 
+    else {result = 1;}
+    return toTobaMap(result);
+
+    // return toTobaMap((('ontouchstart' in window) ||
+    //    (navigator.maxTouchPoints > 0) ||
+    //    (navigator.msMaxTouchPoints > 0)));
+}
 function SplitItem(item1, item2, split_direction){
     Split([item1, item2], {
         direction: split_direction,
@@ -319,6 +337,8 @@ function jsEmFunctionMap(data){
     if(id == index++){DomShow(jsdata[1]);}
     if(id == index++){AddEvent(jsdata[1], jsdata[2]);}
     if(id == index++){return LastEvent();}
+
+    if(id == index++){return isTouchDevice();}
 
     if(id == index++){SetLocalStorage(jsdata[1], jsdata[2]);}
     if(id == index++){return GetLocalStorage(jsdata[1]);}
