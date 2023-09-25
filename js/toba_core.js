@@ -1,4 +1,7 @@
 
+var TobaHandle =  0;
+var jsCallback =  Module.cwrap(
+    "CallbackFunction", null, ["number"]);
 var jsEvtList = [];
 
 var jsEvents = [
@@ -18,6 +21,7 @@ var jsEvents = [
 	"touchstart",
     "keydown"
 ];
+
 
 function ListToF32Ptr(data){
     var data_ptr = Module._malloc(data.length * 4);
@@ -55,6 +59,30 @@ function PtrF64(ptr, index){
 
 function Null(){
     return 0;
+}
+
+function LoadScript() {
+    ccode_ptr = ListToU8Ptr(ccode);
+    var jsStartProgram = Module.cwrap(
+        "StartProgram", null, ["number", "number"]);
+    jsStartProgram(ccode_ptr, ccode.length);
+    DeletePtr(ccode_ptr);
+}
+
+function UnLoadScript() {
+    var jsDeleteProgram = Module.cwrap(
+        "DeleteProgram", null, ["number"]);
+    jsDeleteProgram(TobaHandle);
+}
+
+function ScriptCallBack(){
+    jsCallback(TobaHandle);}
+
+function _TobaInit_() {
+    window.addEventListener('load', function () {
+        LoadScript();});
+    window.addEventListener('beforeunload', function () {
+        UnLoadScript()});
 }
 
 function JsReadMapVar(data){
@@ -271,7 +299,6 @@ function NumFromId(id){
 function GetPosition(event){
     var eventDoc, doc, body;
     event = event || window.event; // IE-ism
-    
     if(event.type == 'touchstart' || event.type == 'touchmove' || event.type == 'touchend' || event.type == 'touchcancel'){
         var touch = event.touches[0];
         event.pageX = touch.pageX;
@@ -291,26 +318,16 @@ function GetPosition(event){
             (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
             (doc && doc.clientTop  || body && body.clientTop  || 0 );
     }
-    
     return [event.pageX, event.pageY];
 }
 
-function jsOnEvent(id, event, evtype){
-    jsEvtList.push([id, GetPosition(event), evtype]);
-}
-
 function AddEvent(item, evtype) {
-    // console.log("AddEvent", item, evtype);
     var index = jsEvents.indexOf(evtype);
     var _item = document.querySelector(item);
     _item.addEventListener(evtype, (event) => {
-        // var screenpos = GetPosition(event);
-        // var clientpos = [event.offsetX, event.offsetY];
-        // var data = [screenpos, clientpos];
         var data = GetPosition(event);
-        // console.log(event.target.id, data, index);
         jsEvtList.push([event.target.id, data, index]);
-        // RunCallBack();
+        ScriptCallBack();
     });
 }
 
@@ -326,6 +343,7 @@ function LastEvent(){
     }
     return Null();
 }
+
 function jsEmFunctionMap(data){
     var index = 0;
     jsdata = JsReadMapVar(data);
@@ -371,28 +389,10 @@ function jsEmFunctionMap(data){
     if(id == index++){return KeysLocalStorage();}
 
     if(id == index++){SplitItem(jsdata[1], jsdata[2], jsdata[3]);}
-    if(id == index++){DragItem(jsdata[1]);}
-    
+    if (id == index++) {DragItem(jsdata[1]);}
+
     return Null();
 }
 
-function LoadScript() {
-    ccode_ptr = ListToU8Ptr(ccode);
-    var jsStartProgram = Module.cwrap(
-        "StartProgram", null, ["number", "number"]);
-    jsStartProgram(ccode_ptr, ccode.length);
-    DeletePtr(ccode_ptr);
-}
 
-function RunCallBack(){
-    var jsCallBack = Module.cwrap(
-        "CallbackFunction", null, null);
-    jsCallBack();
-}
-
-function _TobaInit_(){
-    window.addEventListener('load', function () {
-        LoadScript();
-    })
-}
 
