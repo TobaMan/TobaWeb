@@ -19,7 +19,9 @@ var jsEvents = [
 	"touchend",
 	"touchmove",
 	"touchstart",
-    "keydown"
+    "keydown",
+    "timeout",
+    "animationend",
 ];
 
 
@@ -55,6 +57,21 @@ function PtrF32(ptr, index){
 }
 function PtrF64(ptr, index){
     return Module.HEAPF64[(ptr + index*8) >> 3];
+}
+
+function IsNumber(item){
+    return typeof item === 'number';
+}
+function IsString(item){
+    return typeof item === 'string';
+}
+function IsArray(item){
+    return Array.isArray(item) === true;
+}
+function IsNumericArray(array) {
+    return array.every(element => {
+        return typeof element === 'number';
+    });
 }
 
 function Null(){
@@ -105,10 +122,7 @@ function JsReadMapVar(data){
             // console.log(listvar, jsdata);
         }
         else{//NUM STR type
-            if(sitem == 1){
-                var jsdata = PtrF64(data, startv);
-            }
-            if(sitem > 1){
+            if(sitem >= 1){
                 var jsdata = new Float64Array(
                     Module.HEAPF64.buffer, 
                     data+startv*8, sitem);
@@ -126,9 +140,7 @@ function JsReadMapVar(data){
 
 function jsWriteMapVar(data){ 
     var header = [];
-    if(typeof data === 'number'){
-        data = [data];}
-    if(typeof data === 'string'){
+    if(IsString(data) || IsNumber(data)){
         data = [data];}
     var start = 2 + data.length;
     header.push(data.length);
@@ -137,29 +149,34 @@ function jsWriteMapVar(data){
     var dsize = 0;
     for(i=0; i<data.length-1; i++){
         var vsize = 0;
-        if(typeof data[i] === 'number'){
-            vsize = 1;}
+        if(IsNumber(data[i])){vsize = 1;}
         else{vsize = data[i].length;}
         dsize += 2 + vsize;
         header.push(start + dsize);
     }
     var mapvar = header;
     for(i=0; i<data.length; i++){
-        if(typeof data[i] === 'number'){
+        if(IsNumber(data[i])){ //single num
             var dat = [1, 2].concat(data[i]); //numtype
-            mapvar = mapvar.concat(dat);
-        }
-        if(Array.isArray(data[i]) === true){
+            mapvar = mapvar.concat(dat);}
+        if(IsString(data[i])){//string
+            asciiKeys = [];
+            for (var s = 0; s < data[i].length; s++){
+              asciiKeys.push(data[i][s].charCodeAt(0));}
+            var dat = [data[i].length, 3].concat(asciiKeys); //strtype
+            mapvar = mapvar.concat(dat);}
+        if(IsArray(data[i])){
+            // if(IsNumericArray(data[i])){ // num array
+            //     var dat = [data[i].length, 2].concat(data[i]); //numtype
+            //     mapvar = mapvar.concat(dat);}
+            // else{//maptype
+            // }
             var dat = [data[i].length, 2].concat(data[i]); //numtype
             mapvar = mapvar.concat(dat);
+            
+            
         }
-        if(typeof data[i] === 'string'){
-            asciiKeys = [];
-            for (var s = 0; s < data[i].length; s ++)
-              asciiKeys.push(data[i][s].charCodeAt(0));
-            var dat = [data[i].length, 3].concat(asciiKeys); //strtype
-            mapvar = mapvar.concat(dat);
-        }
+        
     }
     return mapvar;
 }
@@ -276,6 +293,9 @@ function isTouchDevice(){
     else {result = 1;}
     return toTobaMap(result);
 }
+function TriggeringReflow(item){
+    void $( item )[0].offsetWidth;
+}
 function SplitItem(item1, item2, split_direction){
     Split([item1, item2], {
         direction: split_direction,
@@ -284,9 +304,9 @@ function SplitItem(item1, item2, split_direction){
         expandToMin: true,
     })
 }
-
-function DragItem(item){
-    dragula([$( item )]);
+function SortItem(item){
+    var item = $(item)[0]; 
+    new Sortable(item);
 }
 
 function NumFromId(id){
@@ -296,50 +316,70 @@ function NumFromId(id){
     return id;
 }
 
-function GetPosition(event){
-    var eventDoc, doc, body;
-    event = event || window.event; // IE-ism
-    if(event.type == 'touchstart' || event.type == 'touchmove' || event.type == 'touchend' || event.type == 'touchcancel'){
-        var touch = event.touches[0];
-        event.pageX = touch.pageX;
-        event.pageY = touch.pageY;
-        event.clientX = touch.clientX;
-        event.clientY = touch.clientY;
+function GetEventInfo(event){
+
+    if(event.type == 'animationend'){
+        return [event.animationName, event.elapsedTime];
     }
-    //if (event.type == 'mousedown' || event.type == 'mouseup' || event.type == 'mousemove' || event.type == 'mouseover'|| event.type=='mouseout' || event.type=='mouseenter' || event.type=='mouseleave') {
-    if (event.pageX == null && event.clientX != null) {
-        eventDoc = (event.target && event.target.ownerDocument) || document;
-        doc = eventDoc.documentElement;
-        body = eventDoc.body;
-        event.pageX = event.clientX +
-            (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
-            (doc && doc.clientLeft || body && body.clientLeft || 0);
-        event.pageY = event.clientY +
-            (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
-            (doc && doc.clientTop  || body && body.clientTop  || 0 );
+    if (event.type == 'touchstart' ||
+        event.type == 'touchmove' ||
+        event.type == 'touchend' ||
+        event.type == 'touchcancel' ||
+        event.type == 'mousedown' ||
+        event.type == 'mouseup' ||
+        event.type == 'mousemove' ||
+        event.type == 'mouseover' ||
+        event.type == 'mouseout' ||
+        event.type == 'mouseenter' ||
+        event.type == 'mouseleave') {
+
+        var eventDoc, doc, body;
+        event = event || window.event; // IE-ism
+        if (event.type == 'touchstart' ||
+            event.type == 'touchmove' ||
+            event.type == 'touchend' ||
+            event.type == 'touchcancel') {
+
+            var touch = event.touches[0];
+            event.pageX = touch.pageX;
+            event.pageY = touch.pageY;
+            event.clientX = touch.clientX;
+            event.clientY = touch.clientY;
+        }
+        if (event.pageX == null && event.clientX != null) {
+            eventDoc = (event.target && event.target.ownerDocument) || document;
+            doc = eventDoc.documentElement;
+            body = eventDoc.body;
+            event.pageX = event.clientX +
+                (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+                (doc && doc.clientLeft || body && body.clientLeft || 0);
+            event.pageY = event.clientY +
+                (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
+                (doc && doc.clientTop  || body && body.clientTop  || 0 );
+        }
+        return [event.pageX, event.pageY];
     }
-    return [event.pageX, event.pageY];
+    return [null, null];
 }
 
 function AddEvent(item, evtype) {
     var index = jsEvents.indexOf(evtype);
     var _item = document.querySelector(item);
     _item.addEventListener(evtype, (event) => {
-        var data = GetPosition(event);
-        jsEvtList.push([event.target.id, data, index]);
+        var idevt = event.target.id
+        var data = GetEventInfo(event);
+        jsEvtList.push([idevt, data, index]);
         ScriptCallBack();
     });
 }
 
 function LastEvent(){
     if(jsEvtList.length){
-        // var levt = jsEvtList.pop();
         var levt = jsEvtList.shift();
         var idevt = NumFromId(levt[0]);
-        var evtdata = levt[1];
-        var tevt = levt[2];
-        return toTobaMap(
-            [idevt, evtdata, tevt]);
+        var data = levt[1];
+        var index = levt[2];
+        return toTobaMap([idevt, data, index]);
     }
     return Null();
 }
@@ -380,6 +420,7 @@ function jsEmFunctionMap(data){
     if(id == index++){return LastEvent();}
 
     if(id == index++){return isTouchDevice();}
+    if(id == index++){TriggeringReflow(jsdata[1]);}
 
     if(id == index++){SetLocalStorage(jsdata[1], jsdata[2]);}
     if(id == index++){return GetLocalStorage(jsdata[1]);}
@@ -389,7 +430,7 @@ function jsEmFunctionMap(data){
     if(id == index++){return KeysLocalStorage();}
 
     if(id == index++){SplitItem(jsdata[1], jsdata[2], jsdata[3]);}
-    if (id == index++) {DragItem(jsdata[1]);}
+    if(id == index++) {SortItem(jsdata[1]);}
 
     return Null();
 }
