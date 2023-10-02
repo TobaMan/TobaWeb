@@ -59,6 +59,12 @@ function PtrF64(ptr, index){
     return Module.HEAPF64[(ptr + index*8) >> 3];
 }
 
+function IsUndefined(item){
+    return item === undefined;
+}
+function IsBoolean(item){
+    return typeof item === 'boolean';
+}
 function IsNumber(item){
     return typeof item === 'number';
 }
@@ -140,7 +146,11 @@ function JsReadMapVar(data){
 
 function jsWriteMapVar(data){ 
     var header = [];
-    if(IsString(data) || IsNumber(data)){
+    if(IsUndefined(data)){
+        data = ["undefined"];}
+    else if(IsBoolean(data)){
+        data = [Number(data)];}
+    else if(IsString(data) || IsNumber(data)){
         data = [data];}
     var start = 2 + data.length;
     header.push(data.length);
@@ -198,11 +208,9 @@ function DomAfter(item, data){
     $( item ).after( data );
 }
 function DomWrap(item, data){
-    //Wrap an HTML structure around each element in the set of matched elements.
     $( item ).wrap( data );
 }
 function DomWrapAll(item, data){
-    //Wrap an HTML structure around all elements in the set of matched elements.
     $( item ).wrapAll( data );
 }
 function DomAddClass(item, data){
@@ -230,10 +238,8 @@ function DomHeight(item){
     return toTobaMap($( item ).height());
 }
 function DomGetPosition(item){
-    // console.log(item, $( item ).offset());
     var offset = $( item ).offset();
     var pos = [offset.left, offset.top];
-    // console.log(pos);
     return toTobaMap(pos);
 }
 function DomSetPosition(item, x, y){
@@ -245,10 +251,14 @@ function DomGetText(item){
 function DomSetText(item, value){
     $( item ).text(value);
 }
-function DomVal(item){
+function DomGetVal(item){
+    console.log($( item ).val());
     return toTobaMap($( item ).val());
 }
-function DomHtml(item){
+function DomGetProp(item, key){
+    return toTobaMap($( item ).prop(key));
+}
+function DomGetHtml(item){
     return toTobaMap($( item ).html());
 }
 function DomGetCss(item, key){
@@ -410,8 +420,9 @@ function jsEmFunctionMap(data){
     
     if(id == index++){return DomGetText(jsdata[1]);}
     if(id == index++){DomSetText(jsdata[1], jsdata[2]);}
-    if(id == index++){return DomVal(jsdata[1]);}
-    if(id == index++){return DomHtml(jsdata[1]);}
+    if(id == index++){return DomGetVal(jsdata[1]);}
+    if(id == index++){return DomGetProp(jsdata[1], jsdata[2]);}
+    if(id == index++){return DomGetHtml(jsdata[1]);}
     if(id == index++){return DomGetCss(jsdata[1], jsdata[2]);}
     if(id == index++){DomSetCss(jsdata[1], jsdata[2], jsdata[3]);}
 
