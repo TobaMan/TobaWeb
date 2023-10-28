@@ -101,12 +101,19 @@ function UnLoadScript() {
 function ScriptCallBack(){
     jsCallback(TobaHandle);}
 
+// function _TobaInit_() {
+//     window.addEventListener('load', function () {
+//         LoadScript();});
+//     window.addEventListener('beforeunload', function () {
+//         UnLoadScript()});
+// }
+
 function _TobaInit_() {
-    window.addEventListener('load', function () {
-        LoadScript();});
+    Module.onRuntimeInitialized = () => { LoadScript(); }
     window.addEventListener('beforeunload', function () {
         UnLoadScript()});
 }
+
 
 function JsReadMapVar(data){
     //dic = {};
@@ -252,7 +259,6 @@ function DomSetText(item, value){
     $( item ).text(value);
 }
 function DomGetVal(item){
-    console.log($( item ).val());
     return toTobaMap($( item ).val());
 }
 function DomGetProp(item, key){
