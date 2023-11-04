@@ -1,0 +1,219 @@
+
+import : LibWeb / webdevice
+// import : LibWeb / css
+import : LibWeb / dom
+// import : LibWeb / events
+// import : LibWeb / storage
+import : LibWeb / widgets
+// import : Playground
+
+
+enum:gPLAYGROUND{editor; panel; optfile; codes; modules; config; info_diag}
+
+config = ("Show line numbers",\
+        "Automatic close brackets",\
+        "Styling active line",\
+        "Show right size panel")
+
+code1 = "print(panel)"
+
+code2 = "
+Cur = css::cCursor()
+print(Cur.get())
+"
+
+code3 = "
+thlist  = widgets::GetThemeList()
+th = foreach(thlist){
+    widgets::ChangeAppTheme(th)
+    sleep(200)
+}
+"
+
+code4 = "
+print(platform())
+print(rand(0,100))
+print(version())
+print(dtime())
+print(clock())
+"
+
+codes = (code1, code2, code3, code4)
+
+modules = ("animate", "codeeditor", "css", "dom", "events", "storage", "webdevice", "widgets")
+
+
+func:OnRun(wdg, data){
+    if(sizeof(wdg)){
+        tobacode = editor.GetValue()
+        eval(tobacode)
+    }
+}
+
+func:OnOpen(wdg, data){
+    print(data)
+}
+
+func:OnLog(wdg, data){
+    panel.BackgroundColor("primary")
+    // dom::SetText(panel.id, "hhhhhh")
+    // print(wdg, data)
+}
+
+func:OnOption(wdg, data){
+    option = wdg.GetUserInfo()
+    if(option == "opt1"){
+        webdevice::Trigger(optfile.id, "click")
+        // editor.LoadFile("index.to")
+    }
+    if(option == "opt2"){editor.SetValue(codes[1])}
+    if(option == "opt3"){editor.SetValue(codes[2])}
+    if(option == "opt4"){
+        info_diag.ShowModal()}
+    // if(option == "opt4"){
+    //     editor.ShowLineNumbers(1)
+    //     editor.AutoCloseBrackets(1)
+    //     editor.StyleActiveLine(0)
+    // }
+    if(option == "opt5"){panel.Toggle()}
+
+}
+
+func:OnConfig(wdg, data){
+    conf = wdg.GetUserInfo()
+    status = wdg.IsChecked()
+    print(config[conf])
+    if(conf == 0){
+        editor.ShowLineNumbers(status)}
+    if(conf == 1){
+        editor.AutoCloseBrackets(status)}
+    if(conf == 2){
+        editor.StyleActiveLine(status)}
+    if(conf == 3){
+        panel.Toggle()}
+}
+
+func:InfoDialog(){
+    diag = wDialog(dom::IdRoot())
+    diag.BorderColor("base-300")
+    mb = wDialogBox(diag)
+    llayout = wVerticalLayout(mb)
+    tlayout = wHorizontalLayout(llayout)
+    icon = wPngAssets(tlayout, "settings")
+    icon.FitWidth()
+    icon.FitHeight()
+    icon.Margin("m-2")
+    title = wLabel(tlayout, "Playground configuration")
+    title.FontSize().Bold()
+    title.Margin("m-2")
+    div = wDivider(llayout)
+    idcf = for(0, size(config), 1){
+        cf = config[idcf]
+        layout = wHorizontalLayout(llayout)
+        layout.Margin("m-2")
+        pan = wPanel(layout)
+        tx = wLabel(pan, cf)
+        tgl = wToggle(layout)
+        tgl.SetUserInfo(idcf)
+        tgl.EventMouseClick(OnConfig)
+    }
+    return(diag)
+}
+
+
+
+func:OnCombo(wdg, data){
+    editor.LoadFile("LibWeb/" $ wdg.GetValue() $ ".to")
+}
+
+func:Option(parent, txt, icon){
+    t = wButton(parent)
+    t.Small()
+    t.Ghost()
+    t.BorderColor("base-300")
+    wPngAssets(t, icon)
+    t.Margin("m-1")
+    t.SetUserInfo(txt)
+    t.EventMouseClick(OnOption)
+    return(t)
+}
+
+func:Playground(){
+
+    ChangeAppTheme("dark")
+
+    vlayout = widgets::wVerticalWindowLayout
+    hlayout = widgets::wHorizontalWindowLayout
+
+    
+    lpv = vlayout(dom::IdRoot())
+
+    barp = widgets::wLayoutPanel(lpv)
+    bar = hlayout(barp)
+    // bar.BorderColor("base-300")
+    // bar.BackgroundColor("base-300")
+    optfile = wInputFile(Option(bar,"opt1", "file-code"))
+    optfile.EventChange(OnOpen)
+
+
+    Option(bar,"opt2", "list-check")
+    Option(bar,"opt3", "list-check")
+    Option(bar,"opt4", "settings")
+    Option(bar,"opt5", "panel")
+
+    cb = Combo(bar, modules)
+    cb.Margin("m-1")
+    cb.Small()
+    cb.EventMouseClick(OnCombo)
+
+
+    t = wButton(bar)
+    wImageSource(t, "assets/toba.png")
+    t.Text("Run ...")
+    t.Small()
+    t.Margin("m-1")
+    t.BorderColor("base-300")
+    t.EventMouseClick(OnRun)
+    
+
+    lph = hlayout(lpv)
+    lph.Overflow().AutoY()
+
+    console = widgets::wLayoutPanel(lph)
+    console.BackgroundColor("base-200")
+    console.FullWidth()
+    console.Margin("m-1")
+    editor = console.CodeEditor()
+    editor.ShowLineNumbers(1)
+    editor.LoadFile("index.to")
+
+    // dom::SetCss(".CodeMirror", "height", "auto")
+    // dom::SetCss(".CodeMirror", "font-size", "16px")
+    // dom::SetCss(".cm-matchhighlight", "background", "red !important")
+    // dom::SetCss(".cm-wrap", "height", "100%")
+    // dom::SetCss(".cm-scroller", "overflow", "auto")
+
+
+    panel = widgets::wLayoutPanel(lph)
+    panel.BackgroundColor("base-200")
+    panel.FullWidth()
+    panel.Margin("m-1")
+    panel.Hide()
+    RedirectConsole(panel.GetId())
+    // panel.EventChange(OnLog)
+    
+    widgets::Render(0)
+    
+}
+
+info_diag = InfoDialog()
+
+Playground()
+
+
+
+
+
+
+
+

@@ -1,0 +1,1141 @@
+import : LibWeb / webdevice
+import : LibWeb / css
+import : LibWeb / dom
+import : LibWeb / events
+import : LibWeb / animate
+import : LibWeb / codeeditor
+
+//--------------------------------------------------------------------------------------------------------------
+
+enum:GlobalVar{ gCounter=0; gID=1; gInfo=2}
+gInfo = map(1000, 0)
+
+
+//--------------------------------------------------------------------------------------------------------------
+
+​obj:Options(){
+    self.content = null()
+	self.classinfo = null()
+	self.event = 0
+}
+
+
+//--------------------------------------------------------------------------------------------------------------
+
+func:NewId(){
+	gID = gID + 1
+	id = "_id" $ strnum(gID) $ "_"
+	return(id)
+}
+
+func:FromId(id){
+	//Transform to jQuery id 
+	return("#" $ id)
+}
+
+func:IdFromNum(id){
+	//Convert widget number to id
+	id = "_id" $ strnum(id) $ "_"
+	return(id)
+}
+
+func:NumFromId(id){
+	//Convert jQuery id to the widget number
+	id = freplace(id, "#", "")
+	id = freplace(id, "_", "")
+	id = freplace(id, "id", "")
+	id = numstr(id)
+	return(id)
+}
+
+//--------------------------------------------------------------------------------------------------------------
+
+func:SaveInfo(id, info){
+	//Save info structure for a widget
+	gInfo[NumFromId(id)] = info
+}
+
+func:GetInfo(id){
+	//Get widget structure info with number or jQuery id
+	if(isstr(id)){
+		id = NumFromId(id)}
+	info = gInfo[id]
+	if(!isinst(info)){
+		info = Options()
+		gInfo[id] = info}
+	return(info)
+}
+
+//--------------------------------------------------------------------------------------------------------------
+
+func:GetContent(id){
+	//Get the widget id content
+	return(gInfo[NumFromId(id)].content)
+}
+
+
+// func:Resizable(item, x, y){
+// 	if(x && !y){dom::AddClass(item, "resize-x overflow-auto")}
+// 	if(!x && y){dom::AddClass(item, "resize-y overflow-auto")}
+// 	if(x && y){dom::AddClass(item, "resize overflow-auto")}
+// 	if(!x && !y){
+// 		dom::RemoveClass(item, "resize")
+// 		dom::RemoveClass(item, "resize-x")
+// 		dom::RemoveClass(item, "resize-y")
+// 		dom::RemoveClass(item, "overflow-auto")
+// 	}
+// }
+
+// func:Split(item1, item2, direction){
+// 	CallJs((SPLITITEM, item1, item2, direction))
+// }
+
+// func:Drag(item){
+// 	CallJs((DRAGITEM, item))
+// }
+
+
+
+
+//--------------------------------------------------------------------------------------------------------------
+
+// func:GetHtmlSource(){
+// 	//Get the Html body source code
+// 	return(dom::GetHtml(dom::IdRoot()))
+// }
+
+func:GetThemeList(){
+    return(("light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave", "retro", "cyberpunk",\
+      "valentine", "halloween", "garden", "forest", "aqua", "lofi", "pastel", "fantasy", "wireframe", "black",\
+      "luxury", "dracula", "cmyk", "autumn", "business", "acid", "lemonade", "night", "coffee", "winter"))
+}
+
+func:ChangeAppTheme(theme){
+	dom::SetAttribute(dom::IdHtml(), "data-theme", theme)
+}
+
+//--------------------------------------------------------------------------------------------------------------
+
+
+
+func:AddEvent(cls, event, fcall){
+	//Set the widget event
+	id = cls.GetId()
+	info = GetInfo(id)
+	evt = info.event
+	if(!isinst(evt)){
+		evt = events::cEvent()}
+	evt.SetCallback(event, fcall)
+	evtn = evt.GetEventName(event)
+	info.event = evt
+	info.classinfo = cls
+	SaveInfo(id, info)
+	events::AddEvent(id, evtn)
+}
+
+func:EventManager(){
+	//All application event manager function
+	//To be call inside the threaded main loop
+	evt = events::LastEvent()
+	if(size(evt)){
+		numid = evt[0]
+		evtdata = evt[1]
+		evtype = evt[2]
+		event = GetInfo(numid).event
+		cls = GetInfo(numid).classinfo
+		if(isinst(event)){
+			evtfunc = event.GetCallback(evtype)
+			if(isfunc(evtfunc)){
+				evtfunc(cls, evtdata)}
+		}
+	}
+}
+
+//--------------------------------------------------------------------------------------------------------------
+
+enum:eDRAGGABLE{dSelf; gValue; gKey; gSize}
+gValue = 0
+gKey = 0
+
+func:GetValue(key){
+    idx = find(gKey, key)
+    value = gValue[idx]
+    return(value)
+}
+func:SetValue(key, value){
+    if(ismap(gKey)){
+        if(key <> gKey){
+            idx = find(gKey, key)
+            gValue[idx] = value}
+        else{
+            gKey = gKey $ map(1, key)
+            gValue = gValue $ map(1, value)
+        }
+    }
+    else{
+        gKey = map(1, key)
+        gValue = map(1, value)}
+        
+}
+
+func:OnMouseDown(wdg, data){
+	id = wdg.GetId()
+    dSelf = GetValue(id)
+    dSelf.down = 1
+    dSelf.lastpos = data
+    SetValue(id, dSelf)
+}
+func:OnMouseUp(wdg, data){
+	id = wdg.GetId()
+    dSelf = GetValue(id)
+    dSelf.down = 0
+    dSelf.lastpos = data
+    if(sizeof(dSelf.ondraggingstop)){
+        dSelf.ondraggingstop(dSelf.widget)}
+    SetValue(id, dSelf)
+}
+func:OnMouseMove(wdg, data){
+	id = wdg.GetId()
+    dSelf = GetValue(id)
+    if(dSelf.down == 1){
+        deltax = data[0] - dSelf.lastpos[0]
+        deltay = data[1] - dSelf.lastpos[1]
+        dSelf.widget.Move(deltax, deltay)
+        if(sizeof(dSelf.ondragging)){
+            dSelf.ondragging(dSelf.widget)}
+        dSelf.lastpos = data
+    }
+    SetValue(id, dSelf)
+}
+obj:Draggable(wdg){
+    self.down = 0
+    self.lastpos = 0
+    self.widget = wdg
+    self.ondragging = null()
+    self.ondraggingstop = null()
+    if(IsTouchDevice()){
+        wdg.EventTouchMove(OnMouseMove)
+        wdg.EventTouchStart(OnMouseDown)
+        wdg.EventTouchEnd(OnMouseUp)
+    }
+    else{
+        wdg.EventMouseMove(OnMouseMove)
+        wdg.EventMouseDown(OnMouseDown)
+        wdg.EventMouseUp(OnMouseUp)
+    }
+}
+
+func:SetDraggable(wdg, dragfunc, stopfunc){
+    drag = Draggable(wdg)
+    drag.ondragging = dragfunc
+    drag.ondraggingstop = stopfunc
+    SetValue(wdg.GetId(), drag)
+}
+
+//--------------------------------------------------------------------------------------------------------------
+
+func:Controller(){
+	if(gCounter == 10000){
+		webdevice::StopMainLoop()
+	}
+	EventManager()
+	gCounter = gCounter + 1
+}
+
+func:Render(pooling){
+	if(pooling){webdevice::MainLoop(Controller)}
+    else{callback(EventManager)}
+}
+
+
+
+//--------------------------------------------------------------------------------------------------------------
+
+
+func:Cond_None(item){
+	return(item)}
+func:Cond_Hover(item){
+	return("hover:" $ item)}
+func:Cond_Focus(item){
+	return("focus:" $ item)}
+func:Cond_Active(item){
+	return("active:" $ item)}
+
+func:Cond_SmallScreen(item){
+	return("sm:" $ item)}
+func:Cond_MiddleScreen(item){
+	return("md:" $ item)}
+func:Cond_LargeScreen(item){
+	return("lg:" $ item)}
+func:Cond_XLScreen(item){
+	return("xl:" $ item)}
+func:Cond_XXLScreen(item){
+	return("2xl:" $ item)}
+
+func:Cond_Portrait(item){
+	return("portrait:" $ item)}
+func:Cond_Landscape(item){
+	return("landscape:" $ item)}
+
+
+
+obj:Overflow(id){
+
+	self.id = id
+
+	func:Auto(self){dom::AddClass(self.id, "overflow-auto")}
+	func:Hidden(self){dom::AddClass(self.id, "overflow-hidden")}
+	func:Clip(self){dom::AddClass(self.id, "overflow-clip")}
+	func:Visible(self){dom::AddClass(self.id, "overflow-visible")}
+	func:Scroll(self){dom::AddClass(self.id, "overflow-scroll")}
+	func:AutoX(self){dom::AddClass(self.id, "overflow-x-auto")}
+	func:AutoY(self){dom::AddClass(self.id, "overflow-y-auto")}
+	func:HiddenX(self){dom::AddClass(self.id, "overflow-x-hidden")}
+	func:HiddenY(self){dom::AddClass(self.id, "overflow-y-hidden")}
+	func:ClipX(self){dom::AddClass(self.id, "overflow-x-clip")}
+	func:ClipY(self){dom::AddClass(self.id, "overflow-y-clip")}
+	func:VisibleX(self){dom::AddClass(self.id, "overflow-x-visible")}
+	func:VisibleY(self){dom::AddClass(self.id, "overflow-y-visible")}
+	func:ScrollX(self){dom::AddClass(self.id, "overflow-x-scroll")}
+	func:ScrollY(self){dom::AddClass(self.id, "overflow-y-scroll")}
+
+}
+
+obj:FontSize(id){
+
+	self.id = id
+
+	func:Thin(self){dom::AddClass(self.id, "font-thin")}
+	func:ExtraLight(self){dom::AddClass(self.id, "font-extralight")}
+	func:Light(self){dom::AddClass(self.id, "font-light")}
+	func:Normal(self){dom::AddClass(self.id, "font-normal")}
+	func:Medium(self){dom::AddClass(self.id, "font-medium")}
+	func:SemiBold(self){dom::AddClass(self.id, "font-semibold")}
+	func:Bold(self){dom::AddClass(self.id, "font-bold")}
+	func:ExtraBold(self){dom::AddClass(self.id, "font-extrabold")}
+	func:Black(self){dom::AddClass(self.id, "font-black")}
+	
+
+}
+
+// obj:cTextFontSize(){
+// 	self.FONT_THIN 			= "font-thin" 	        // 12px 
+// 	self.FONT_EXTRALIGHT 	= "font-extralight"		// 14px 
+// 	self.FONT_LIGHT 		= "font-light"	        // 16px 
+// 	self.FONT_NORMAL 		= "font-normal"		    // 18px 
+// 	self.FONT_MEDIUM 		= "font-medium"		    // 20px 
+// 	self.FONT_SEMIBOLD 		= "font-semibold"	    // 24px 
+// 	self.FONT_BOLD 			= "font-bold"	        // 30px 
+// 	self.FONT_EXTRABOLD 	= "font-extrabold"	    // 36px 
+// 	self.FONT_BLACK 		= "font-black"	        // 48px 
+// }
+
+
+obj:Widget(parent, constructor){
+
+	self.parent = parent
+	self.userinfo = null()
+	if(isinst(parent)){
+		prtid = parent.GetId()}
+	if(isstr(parent)){
+		prtid = parent}
+	self.id = constructor(prtid)
+	self.condition = Cond_None
+
+	func:AddClass(self, item){
+		dom::AddClass(self.id, item)}
+		//dom::AddClass(self.id, self.condition(item))}
+
+	func:GetId(self){
+		return(self.id)}
+
+	func:GetParent(self){
+		return(self.parent)}
+
+	func:SetUserInfo(self, info){
+		self.userinfo = info}
+
+	func:GetUserInfo(self){
+		return(self.userinfo)}
+
+	func:Source(self, data){
+		dom::SetAttribute(self.id, "src", data)}
+
+	func:Icon(self, data){
+		self.AddClass(data)}
+
+	func:Text(self, text){
+		dom::SetText(self.id, text)}
+
+	func:PlaceHolder(self, txt){
+		dom::SetAttribute(self.id, "placeholder", txt)}
+
+	func:GetValue(self){
+		return(dom::GetVal(self.id))}
+
+	func:IsChecked(self){
+		return(dom::GetProp(self.id, "checked"))}
+
+	func:IsEnabled(self){
+		return(!dom::GetProp(self.id, "disabled"))}
+
+	func:Check(self, state){
+		dom::SetStatus(self.id, "checked", state)}
+
+	func:Enable(self, state){
+		dom::SetStatus(self.id, "disabled", !state)}
+
+	func:ShowInplace(self){
+		dom::RemoveClass(self.id, "invisible")
+		self.AddClass("visible")}
+
+	func:HideInPlace(self){
+		dom::RemoveClass(self.id, "visible")
+		self.AddClass("invisible")}
+
+	func:Show(self){
+		dom::RemoveClass(self.id, "hidden")
+		self.AddClass("block")}
+
+	func:Hide(self){
+		dom::RemoveClass(self.id, "block")
+		self.AddClass("hidden")}
+
+	func:Toggle(self){
+		dom::ToggleClass(self.id, "block")
+		dom::ToggleClass(self.id, "hidden")}
+
+	func:Collapse(self){
+		dom::ToggleClass(self.id, "collapse")}
+
+	func:ShowModal(self){
+		webdevice::ShowModal(self.id)
+	}
+
+
+	// func:CleanOptions(self, opt){
+	// 	itemcls = self.GetClass()
+	// 	if(sizeof(itemcls)){
+	// 		cls = foreach(itemcls){
+	// 			if(opt.has(cls)){
+	// 				dom::RemoveClass(self.id, cls)}}}}
+
+	func:ChangeTheme(self, theme){
+		dom::SetAttribute(self.id, "data-theme", theme)}
+
+	func:None(self){
+		self.condition = Cond_None}
+	func:Hover(self){
+		self.condition = Cond_Hover}
+	func:Focus(self){
+		self.condition = Cond_Focus}
+	func:Active(self){
+		self.condition = Cond_Active}
+
+	func:Move(self, x, y){
+		if(x!=0 || y!=0){
+			pos = dom::GetPosition(self.id)
+			px = pos[0] + x; py = pos[1] + y
+			dom::SetPosition(self.id, (px, py))}}
+
+	func:AddEvent(self, event, fcallback){
+		AddEvent(self, event,  fcallback)}
+
+	func:EventChange(self, fcallback){
+		AddEvent(self, events::CHANGE, fcallback)}
+
+	func:EventMouseClick(self, fcallback){
+		AddEvent(self, events::CLICK, fcallback)}
+
+	func:EventMouseMove(self, fcallback){
+		AddEvent(self, events::MOUSEMOVE, fcallback)}
+
+	func:EventMouseDown(self, fcallback){
+		AddEvent(self, events::MOUSEDOWN, fcallback)}
+
+	func:EventMouseUp(self, fcallback){
+		AddEvent(self, events::MOUSEUP, fcallback)}
+
+	func:EventTouchCancel(self, fcallback){
+		AddEvent(self, events::TOUCHCANCEL, fcallback)}
+
+	func:EventTouchEnd(self, fcallback){
+		AddEvent(self, events::TOUCHEND, fcallback)}
+
+	func:EventTouchMove(self, fcallback){
+		AddEvent(self, events::TOUCHMOVE, fcallback)}
+
+	func:EventTouchStart(self, fcallback){
+		AddEvent(self, events::TOUCHSTART, fcallback)}
+
+	func:EventAnimationEnd(self, fcallback){
+		AddEvent(self, events::ANIMATIONEND, fcallback)}
+
+	func:Ping(self){
+		cls = css::cAnimate().PING
+		self.AddClass(cls)}
+
+	func:Spin(self){
+		cls = css::cAnimate().SPIN
+		self.AddClass(cls)}
+
+	func:Pulse(self){
+		cls = css::cAnimate().PULSE
+		self.AddClass(cls)}
+
+	func:Bounce(self){
+		cls = css::cAnimate().BOUNCE
+		self.AddClass(cls)}
+
+	func:Animate(self){return(Animate(self.id))}
+
+	func:BoxShadow(self, shadow){
+		// self.CleanOptions(BoxShadowCls)
+		self.AddClass(shadow)}
+
+	func:Opacity(self, opacity){
+		// self.CleanOptions(OpacityCls)
+		self.AddClass(opacity)}
+
+	func:SetCursor(self, cursor){
+		// self.CleanOptions(CursorCls)
+		self.AddClass(cursor)}
+
+	func:BackgroundColor(self, color){
+		color = cColorItem().BG $ color
+    	self.AddClass(color)}
+
+	func:BorderColor(self, color){
+		color = cColorItem().BORDER $ color
+    	self.AddClass(color)}
+
+	func:BadgeColor(self, color){
+		color = cColorItem().BADGE $ color
+    	self.AddClass(color)}
+
+	func:TextColor(self, color){
+		color = cColorItem().TEXT $ color
+    	self.AddClass(color)}
+
+	func:SetWidth(self, width){
+		self.AddClass(width)}
+
+	func:Width(self, value){
+		self.AddClass("w-[" $ value $ "]")}
+
+	func:AutoWidth(self){
+		self.AddClass("w-auto")}
+
+	func:FitWidth(self){
+		self.AddClass("w-fit")}
+
+	func:ScreenWidth(self){
+		self.AddClass("w-screen")}
+
+	func:FullWidth(self){
+		self.AddClass("w-full")}
+
+	func:MinWidth(self){
+		self.AddClass("w-min")}
+
+	func:MaxWidth(self){
+		self.AddClass("w-max")}
+
+
+	func:SetHeight(self, height){
+		self.AddClass(height)}
+
+	func:Height(self, value){
+		self.AddClass("h-[" $ value $ "]")}
+
+	func:AutoHeight(self){
+		self.AddClass("h-auto")}
+
+	func:FitHeight(self){
+		self.AddClass("h-fit")}
+
+	func:ScreenHeight(self){
+		self.AddClass("h-screen")}
+
+	func:FullHeight(self){
+		self.AddClass("h-full")}
+
+	func:MinHeight(self){
+		self.AddClass("h-min")}
+
+	func:MaxHeight(self){
+		self.AddClass("h-max")}
+
+	func:Margin(self, margin){
+		self.AddClass(margin)}
+
+	func:BorderRadius(self, radius){
+		self.AddClass(radius)}
+
+	func:BorderWidth(self, width){
+		self.AddClass(width)}
+
+	func:BorderStyle(self, style){
+		self.AddClass(style)}
+
+	
+	func:FontSize(self){return(FontSize(self.id))}
+
+	func:IsButton(self){return(dom::HasClass(self.id, "btn"))}
+	func:IsSelect(self){return(dom::HasClass(self.id, "select"))}
+
+	func:Tiny(self){
+		if(self.IsButton()){self.AddClass("btn-xs")}
+		if(self.IsSelect()){self.AddClass("select-xs")}
+	}
+	func:Small(self){
+		if(self.IsButton()){self.AddClass("btn-sm")}
+		if(self.IsSelect()){self.AddClass("select-sm")}
+	}
+	func:Normal(self){
+		if(self.IsButton()){self.AddClass("btn-md")}
+		if(self.IsSelect()){self.AddClass("select-md")}
+	}
+	func:Large(self){
+		if(self.IsButton()){self.AddClass("btn-xl")}
+		if(self.IsSelect()){self.AddClass("select-xl")}
+	}
+
+	func:Ghost(self){
+		if(self.IsButton()){self.AddClass("btn-ghost")}
+	}
+
+	func:Link(self){
+		if(self.IsButton()){self.AddClass("btn-link")}
+	}
+
+	func:Overflow(self){return(Overflow(self.id))}
+
+	func:Justify(self, justify){
+		self.AddClass(justify)}
+
+	func:JustifyAuto(self){
+		self.AddClass(cJustifySelf().AUTO)}
+	func:JustifyCenter(self){
+		self.AddClass(cJustifySelf().CENTER)}
+	func:JustifyStretch(self){
+		self.AddClass(cJustifySelf().STRETCH)}
+	func:JustifyStart(self){
+		self.AddClass(cJustifySelf().START)}
+	func:JustifyEnd(self){
+		self.AddClass(cJustifySelf().END)}
+
+	func:AlignAuto(self){
+		self.AddClass(cAlignSelf().AUTO)}
+	func:AlignCenter(self){
+		self.AddClass(cAlignSelf().CENTER)}
+	func:AlignStretch(self){
+		self.AddClass(cAlignSelf().STRETCH)}
+	func:AlignStart(self){
+		self.AddClass(cAlignSelf().START)}
+	func:AlignEnd(self){
+		self.AddClass(cAlignSelf().END)}
+
+	func:PlaceAuto(self){
+		self.AddClass(cPlaceSelf().AUTO)}
+	func:PlaceCenter(self){
+		self.AddClass(cPlaceSelf().CENTER)}
+	func:PlaceStretch(self){
+		self.AddClass(cPlaceSelf().STRETCH)}
+	func:PlaceStart(self){
+		self.AddClass(cPlaceSelf().START)}
+	func:PlaceEnd(self){
+		self.AddClass(cPlaceSelf().END)}
+
+
+	func:Draggable(self, dragfunc, stopfunc){
+		SetDraggable(self, dragfunc, stopfunc)
+	}
+
+	func:Sortable(self){
+		CallJs((SORTITEM, self.id))
+	}
+
+	func:CodeEditor(self){
+		return(CodeEditor(self.id))
+	}
+
+}
+
+//--------------------------------------------------------------------------------------------------------------
+
+func:NewWidget(parent, html){
+	id = NewId()
+	html = freplace(html, "_ID_", id)
+	dom::Append(parent, html)
+	return(FromId(id))
+}
+
+func:Panel(parent){
+	return(NewWidget(parent, "<div  id='_ID_' class='container'></div>"))
+}
+func:wPanel(parent){
+	return(Widget(parent, Panel))}
+
+func:HorizontalLayout(parent){
+	return(NewWidget(parent, "<div id='_ID_' class='flex flex-row'></div>"))
+}
+func:wHorizontalLayout(parent){
+	return(Widget(parent, HorizontalLayout))}
+
+func:VerticalLayout(parent){
+	return(NewWidget(parent, "<div id='_ID_' class='flex flex-col'></div>"))
+}
+func:wVerticalLayout(parent){
+	return(Widget(parent, VerticalLayout))}
+
+func:HorizontalWindowLayout(parent){
+	id = HorizontalLayout(parent)
+	dom::AddClass(id, "w-full h-full")
+	return(id)
+}
+func:wHorizontalWindowLayout(parent){
+	return(Widget(parent, HorizontalWindowLayout))}
+
+func:VerticalWindowLayout(parent){
+	id = VerticalLayout(parent)
+	dom::AddClass(id, "w-full h-full")
+	return(id)
+}
+func:wVerticalWindowLayout(parent){
+	return(Widget(parent, VerticalWindowLayout))}
+
+
+
+func:LayoutPanel(parent){
+	return(NewWidget(parent, "<div id='_ID_' class='grid'></div>"))
+}
+func:wLayoutPanel(parent){
+	return(Widget(parent, LayoutPanel))}
+
+
+func:Button(parent){
+	return(NewWidget(parent, "<button id='_ID_' class='btn'></button>"))
+}
+func:wButton(parent){
+	return(Widget(parent, Button))}
+
+
+
+func:Select(parent){
+	return(NewWidget(parent, "<select id='_ID_' class='select'>"))
+}
+func:wSelect(parent){
+	return(Widget(parent, Select))}
+
+func:Option(parent){
+	return(NewWidget(parent, "<option  id='_ID_'></option>"))
+}
+func:wOption(parent){
+	return(Widget(parent, Option))}
+
+func:Combo(parent, data){
+    sel = wSelect(parent)
+    d = foreach(data){
+        selopt = wOption(sel)
+        selopt.Text(d)
+    }
+    return(sel)
+}
+
+func:Dialog(parent){
+	return(NewWidget(parent, "<dialog id='_ID_' class='modal'></dialog>"))
+}
+func:wDialog(parent){
+	return(Widget(parent, Dialog))}
+
+func:Form(parent){
+	return(NewWidget(parent, "<form id='_ID_' method='dialog' class='modal-backdrop'></form>"))
+}
+func:wForm(parent){
+	return(Widget(parent, Form))}
+
+func:DialogBox(parent){
+	return(NewWidget(parent, "<div id='_ID_' class='modal-box'></div>"))
+}
+func:wDialogBox(parent){
+	return(Widget(parent, DialogBox))}
+
+func:Divider(parent){
+	return(NewWidget(parent, "<div  id='_ID_' class='divider'></div>"))
+}
+func:wDivider(parent){
+	return(Widget(parent, Divider))}
+
+func:Paragraph(parent){
+	return(NewWidget(parent, "<p id='_ID_'></p>"))
+}
+func:wParagraph(parent){
+	return(Widget(parent, Paragraph))}
+
+func:wLabel(parent, text){
+	p = Widget(parent, Paragraph)
+	p.Text(text)
+	return(p)}
+
+
+// func:Divider(opts){
+// 	id = NewId()
+// 	SaveInfo(id, opts)
+// 	wdg = "<div class='divider'>_TITLE_</div>"
+// 	wdg = freplace(wdg, "_TITLE_", opts.title)
+// 	dom::Append(opts.parent, wdg)
+// 	return(FromId(id))
+// }
+
+
+// func:Modal(opts){
+// 	idmodal = NewId()
+// 	idcontent = NewId()
+// 	opts.content = FromId(idcontent)
+// 	SaveInfo(idmodal, opts)
+// 	wdg = "<dialog id='_ID1_' class='modal'>"
+//     wdg = wdg $ "<form id='_ID2_' method='dialog' class='modal-box'>"
+//     wdg = wdg $ "</form>"
+
+// 	wdg = wdg $ "<form method='dialog' class='modal-backdrop'>"
+//     wdg = wdg $ "<button>close</button>"
+//   	wdg = wdg $ "</form>"
+
+//     wdg = wdg $ "</dialog>"
+// 	wdg = freplace(wdg, "_ID1_", idmodal)
+// 	wdg = freplace(wdg, "_ID2_", idcontent)
+// 	dom::After(IdRoot(), wdg)
+// 	return(FromId(idmodal))
+// }
+
+
+// func:PopOver(parent){
+// 	return(NewWidget(parent, "<div id='_ID_' class='dropdown dropdown-hover'></div>"))
+// }
+// func:wPopOver(parent){
+// 	return(Widget(parent, PopOver))}
+
+// func:Popover(opts){
+// 	id1 = NewId()
+// 	id2 = NewId()
+// 	opts.content = FromId(id2)
+// 	SaveInfo(id1, opts)
+// 	wdg = "<div id='_ID1_' class='dropdown dropdown-hover'></div>"
+// 	wdg = freplace(wdg, "_ID1_", id1)
+// 	dom::Wrap(opts.parent, wdg)
+//     wdg = "<div class='py-2'>"
+//     //<ul class="dropdown-content z-[1] bg-base-200 shadow-xl border border-base-300 rounded min-w-max">
+//     //wdg = wdg $ "<ul class='dropdown-content z-[1] bg-base-200 shadow-lg rounded min-w-max'>"
+// 	wdg = wdg $ "<ul class='dropdown-content z-[1] bg-base-200 shadow-lg rounded w-96'>"
+//     wdg = wdg $ "<div id='_ID2_' class='px-3 py-2'></div></ul></div>"
+// 	wdg = freplace(wdg, "_ID2_", id2)
+// 	dom::After(opts.parent, wdg)
+// 	return(FromId(id1))
+// }
+
+func:Image(parent){
+	return(NewWidget(parent, "<img id='_ID_' />"))
+}
+func:wImage(parent){
+	return(Widget(parent, Image))}
+
+func:wImageSource(parent, img){
+	im = wImage(parent)
+    im.Source(img)
+	return(im)}
+
+func:wPngAssets(parent, name){
+	icon = "assets/" $ name $ ".png"
+    ims = wImageSource(parent, icon)
+	return(ims)}
+
+<
+
+func:InputFile(parent){
+	return(NewWidget(parent, "<input id='_ID_' type='file' class='hidden'/>"))
+}
+func:wInputFile(parent){
+	return(Widget(parent, InputFile))}
+
+
+func:Toggle(parent){
+	return(NewWidget(parent, "<input id='_ID_' type='checkbox' class='toggle'/>"))
+}
+func:wToggle(parent){
+	return(Widget(parent, Toggle))}
+
+func:Checkbox(parent){
+	return(NewWidget(parent, "<input id='_ID_' type='checkbox' class='checkbox'/>"))
+}
+func:wCheckbox(parent){
+	return(Widget(parent, Checkbox))}
+
+func:TextArea(parent){
+	return(NewWidget(parent, "<textarea id='_ID_' class='textarea'></textarea>"))
+}
+func:wTextArea(parent){
+	return(Widget(parent, TextArea))}
+
+func:Tab(parent){
+	return(NewWidget(parent, "<div id='_ID_' class='tabs'></div>"))
+}
+func:wTab(parent){
+	return(Widget(parent, Tab))}
+
+func:TabItem(parent){
+	return(NewWidget(parent, "<a id='_ID_' class='tab'></a>"))
+}
+func:wTabItem(parent){
+	return(Widget(parent, TabItem))}
+
+
+func:Indicator(parent, position){
+	id = NewId()
+	wdg = "<div class='indicator'></div>"
+	dom::Wrap(parent, wdg)
+	wdg1 = "<span id='_ID_' class='indicator-item _POSITION_'></span>"
+	wdg1 = freplace(wdg1, "_ID_", id)
+	wdg1 = freplace(wdg1, "_POSITION_", position)
+	dom::Append(parent, wdg1)
+	return(FromId(id))
+}
+
+func:IndicatorTopStart(parent){
+	return(Indicator(parent, "indicator-top indicator-start"))}
+
+func:wIndicatorTopStart(parent){
+	return(Widget(parent, IndicatorTopStart))}
+
+func:IndicatorTopCenter(parent){
+	return(Indicator(parent, "indicator-top indicator-center"))}
+
+func:IndicatorTopEnd(parent){
+	return(Indicator(parent, "indicator-top indicator-end"))}
+
+
+func:IndicatorBottomStart(parent){
+	return(Indicator(parent, "indicator-bottom indicator-start"))}
+
+func:IndicatorBottomCenter(parent){
+	return(Indicator(parent, "indicator-bottom indicator-center"))}
+
+func:IndicatorBottomEnd(parent){
+	return(Indicator(parent, "indicator-bottom indicator-end"))}
+
+
+func:IndicatorMiddleStart(parent){
+	return(Indicator(parent, "indicator-middle indicator-start"))}
+
+func:IndicatorMiddleCenter(parent){
+	return(Indicator(parent, "indicator-middle indicator-center"))}
+
+func:IndicatorMiddleEnd(parent){
+	return(Indicator(parent, "indicator-middle indicator-end"))}
+
+
+
+
+
+// func:Container(opts){
+//     id = NewId()
+// 	SaveInfo(id, opts)
+// 	cls_size = opts.size.ToClass()
+// 	cls_color = css::cColorItem().BG $ opts.color
+//     wdg = "<div  id='_ID_' class='container _SIZE_ _COL_'></div>"
+// 	wdg = freplace(wdg, "_SIZE_", cls_size)
+//     wdg = freplace(wdg, "_COL_", cls_color)
+//     wdg = freplace(wdg, "_ID_", id)
+//     dom::Append(opts.parent, wdg)
+//     return(FromId(id))
+// }
+
+
+// func:ColomnLayout(opts){
+// 	id = NewId()
+// 	SaveInfo(id, opts)
+// 	wopt = opts.justify
+// 	wopt = wopt $ " " $ "p-" $ strnum(opts.padding)
+// 	wopt = wopt $ " " $ "gap-" $ strnum(opts.gap)
+// 	wdg = "<div id='_ID_' class='grid grid-flow-col _OPT_'></div>"
+// 	wdg = freplace(wdg, "_OPT_", wopt)
+// 	wdg = freplace(wdg, "_ID_", id)
+// 	dom::Append(opts.parent, wdg)
+// 	return(FromId(id))
+// }
+
+// func:RowLayout(opts){
+// 	id = NewId()
+// 	SaveInfo(id, opts)
+// 	wopt = opts.justify
+// 	wopt = wopt $ " " $ "p-" $ strnum(opts.padding)
+// 	wopt = wopt $ " " $ "gap-" $ strnum(opts.gap)
+// 	wdg = "<div id='_ID_' class='grid grid-flow-row _OPT_'></div>"
+// 	wdg = freplace(wdg, "_OPT_", wopt)
+// 	wdg = freplace(wdg, "_ID_", id)
+// 	dom::Append(opts.parent, wdg)
+// 	return(FromId(id))
+// }
+
+// func:Text(opts){
+// 	id = NewId()
+// 	SaveInfo(id, opts)
+// 	wdg = "<p id='_ID_' _EVT_ class='_OPT_'>_TITLE_</p>"
+// 	wdg = freplace(wdg, "_ID_", id)
+// 	wdg = freplace(wdg, "_TITLE_", opts.title)
+// 	if(isinst(opts.text)){
+// 		wopt = opts.text.ToClass()
+// 		wdg = freplace(wdg, "_OPT_", wopt)}
+// 	if(isinst(opts.event)){
+// 		evt = opts.event.ToHtml()
+// 		wdg = freplace(wdg, "_EVT_", evt)}
+// 	dom::Append(opts.parent, wdg)
+// 	return(FromId(id))
+// }
+
+// func:Button(opts){
+// 	id = NewId()
+// 	SaveInfo(id, opts)
+// 	opt = "m-8"
+// 	evt = "onclick='jsOnEvent(this.id, 0)'"
+// 	wdg = "<button id='_ID_' class='btn _OPTIONS_' _EVT_>_TITLE_</button>"
+// 	wdg = freplace(wdg, "_ID_", id)
+// 	wdg = freplace(wdg, "_TITLE_", opts.title)
+// 	wdg = freplace(wdg, "_EVT_", evt)
+// 	dom::Append(opts.parent, wdg)
+// 	return(FromId(id))
+// }
+
+// func:ProgressBar(opts){
+// 	id = NewId()
+// 	SaveInfo(id, opts)
+// 	wdg = "<progress id='_ID_' class='progress w-auto _COL_'></progress>"
+// 	wdg = freplace(wdg, "_ID_", id)
+//     color = css::cColorItem().PROGRESS $ opts.color
+//     wdg = freplace(wdg, "_COL_", color)
+// 	dom::Append(opts.parent, wdg)
+// 	return(FromId(id))
+// }
+
+// func:ProgressBarValue(item, value){
+//     dom::SetAttribute(item, "value", strnum(value))
+//     dom::SetAttribute(item, "max", "100")
+// }
+
+// func:Popover(opts){
+// 	id1 = NewId()
+// 	id2 = NewId()
+// 	opts.content = FromId(id2)
+// 	SaveInfo(id1, opts)
+// 	wdg = "<div id='_ID1_' class='dropdown dropdown-hover'></div>"
+// 	wdg = freplace(wdg, "_ID1_", id1)
+// 	dom::Wrap(opts.parent, wdg)
+//     wdg = "<div class='py-2'>"
+//     //<ul class="dropdown-content z-[1] bg-base-200 shadow-xl border border-base-300 rounded min-w-max">
+//     //wdg = wdg $ "<ul class='dropdown-content z-[1] bg-base-200 shadow-lg rounded min-w-max'>"
+// 	wdg = wdg $ "<ul class='dropdown-content z-[1] bg-base-200 shadow-lg rounded w-96'>"
+//     wdg = wdg $ "<div id='_ID2_' class='px-3 py-2'></div></ul></div>"
+// 	wdg = freplace(wdg, "_ID2_", id2)
+// 	dom::After(opts.parent, wdg)
+// 	return(FromId(id1))
+// }
+
+// // func:PopoverMenu(opts){
+// // 	id = Popover(opts)
+// // 	cls = "dropdown-bottom dropdown-end"
+// // 	cls = "w-48 h-48 overflow-y-auto border-base-300 menu"
+// // 	dom::AddClass(id, )
+// // 	return(id)
+// // }
+
+// func:Dropdown(opts){
+// 	id1 = NewId()
+// 	id2 = NewId()
+// 	opts.content = FromId(id2)
+// 	SaveInfo(id1, opts)
+// 	wdg = "<details id='_ID1_' class='dropdown'>"
+//     wdg = wdg $ "<summary class='m-1 btn'>_TITLE_</summary>"
+//     wdg = wdg $ "<ul id='_ID2_' class='p-0 shadow-xl menu dropdown-content z-[1] bg-base-100 rounded-box w-52'>"
+//     wdg = wdg $ "</ul>"
+//     wdg = wdg $ "</details>"
+// 	wdg = freplace(wdg, "_ID1_", id1)
+// 	wdg = freplace(wdg, "_ID2_", id2)
+// 	wdg = freplace(wdg, "_TITLE_", opts.title)
+// 	dom::Append(opts.parent, wdg)
+// 	return(FromId(id1))
+// }
+
+// func:ItemList(opts){
+// 	id = NewId()
+// 	SaveInfo(id, opts)
+//     wdg = "<li id='_ID_'>_TITLE_</li>"
+// 	wdg = freplace(wdg, "_ID_", id)
+// 	wdg = freplace(wdg, "_TITLE_", opts.title)
+// 	dom::Append(opts.parent, wdg)
+// 	return(FromId(id))
+// }
+
+// func:Selectable(opts){
+// 	id = NewId()
+// 	SaveInfo(id, opts)
+// 	evt = "onclick='jsOnEvent(this.id, 0)'"
+//     wdg = "<a id='_ID_' _EVT_>_TITLE_</a>"
+// 	wdg = freplace(wdg, "_ID_", id)
+// 	wdg = freplace(wdg, "_TITLE_", opts.title)
+// 	wdg = freplace(wdg, "_EVT_", evt)
+// 	dom::Append(opts.parent, wdg)
+// 	return(FromId(id))
+// }
+
+// func:Badge(opts){
+// 	id = NewId()
+// 	SaveInfo(id, opts)
+// 	opt = "badge-primary"
+// 	wdg = "<div id='_ID_' class='badge _OPTIONS_'>_TITLE_</div>"
+// 	wdg = freplace(wdg, "_ID_", id)
+// 	wdg = freplace(wdg, "_TITLE_", opts.title)
+// 	wdg = freplace(wdg, "_OPTIONS_", opt)
+// 	dom::Append(opts.parent, wdg)
+// 	return(FromId(id))
+// }
+
+// func:Divider(opts){
+// 	id = NewId()
+// 	SaveInfo(id, opts)
+// 	wdg = "<div class='divider'>_TITLE_</div>"
+// 	wdg = freplace(wdg, "_TITLE_", opts.title)
+// 	dom::Append(opts.parent, wdg)
+// 	return(FromId(id))
+// }
+
+// func:Modal(opts){
+// 	idmodal = NewId()
+// 	idcontent = NewId()
+// 	opts.content = FromId(idcontent)
+// 	SaveInfo(idmodal, opts)
+// 	wdg = "<dialog id='_ID1_' class='modal'>"
+//     wdg = wdg $ "<form id='_ID2_' method='dialog' class='modal-box'>"
+//     wdg = wdg $ "</form>"
+
+// 	wdg = wdg $ "<form method='dialog' class='modal-backdrop'>"
+//     wdg = wdg $ "<button>close</button>"
+//   	wdg = wdg $ "</form>"
+
+//     wdg = wdg $ "</dialog>"
+// 	wdg = freplace(wdg, "_ID1_", idmodal)
+// 	wdg = freplace(wdg, "_ID2_", idcontent)
+// 	dom::After(IdRoot(), wdg)
+// 	return(FromId(idmodal))
+// }
+
+// func:ShowModal(id){
+// 	dom::Show(id)
+// }
+
+// func:ModalClose(){
+// 	id = NewId()
+// 	wdg = wdg $ "<div  id='_ID_' class='modal-action'>"
+//     wdg = wdg $ "<button class='btn'>_TITLE_</button>"
+//     wdg = wdg $ "</div>"
+// 	wdg = freplace(wdg, "_ID_", id)
+// }

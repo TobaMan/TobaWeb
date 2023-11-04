@@ -1,0 +1,152 @@
+import : LibWeb / webdevice
+import : LibWeb / dom
+
+//Animate.css is a library of ready-to-use, cross-browser animations for use in your web projects. 
+//Great for emphasis, home pages, sliders, and attention-guiding hints.
+//https://github.com/animate-css/animate.css
+
+obj:Animate(id){
+
+	self.id = id
+	self.oldcls = 0
+	self.pre = "animate__"
+	self.precss = "animate__animated"
+	self.reapeat = self.pre $ "repeat-1"
+	self.speed = self.pre $ "faster"
+	self.delay = self.pre $ "delay-2s"
+	self.type = 0
+
+    func:Clean(self){
+        cls = dom::GetClassList(self.id)
+        c = foreach(cls){
+            if(self.pre <> c){
+                dom::RemoveClass(self.id, c)}}
+        dom::TriggeringReflow(self.id)}
+
+	func:Type(self, type){
+        self.Clean()
+        self.type = type
+		cls = self.precss $ " " $ self.pre $ type $ " " $ self.reapeat $ " " $ self.speed
+		dom::AddClass(self.id, cls)
+		self.oldcls = cls}
+
+	func:Slower(self){self.speed = self.pre $ "slower"}
+	func:Slow(self){self.speed = self.pre $ "slow"} 
+	func:Fast(self){self.speed = self.pre $ "fast"}
+	func:Faster(self){self.speed = self.pre $ "faster"}
+
+	func:Repeat_1(self){self.reapeat = self.pre $ "repeat-1"}
+	func:Repeat_2(self){self.reapeat = self.pre $ "repeat-2"}
+	func:Repeat_3(self){self.reapeat = self.pre $ "repeat-3"}
+	func:Infinite(self){self.reapeat = self.pre $ "infinite"}
+
+	func:zoomIn(self){self.Type("zoomIn")}
+	func:zoomOut(self){self.Type("zoomOut")}
+	func:zoomInDown(self){self.Type("zoomInDown")}
+	func:zoomOutDown(self){self.Type("zoomOutDown")}
+	func:zoomInUp(self){self.Type("zoomInUp")}
+	func:zoomOutUp(self){self.Type("zoomOutUp")}
+	func:zoomInLeft(self){self.Type("zoomInLeft")}
+	func:zoomOutLeft(self){self.Type("zoomOuteft")}
+	func:zoomInRight(self){self.Type("zoomInRight")}
+	func:zoomOutRight(self){self.Type("zoomOutRight")}
+	
+	func:hinge(self){self.Type("hinge")}
+	func:jackInTheBox(self){self.Type("jackInTheBox")}
+	func:rollIn(self){self.Type("rollIn")}
+	func:rollOut(self){self.Type("rollOut")}
+
+	func:flip(self){self.Type("flip")}
+	func:flipInX(self){self.Type("flipInX")}
+	func:flipInY(self){self.Type("flipInY")}
+	func:flipOutX(self){self.Type("flipOutX")}
+	func:flipOutY(self){self.Type("flipOutY")}
+
+	func:lightSpeedInRight(self){self.Type("lightSpeedInRight")}
+	func:lightSpeedInLeft(self){self.Type("lightSpeedInLeft")}
+	func:lightSpeedOutRight(self){self.Type("lightSpeedOutRight")}
+	func:lightSpeedOutLeft(self){self.Type("lightSpeedOutLeft")}
+
+	func:bounce(self){self.Type("bounce")}
+	func:flash(self){self.Type("flash")}
+	func:pulse(self){self.Type("pulse")}
+	func:rubberBand(self){self.Type("rubberBand")}
+	func:shakeX(self){self.Type("shakeX")}
+	func:shakeY(self){self.Type("shakeY")}
+	func:headShake(self){self.Type("headShake")}
+	func:swing(self){self.Type("swing")}
+	func:tada(self){self.Type("tada")}
+	func:wobble(self){self.Type("wobble")}
+	func:jello(self){self.Type("jello")}
+	func:jheartBeat(self){self.Type("heartBeat")}
+
+    func:backInDown(self){self.Type("backInDown")}
+	func:backOutDown(self){self.Type("backOutDown")}
+	func:backInLeft(self){self.Type("backInLeft")}
+	func:backOutLeft(self){self.Type("backOutLeft")}
+    func:backInRight(self){self.Type("backInRight")}
+	func:backOutRight(self){self.Type("backOutRight")}
+	func:backInUp(self){self.Type("backInUp")}
+	func:backOutUp(self){self.Type("backOutUp")}
+
+    func:bounceIn(self){self.Type("bounceIn")}
+	func:bounceOut(self){self.Type("bounceOut")}
+	func:bounceInDown(self){self.Type("bounceInDown")}
+	func:bounceOutDown(self){self.Type("bounceOutDown")}
+    func:bounceInLeft(self){self.Type("bounceInLeft")}
+    func:bounceOutLeft(self){self.Type("bounceOutLeft")}
+	func:bounceInRight(self){self.Type("bounceInRight")}
+    func:bounceOutRight(self){self.Type("bounceOutRight")}
+	func:bounceInUp(self){self.Type("bounceInUp")}
+    func:bounceOutUp(self){self.Type("bounceOutUp")}
+
+    func:fadeIn(self){self.Type("fadeIn")}
+	func:fadeOut(self){self.Type("fadeOut")}
+	func:fadeInDown(self){self.Type("fadeInDown")}
+	func:fadeOutDown(self){self.Type("fadeOutDown")}
+    func:fadeInDownBig(self){self.Type("fadeInDownBig")}
+    func:fadeOutDownBig(self){self.Type("fadeOutDownBig")}
+	func:fadeInLeft(self){self.Type("fadeInLeft")}
+    func:fadeOutLeft(self){self.Type("fadeOutLeft")}
+	func:fadeInLeftBig(self){self.Type("fadeInLeftBig")}
+    func:fadeOutLeftBig(self){self.Type("fadeOutLeftBig")}
+    func:fadeInRight(self){self.Type("fadeInRight")}
+	func:fadeOutRight(self){self.Type("fadeOutRight")}
+    func:fadeInRightBig(self){self.Type("fadeInRightBig")}
+    func:fadeOutRightBig(self){self.Type("fadeOutRightBig")}
+	func:fadeInUp(self){self.Type("fadeInUp")}
+	func:fadeOutUp(self){self.Type("fadeOutUp")}
+	func:fadeInUpBig(self){self.Type("fadeInUpBig")}
+    func:fadeOutUpBig(self){self.Type("fadeOutUpBig")}
+    func:fadeInTopLeft(self){self.Type("fadeInTopLeft")}
+	func:fadeOutTopLeft(self){self.Type("fadeOutTopLeft")}
+    func:fadeInTopRight(self){self.Type("fadeInTopRight")}
+	func:fadeOutTopRight(self){self.Type("fadeOutTopRight")}
+    func:fadeInBottomLeft(self){self.Type("fadeInBottomLeft")}
+    func:fadeOutBottomRight(self){self.Type("fadeOutBottomRight")}
+	func:fadeInBottomRight(self){self.Type("fadeInBottomRight")}
+    func:fadeOutBottomLeft(self){self.Type("fadeOutBottomLeft")}
+
+    func:slideInDown(self){self.Type("slideInDown")}
+	func:slideOutDown(self){self.Type("slideOutDown")}
+	func:slideInLeft(self){self.Type("slideInLeft")}
+	func:slideOutLeft(self){self.Type("slideOutLeft")}
+    func:slideInRight(self){self.Type("slideInRight")}
+	func:slideOutRight(self){self.Type("slideOutRight")}
+	func:slideInUp(self){self.Type("slideInUp")}
+	func:slideOutUp(self){self.Type("slideOutUp")}
+
+    func:rotateIn(self){self.Type("rotateIn")}
+	func:rotateOut(self){self.Type("rotateOut")}
+	func:rotateInDownLeft(self){self.Type("rotateInDownLeft")}
+	func:rotateOutDownLeft(self){self.Type("rotateOutDownLeft")}
+    func:rotateInDownRight(self){self.Type("rotateInDownRight")}
+    func:rotateOutDownRight(self){self.Type("rotateOutDownRight")}
+	func:rotateInUpLeft(self){self.Type("rotateInUpLeft")}
+    func:rotateOutUpLeft(self){self.Type("rotateOutUpLeft")}
+	func:rotateInUpRight(self){self.Type("rotateInUpRight")}
+    func:rotateOutUpRight(self){self.Type("rotateOutUpRight")}
+
+
+
+}

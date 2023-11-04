@@ -1,0 +1,162 @@
+import : LibWeb / webdevice
+
+
+
+func:IdHtml(){
+	//Get the Html content page id
+	return("html")}
+
+func:IdDocument(){
+	//Get the Document content page id
+	return("document")}
+
+func:IdWindow(){
+	//Get the Window content page id
+	return("window")}
+
+func:IdRoot(){
+	//Get the Body content page id
+	return("body")}
+
+
+func:Append(item, data){
+	//Insert content, specified by the parameter, to the end of each element in the set of matched elements.
+    CallJs((DOMAPPEND, item, data))
+}
+func:Remove(item, data){
+	//Remove the set of matched elements from the DOM.
+	CallJs((DOMREMOVE, item, data))
+}
+func:Before(item, data){
+	//Insert content, specified by the parameter, before each element in the set of matched elements.
+	CallJs((DOMBEFORE, item, data))
+}
+func:After(item, data){
+	//Insert content, specified by the parameter, after each element in the set of matched elements.
+	CallJs((DOMAFTER, item, data))
+}
+func:Wrap(item, data){
+	// Wrap an HTML structure around each element in the set of matched elements.
+	CallJs((DOMWRAP, item, data))
+}
+func:WrapAll(item, data){
+	// Wrap an HTML structure around all elements in the set of matched elements.
+	//
+	// 		<div class="container">
+	// 			<div class="inner">Hello</div>
+	// 			<div class="inner">Goodbye</div>
+	// 		</div>
+	//
+	// 	* Using WrapAll(), we can insert an HTML structure around the inner <div> elements like so:
+	// 		WrapAll(".inner", "<div class='new' />") 
+	//
+	// 	The new <div> element is created on the fly and added to the DOM. The result is a new <div> 
+	// 	* wrapped around all matched elements:
+	// 		<div class="container">
+	// 			<div class="new">
+	// 				<div class="inner">Hello</div>
+	// 				<div class="inner">Goodbye</div>
+	// 			</div>
+	// 		</div>
+	CallJs((DOMWRAPALL, item, data))
+}
+func:HasClass(item, data){
+	//Determine whether any of the matched elements are assigned the given class.
+	return(CallJs((DOMHASCLASS, item, data))[0])
+}
+func:AddClass(item, data){
+	//Adds the specified class(es) to each element in the set of matched elements.
+	CallJs((DOMADDCLASS, item, data))
+}
+func:RemoveClass(item, data){
+	//Remove a single class, multiple classes, or all classes from each element in the set of matched elements.
+	CallJs((DOMREMOVECLASS, item, data))
+}
+func:ToggleClass(item, data){
+	//Add or remove one or more classes from each element in the set of matched elements, 
+	//depending on either the class’s presence or the value of the state argument.
+	CallJs((DOMTOGGLECLASS, item, data))
+}
+func:GetAttribute(item, attr){
+	//Get the value of an attribute for the first element in the set of matched elements
+	return(CallJs((DOMGETATTR, item, attr))[0])
+}
+func:SetAttribute(item, attr, value){
+	//Set one or more attributes for every matched element.
+	CallJs((DOMSETATTR, item, attr, value))
+}
+func:RemoveAttribute(item, attr){
+	//Remove an attribute from each element in the set of matched elements.
+	CallJs((DOMREMOVEATTR, item, attr))
+}
+func:GetWidth(item){
+	//Get the current computed width for the first element in the set of matched elements
+	return(CallJs((DOMWIDTH, item))[0])
+}
+func:GetHeight(item){
+	//Get the current computed height for the first element in the set of matched elements
+	return(CallJs((DOMHEIGHT, item))[0])
+}
+func:GetPosition(item){
+	//Get the current coordinates of the first element in the set of matched elements, relative to the document.
+	//The .offset() method allows us to retrieve the current position of an element (specifically its border box, 
+	//which excludes margins) relative to the document.
+	return(CallJs((DOMGETPOSITION, item)))
+}
+func:SetPosition(item, pos){
+	//Set the current coordinates of every element in the set of matched elements, relative to the document.
+	//The .offset() setter method allows us to reposition an element. The element's border-box position 
+	//is specified relative to the document.
+	CallJs((DOMSETPOSITION, item, pos[0], pos[1]))
+}
+func:GetText(item){
+	//Get the combined text contents of each element in the set of matched elements, including their descendants
+	return(CallJs((DOMGETTEXT, item))[0])
+}
+func:SetText(item, value){
+	//Set the text contents of the matched elements.
+	CallJs((DOMSETTEXT, item, value))
+}
+func:GetVal(item){
+	//Get the current value of the first element in the set of matched elements 
+	return(CallJs((DOMVAL, item))[0])
+}
+func:GetProp(item, value){
+	//Get the value of a property for the first element in the set of matched elements.
+	return(CallJs((DOMPROP, item, value))[0])
+}
+func:GetHtml(item){
+	//Get the HTML contents of the first element in the set of matched elements
+	return(CallJs((DOMHTML, item))[0])
+}
+func:GetCss(item, key){
+	//Get the value of a computed style property for the first element in the set of matched elements.
+	return(CallJs((DOMGETCSS, item, key))[0])
+}
+func:SetCss(item, key, value){
+	//Set one or more CSS properties for every matched element.
+	CallJs((DOMSETCSS, item, key, value))
+}
+func:GetClassList(item){
+	cls = GetAttribute(item, "class")
+	if(sizeof(cls)){
+		if( " " <> cls){
+			cls = split(cls, find(cls, " "))
+			c = for(0, size(cls), 1){
+				if(" " <> cls[c]){
+					cls[c] = freplace(cls[c], " ", null())}}}}
+	if(!ismap(cls)){cls = map(1, cls)}
+	return(cls)}
+
+func:SetStatus(item, key, state){
+	if(state){SetAttribute(item, key, key)}
+	else{RemoveAttribute(item, key)}
+}
+
+func:TriggeringReflow(item){
+	//Forces layout / reflow
+	CallJs((TRIGGERINGREFLOW, item))
+}
+
+
+

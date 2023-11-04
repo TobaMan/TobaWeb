@@ -1,0 +1,1653 @@
+
+enum:eOPTIONCLS{gOPTCls; gOPTCounter; CursorCls; OpacityCls; BoxShadowCls}
+
+
+gOPTCls = map(256, 0)
+gOPTCounter = 0
+
+func:OptCls(opt){
+	gOPTCls[gOPTCounter] = opt
+	gOPTCounter = gOPTCounter + 1
+	return(opt)
+}
+
+func:OptGet(){
+	list = slice(gOPTCls,0,gOPTCounter)
+	gOPTCls = map(256, 0)
+	gOPTCounter = 0
+	return(list)
+}
+
+
+
+obj:cBorderRadius(){
+	self.NONE				=	"rounded-none"        // border-radius: 0px;
+	self.SMALL				=	"rounded-sm"          // border-radius: 0.125rem;  2px 
+	self.ROUNDED			=	"rounded"             // border-radius: 0.25rem;  4px 	
+	self.MIDDLE				=	"rounded-md"          // border-radius: 0.375rem;  6px 
+	self.LARGE				=	"rounded-lg"          // border-radius: 0.5rem;  8px 
+	self.XL					=	"rounded-xl"          // border-radius: 0.75rem;  12px 
+	self.XXL				=	"rounded-2xl"         // border-radius: 1rem;  16px 	
+	self.XXXL				=	"rounded-3xl"         // border-radius: 1.5rem;  24px 	
+	self.FULL				=	"rounded-full"        // border-radius: 9999px;
+	self.START_NONE			=	"rounded-s-none"      // border-start-start-radius: 0px; border-end-start-radius: 0px;
+	self.START_SMALL		=	"rounded-s-sm"        // border-start-start-radius: 0.125rem;  2px  border-end-start-radius: 0.125rem;  2px 
+	self.START				=	"rounded-s"           // border-start-start-radius: 0.25rem;  4px  border-end-start-radius: 0.25rem;  4px 
+	self.START_MIDDLE		=	"rounded-s-md"        // border-start-start-radius: 0.375rem;  6px border-end-start-radius: 0.375rem;  6px 
+	self.START_LARGE		=	"rounded-s-lg"        // border-start-start-radius: 0.5rem;  8px  border-end-start-radius: 0.5rem;  8px 
+	self.START_XL			=	"rounded-s-xl"        // border-start-start-radius: 0.75rem;  12px border-end-start-radius: 0.75rem;  12px 
+	self.START_XXL			=	"rounded-s-2xl"       // border-start-start-radius: 1rem;  16px  border-end-start-radius: 1rem;  16px 
+	self.START_XXXL			=	"rounded-s-3xl"       // border-start-start-radius: 1.5rem;  24px  border-end-start-radius: 1.5rem;  24px 
+	self.START_FULL			=	"rounded-s-full"      // border-start-start-radius: 9999px; border-end-start-radius: 9999px;
+	self.END_NONE			=	"rounded-e-none"      // border-start-end-radius: 0px; border-end-end-radius: 0px;
+	self.END_SMALL			=	"rounded-e-sm"        // border-start-end-radius: 0.125rem;  2px  border-end-end-radius: 0.125rem;  2px 
+	self.END				=	"rounded-e"           // border-start-end-radius: 0.25rem;  4px border-end-end-radius: 0.25rem;  4px 
+	self.END_MIDDLE			=	"rounded-e-md"        // border-start-end-radius: 0.375rem;  6px border-end-end-radius: 0.375rem;  6px 
+	self.END_LARGE			=	"rounded-e-lg"        // border-start-end-radius: 0.5rem;  8px border-end-end-radius: 0.5rem;  8px 
+	self.END_XL				=	"rounded-e-xl"        // border-start-end-radius: 0.75rem;  12px border-end-end-radius: 0.75rem;  12px 
+	self.END_XXL			=	"rounded-e-2xl"       // border-start-end-radius: 1rem;  16px border-end-end-radius: 1rem;  16px 
+	self.END_XXXL			=	"rounded-e-3xl"       // border-start-end-radius: 1.5rem;  24px border-end-end-radius: 1.5rem;  24px 
+	self.END_FULL			=	"rounded-e-full"      // border-start-end-radius: 9999px;border-end-end-radius: 9999px;
+	self.TOP_NONE			=	"rounded-t-none"      // border-top-left-radius: 0px;border-top-right-radius: 0px;
+	self.TOP_SMALL			=	"rounded-t-sm"        // border-top-left-radius: 0.125rem;  2px border-top-right-radius: 0.125rem;  2px 
+	self.TOP				=	"rounded-t"           // border-top-left-radius: 0.25rem;  4px border-top-right-radius: 0.25rem;  4px 
+	self.TOP_MIDDLE			=	"rounded-t-md"        // border-top-left-radius: 0.375rem;  6px border-top-right-radius: 0.375rem;  6px 
+	self.TOP_LARGE			=	"rounded-t-lg"        // border-top-left-radius: 0.5rem;  8px border-top-right-radius: 0.5rem;  8px 
+	self.TOP_XL				=	"rounded-t-xl"        // border-top-left-radius: 0.75rem;  12px border-top-right-radius: 0.75rem;  12px 
+	self.TOP_XXL			=	"rounded-t-2xl"       // border-top-left-radius: 1rem;  16px border-top-right-radius: 1rem;  16px 
+	self.TOP_XXXL			=	"rounded-t-3xl"       // border-top-left-radius: 1.5rem;  24px border-top-right-radius: 1.5rem;  24px 
+	self.TOP_FULL			=	"rounded-t-full"      // border-top-left-radius: 9999px;border-top-right-radius: 9999px;
+	self.RIGHT_NONE			=	"rounded-r-none"      // border-top-right-radius: 0px;border-bottom-right-radius: 0px;
+	self.RIGHT_SMALL		=	"rounded-r-sm"        // border-top-right-radius: 0.125rem;  2px border-bottom-right-radius: 0.125rem;  2px 
+	self.RIGHT				=	"rounded-r"           // border-top-right-radius: 0.25rem;  4px border-bottom-right-radius: 0.25rem;  4px 
+	self.RIGHT_MIDDLE		=	"rounded-r-md"        // border-top-right-radius: 0.375rem;  6px border-bottom-right-radius: 0.375rem;  6px 
+	self.RIGHT_LARGE		=	"rounded-r-lg"        // border-top-right-radius: 0.5rem;  8px border-bottom-right-radius: 0.5rem;  8px 
+	self.RIGHT_XL			=	"rounded-r-xl"        // border-top-right-radius: 0.75rem;  12px border-bottom-right-radius: 0.75rem;  12px 
+	self.RIGHT_XXL			=	"rounded-r-2xl"       // border-top-right-radius: 1rem;  16px border-bottom-right-radius: 1rem;  16px 
+	self.RIGHT_XXXL			=	"rounded-r-3xl"       // border-top-right-radius: 1.5rem;  24px border-bottom-right-radius: 1.5rem;  24px 
+	self.RIGHT_FULL			=	"rounded-r-full"      // border-top-right-radius: 9999px;border-bottom-right-radius: 9999px;
+	self.BOTTOM_NONE		=	"rounded-b-none"      // border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;
+	self.BOTTOM_SMALL		=	"rounded-b-sm"        // border-bottom-right-radius: 0.125rem;  2px border-bottom-left-radius: 0.125rem;  2px 
+	self.BOTTOM				=	"rounded-b"           // border-bottom-right-radius: 0.25rem;  4px border-bottom-left-radius: 0.25rem;  4px 
+	self.BOTTOM_MIDDLE		=	"rounded-b-md"        // border-bottom-right-radius: 0.375rem;  6px border-bottom-left-radius: 0.375rem;  6px 
+	self.BOTTOM_LARGE		=	"rounded-b-lg"        // border-bottom-right-radius: 0.5rem;  8px border-bottom-left-radius: 0.5rem;  8px 
+	self.BOTTOM_XL			=	"rounded-b-xl"        // border-bottom-right-radius: 0.75rem;  12px border-bottom-left-radius: 0.75rem;  12px 
+	self.BOTTOM_XXL			=	"rounded-b-2xl"       // border-bottom-right-radius: 1rem;  16px border-bottom-left-radius: 1rem;  16px 
+	self.BOTTOM_XXXL		=	"rounded-b-3xl"       // border-bottom-right-radius: 1.5rem;  24px border-bottom-left-radius: 1.5rem;  24px 
+	self.BOTTOM_FULL		=	"rounded-b-full"      // border-bottom-right-radius: 9999px;border-bottom-left-radius: 9999px;
+	self.LEFT_NONE			=	"rounded-l-none"      // border-top-left-radius: 0px;border-bottom-left-radius: 0px;
+	self.LEFT_SMALL			=	"rounded-l-sm"        // border-top-left-radius: 0.125rem;  2px border-bottom-left-radius: 0.125rem;  2px 
+	self.LEFT				=	"rounded-l"           // border-top-left-radius: 0.25rem;  4px border-bottom-left-radius: 0.25rem;  4px 
+	self.LEFT_MIDDLE		=	"rounded-l-md"        // border-top-left-radius: 0.375rem;  6px border-bottom-left-radius: 0.375rem;  6px 
+	self.LEFT_LARGE			=	"rounded-l-lg"        // border-top-left-radius: 0.5rem;  8px border-bottom-left-radius: 0.5rem;  8px 
+	self.LEFT_XL			=	"rounded-l-xl"        // border-top-left-radius: 0.75rem;  12px border-bottom-left-radius: 0.75rem;  12px 
+	self.LEFT_XXL			=	"rounded-l-2xl"       // border-top-left-radius: 1rem;  16px border-bottom-left-radius: 1rem;  16px 
+	self.LEFT_XXXL			=	"rounded-l-3xl"       // border-top-left-radius: 1.5rem;  24px border-bottom-left-radius: 1.5rem;  24px 
+	self.LEFT_FULL			=	"rounded-l-full"      // border-top-left-radius: 9999px;border-bottom-left-radius: 9999px;
+	self.SSTART_NONE		=	"rounded-ss-none"     // border-start-start-radius: 0px;	
+	self.SSTART_SMALL		=	"rounded-ss-sm"       // border-start-start-radius: 0.125rem;  2px 
+	self.SSTART				=	"rounded-ss"          // border-start-start-radius: 0.25rem;  4px 
+	self.SSTART_MIDDLE		=	"rounded-ss-md"       // border-start-start-radius: 0.375rem;  6px 
+	self.SSTART_LARGE		=	"rounded-ss-lg"       // border-start-start-radius: 0.5rem;  8px 
+	self.SSTART_XL			=	"rounded-ss-xl"       // border-start-start-radius: 0.75rem;  12px 
+	self.SSTART_XXL			=	"rounded-ss-2xl"      // border-start-start-radius: 1rem;  16px 
+	self.SSTART_XXXL		=	"rounded-ss-3xl"      // border-start-start-radius: 1.5rem;  24px 
+	self.SSTART_FULL		=	"rounded-ss-full"     // border-start-start-radius: 9999px;	
+	self.SEND_NONE			=	"rounded-se-none"     // border-start-end-radius: 0px;	
+	self.SEND_SMALL			=	"rounded-se-sm"       // border-start-end-radius: 0.125rem;  2px 
+	self.SEND				=	"rounded-se"          // border-start-end-radius: 0.25rem;  4px 
+	self.SEND_MIDDLE		=	"rounded-se-md"       // border-start-end-radius: 0.375rem;  6px 
+	self.SEND_LARGE			=	"rounded-se-lg"       // border-start-end-radius: 0.5rem;  8px 
+	self.SEND_XL			=	"rounded-se-xl"       // border-start-end-radius: 0.75rem;  12px 
+	self.SEND_XXL			=	"rounded-se-2xl"      // border-start-end-radius: 1rem;  16px 
+	self.SEND_XXXL			=	"rounded-se-3xl"      // border-start-end-radius: 1.5rem;  24px 
+	self.SEND_FULL			=	"rounded-se-full"     // border-start-end-radius: 9999px;	
+	self.EEND_NONE			=	"rounded-ee-none"     // border-end-end-radius: 0px;	
+	self.EEND_SMALL			=	"rounded-ee-sm"       // border-end-end-radius: 0.125rem;  2px 
+	self.EEND				=	"rounded-ee"          // border-end-end-radius: 0.25rem;  4px 
+	self.EEND_MIDDLE		=	"rounded-ee-md"       // border-end-end-radius: 0.375rem;  6px 
+	self.EEND_LARGE			=	"rounded-ee-lg"       // border-end-end-radius: 0.5rem;  8px 
+	self.EEND_XL			=	"rounded-ee-xl"       // border-end-end-radius: 0.75rem;  12px 
+	self.EEND_XXL			=	"rounded-ee-2xl"      // border-end-end-radius: 1rem;  16px 
+	self.EEND_XXXL			=	"rounded-ee-3xl"      // border-end-end-radius: 1.5rem;  24px 
+	self.EEND_FULL			=	"rounded-ee-full"     // border-end-end-radius: 9999px;	
+	self.ESTART_NONE		=	"rounded-es-none"     // border-end-start-radius: 0px;	
+	self.ESTART_SMALL		=	"rounded-es-sm"       // border-end-start-radius: 0.125rem;  2px 
+	self.ESTART				=	"rounded-es"          // border-end-start-radius: 0.25rem;  4px 
+	self.ESTART_MIDDLE		=	"rounded-es-md"       // border-end-start-radius: 0.375rem;  6px 
+	self.ESTART_LARGE		=	"rounded-es-lg"       // border-end-start-radius: 0.5rem;  8px 
+	self.ESTART_XL			=	"rounded-es-xl"       // border-end-start-radius: 0.75rem;  12px 
+	self.ESTART_XXL			=	"rounded-es-2xl"      // border-end-start-radius: 1rem;  16px 
+	self.ESTART_XXXL		=	"rounded-es-3xl"      // border-end-start-radius: 1.5rem;  24px 
+	self.ESTART_FULL		=	"rounded-es-full"     // border-end-start-radius: 9999px;	
+	self.TLEFT_NONE			=	"rounded-tl-none"     // border-top-left-radius: 0px;	
+	self.TLEFT_SMALL		=	"rounded-tl-sm"       // border-top-left-radius: 0.125rem;  2px 
+	self.TL					=	"rounded-tl"          // border-top-left-radius: 0.25rem;  4px 
+	self.TLEFT_MIDDLE		=	"rounded-tl-md"       // border-top-left-radius: 0.375rem;  6px 
+	self.TLEFT_LARGE		=	"rounded-tl-lg"       // border-top-left-radius: 0.5rem;  8px 
+	self.TLEFT_XL			=	"rounded-tl-xl"       // border-top-left-radius: 0.75rem;  12px 
+	self.TLEFT_XXL			=	"rounded-tl-2xl"      // border-top-left-radius: 1rem;  16px 
+	self.TLEFT_XXXL			=	"rounded-tl-3xl"      // border-top-left-radius: 1.5rem;  24px 
+	self.TLEFT_FULL			=	"rounded-tl-full"     // border-top-left-radius: 9999px;	
+	self.TRIGHT_NONE		=	"rounded-tr-none"     // border-top-right-radius: 0px;	
+	self.TRIGHT_SMALL		=	"rounded-tr-sm"       // border-top-right-radius: 0.125rem;  2px 
+	self.TRIGHT				=	"rounded-tr"          // border-top-right-radius: 0.25rem;  4px 
+	self.TRIGHT_MIDDLE		=	"rounded-tr-md"       // border-top-right-radius: 0.375rem;  6px 
+	self.TRIGHT_LARGE		=	"rounded-tr-lg"       // border-top-right-radius: 0.5rem;  8px 
+	self.TRIGHT_XL			=	"rounded-tr-xl"       // border-top-right-radius: 0.75rem;  12px 
+	self.TRIGHT_XXL			=	"rounded-tr-2xl"      // border-top-right-radius: 1rem;  16px 
+	self.TRIGHT_XXXL		=	"rounded-tr-3xl"      // border-top-right-radius: 1.5rem;  24px 
+	self.TRIGHT_FULL		=	"rounded-tr-full"     // border-top-right-radius: 9999px;	
+	self.BRIGHT_NONE		=	"rounded-br-none"     // border-bottom-right-radius: 0px;	
+	self.BRIGHT_SMALL		=	"rounded-br-sm"       // border-bottom-right-radius: 0.125rem;  2px 
+	self.BRIGHT				=	"rounded-br"          // border-bottom-right-radius: 0.25rem;  4px 
+	self.BRIGHT_MIDDLE		=	"rounded-br-md"       // border-bottom-right-radius: 0.375rem;  6px 
+	self.BRIGHT_LARGE		=	"rounded-br-lg"       // border-bottom-right-radius: 0.5rem;  8px 
+	self.BRIGHT_XL			=	"rounded-br-xl"       // border-bottom-right-radius: 0.75rem;  12px 
+	self.BRIGHT_XXL			=	"rounded-br-2xl"      // border-bottom-right-radius: 1rem;  16px 
+	self.BRIGHT_XXXL		=	"rounded-br-3xl"      // border-bottom-right-radius: 1.5rem;  24px 
+	self.BRIGHT_FULL		=	"rounded-br-full"     // border-bottom-right-radius: 9999px;	
+	self.BLEFT_NONE			=	"rounded-bl-none"     // border-bottom-left-radius: 0px;	
+	self.BLEFT_SMALL		=	"rounded-bl-sm"       // border-bottom-left-radius: 0.125rem;  2px 
+	self.BLEFT				=	"rounded-bl"          // border-bottom-left-radius: 0.25rem;  4px 
+	self.BLEFT_MIDDLE		=	"rounded-bl-md"       // border-bottom-left-radius: 0.375rem;  6px 
+	self.BLEFT_LARGE		=	"rounded-bl-lg"       // border-bottom-left-radius: 0.5rem;  8px 
+	self.BLEFT_XL			=	"rounded-bl-xl"       // border-bottom-left-radius: 0.75rem;  12px 
+	self.BLEFT_XXL			=	"rounded-bl-2xl"      // border-bottom-left-radius: 1rem;  16px 
+	self.BLEFT_XXXL			=	"rounded-bl-3xl"      // border-bottom-left-radius: 1.5rem;  24px 
+	self.BLEFT_FULL			=	"rounded-bl-full"     // border-bottom-left-radius: 9999px;	
+}
+
+obj:cBorderStyle(){
+	self.SOLID		=	"border-solid"	//border-style: solid;
+	self.DASHED		=	"border-dashed"	//border-style: dashed;
+	self.DOTTED		=	"border-dotted"	//border-style: dotted;
+	self.DOUBLE		=	"border-double"	//border-style: double;
+	self.HIDDEN		=	"border-hidden"	//border-style: hidden;
+	self.NONE		=	"border-none"	//border-style: none;
+}
+
+obj:cBorderWidth(){
+	self.NONE          = "border-0"        //border-width: 0px;
+	self.ALL_2         = "border-2"        //border-width: 2px;
+	self.ALL_4         = "border-4"        //border-width: 4px;
+	self.ALL_8         = "border-8"        //border-width: 8px;border	border-width: 1px;
+	self.VERTICAL_0    = "border-x-0"      //border-left-width: 0px;border-right-width: 0px;
+	self.VERTICAL_2    = "border-x-2"      //border-left-width: 2px;border-right-width: 2px;
+	self.VERTICAL_4    = "border-x-4"      //border-left-width: 4px;border-right-width: 4px;
+	self.VERTICAL_8    = "border-x-8"      //border-left-width: 8px;border-right-width: 8px;
+	self.VERTICAL      = "border-x"        //border-left-width: 1px;border-right-width: 1px;
+	self.HORIZONTAL_0  = "border-y-0"      //border-top-width: 0px;border-bottom-width: 0px;
+	self.HORIZONTAL_2  = "border-y-2"      //border-top-width: 2px;border-bottom-width: 2px;
+	self.HORIZONTAL_4  = "border-y-4"      //border-top-width: 4px;border-bottom-width: 4px;
+	self.HORIZONTAL_8  = "border-y-8"      //border-top-width: 8px;border-bottom-width: 8px;
+	self.HORIZONTAL    = "border-y"        //border-top-width: 1px;border-bottom-width: 1px;
+	self.START_0       = "border-s-0"      //border-inline-start-width: 0px;
+	self.START_2       = "border-s-2"      //border-inline-start-width: 2px;
+	self.START_4       = "border-s-4"      //border-inline-start-width: 4px;
+	self.START_8       = "border-s-8"      //border-inline-start-width: 8px;
+	self.START         = "border-s"        //border-inline-start-width: 1px;
+	self.END_0         = "border-e-0"      //border-inline-end-width: 0px;
+	self.END_2         = "border-e-2"      //border-inline-end-width: 2px;
+	self.END_4         = "border-e-4"      //border-inline-end-width: 4px;
+	self.END_8         = "border-e-8"      //border-inline-end-width: 8px;
+	self.END           = "border-e"        //border-inline-end-width: 1px;
+	self.TOP_0         = "border-t-0"      //border-top-width: 0px;
+	self.TOP_2         = "border-t-2"      //border-top-width: 2px;
+	self.TOP_4         = "border-t-4"      //border-top-width: 4px;
+	self.TOP_8         = "border-t-8"      //border-top-width: 8px;
+	self.TOP           = "border-t"        //border-top-width: 1px;
+	self.RIGHT_0       = "border-r-0"      //border-right-width: 0px;
+	self.RIGHT_2       = "border-r-2"      //border-right-width: 2px;
+	self.RIGHT_4       = "border-r-4"      //border-right-width: 4px;
+	self.RIGHT_8       = "border-r-8"      //border-right-width: 8px;
+	self.RIGHT         = "border-r"        //border-right-width: 1px;
+	self.BOTTOM_0      = "border-b-0"      //border-bottom-width: 0px;
+	self.BOTTOM_2      = "border-b-2"      //border-bottom-width: 2px;
+	self.BOTTOM_4      = "border-b-4"      //border-bottom-width: 4px;
+	self.BOTTOM_8      = "border-b-8"      //border-bottom-width: 8px;
+	self.BOTTOM        = "border-b"        //border-bottom-width: 1px;
+	self.LEFT_0        = "border-l-0"      //border-left-width: 0px;
+	self.LEFT_2        = "border-l-2"      //border-left-width: 2px;
+	self.LEFT_4        = "border-l-4"      //border-left-width: 4px;
+	self.LEFT_8        = "border-l-8"      //border-left-width: 8px;
+	self.LEFT          = "border-l"        //border-left-width: 1px;
+}
+
+
+obj:cColor(){
+	self.INHERIT       = "inherit"		// color: inherit;
+	self.CURRENT       = "current"		// color: currentColor;
+	self.TRANSPARENT   = "transparent"	// color: transparent;
+	self.BLACK         = "black"		// color: rgb(0 0 0);
+	self.WHITE         = "white"		// color: rgb(255 255 255);
+	self.SLATE_50      = "slate-50"		// color: rgb(248 250 252);
+	self.SLATE_100     = "slate-100"	// color: rgb(241 245 249);
+	self.SLATE_200     = "slate-200"	// color: rgb(226 232 240);
+	self.SLATE_300     = "slate-300"	// color: rgb(203 213 225);
+	self.SLATE_400     = "slate-400"	// color: rgb(148 163 184);
+	self.SLATE_500     = "slate-500"	// color: rgb(100 116 139);
+	self.SLATE_600     = "slate-600"	// color: rgb(71 85 105);
+	self.SLATE_700     = "slate-700"	// color: rgb(51 65 85);
+	self.SLATE_800     = "slate-800"	// color: rgb(30 41 59);
+	self.SLATE_900     = "slate-900"	// color: rgb(15 23 42);
+	self.SLATE_950     = "slate-950"	// color: rgb(2 6 23);
+	self.GRAY_50       = "gray-50"		// color: rgb(249 250 251);
+	self.GRAY_100      = "gray-100"		// color: rgb(243 244 246);
+	self.GRAY_200      = "gray-200"		// color: rgb(229 231 235);
+	self.GRAY_300      = "gray-300"		// color: rgb(209 213 219);
+	self.GRAY_400      = "gray-400"		// color: rgb(156 163 175);
+	self.GRAY_500      = "gray-500"		// color: rgb(107 114 128);
+	self.GRAY_600      = "gray-600"		// color: rgb(75 85 99);
+	self.GRAY_700      = "gray-700"		// color: rgb(55 65 81);
+	self.GRAY_800      = "gray-800"		// color: rgb(31 41 55);
+	self.GRAY_900      = "gray-900"		// color: rgb(17 24 39);
+	self.GRAY_950      = "gray-950"		// color: rgb(3 7 18);
+	self.ZINC_50       = "zinc-50"		// color: rgb(250 250 250);
+	self.ZINC_100      = "zinc-100"		// color: rgb(244 244 245);
+	self.ZINC_200      = "zinc-200"		// color: rgb(228 228 231);
+	self.ZINC_300      = "zinc-300"		// color: rgb(212 212 216);
+	self.ZINC_400      = "zinc-400"		// color: rgb(161 161 170);
+	self.ZINC_500      = "zinc-500"		// color: rgb(113 113 122);
+	self.ZINC_600      = "zinc-600"		// color: rgb(82 82 91);
+	self.ZINC_700      = "zinc-700"		// color: rgb(63 63 70);
+	self.ZINC_800      = "zinc-800"		// color: rgb(39 39 42);
+	self.ZINC_900      = "zinc-900"		// color: rgb(24 24 27);
+	self.ZINC_950      = "zinc-950"		// color: rgb(9 9 11);
+	self.NEUTRAL_50    = "neutral-50"	// color: rgb(250 250 250);
+	self.NEUTRAL_100   = "neutral-100"	// color: rgb(245 245 245);
+	self.NEUTRAL_200   = "neutral-200"	// color: rgb(229 229 229);
+	self.NEUTRAL_300   = "neutral-300"	// color: rgb(212 212 212);
+	self.NEUTRAL_400   = "neutral-400"	// color: rgb(163 163 163);
+	self.NEUTRAL_500   = "neutral-500"	// color: rgb(115 115 115);
+	self.NEUTRAL_600   = "neutral-600"	// color: rgb(82 82 82);
+	self.NEUTRAL_700   = "neutral-700"	// color: rgb(64 64 64);
+	self.NEUTRAL_800   = "neutral-800"	// color: rgb(38 38 38);
+	self.NEUTRAL_900   = "neutral-900"	// color: rgb(23 23 23);
+	self.NEUTRAL_950   = "neutral-950"	// color: rgb(10 10 10);
+	self.STONE_50      = "stone-50"		// color: rgb(250 250 249);
+	self.STONE_100     = "stone-100"	// color: rgb(245 245 244);
+	self.STONE_200     = "stone-200"	// color: rgb(231 229 228);
+	self.STONE_300     = "stone-300"	// color: rgb(214 211 209);
+	self.STONE_400     = "stone-400"	// color: rgb(168 162 158);
+	self.STONE_500     = "stone-500"	// color: rgb(120 113 108);
+	self.STONE_600     = "stone-600"	// color: rgb(87 83 78);
+	self.STONE_700     = "stone-700"	// color: rgb(68 64 60);
+	self.STONE_800     = "stone-800"	// color: rgb(41 37 36);
+	self.STONE_900     = "stone-900"	// color: rgb(28 25 23);
+	self.STONE_950     = "stone-950"	// color: rgb(12 10 9);
+	self.RED_50        = "red-50"		// color: rgb(254 242 242);
+	self.RED_100       = "red-100"		// color: rgb(254 226 226);
+	self.RED_200       = "red-200"		// color: rgb(254 202 202);
+	self.RED_300       = "red-300"		// color: rgb(252 165 165);
+	self.RED_400       = "red-400"		// color: rgb(248 113 113);
+	self.RED_500       = "red-500"		// color: rgb(239 68 68);
+	self.RED_600       = "red-600"		// color: rgb(220 38 38);
+	self.RED_700       = "red-700"		// color: rgb(185 28 28);
+	self.RED_800       = "red-800"		// color: rgb(153 27 27);
+	self.RED_900       = "red-900"		// color: rgb(127 29 29);
+	self.RED_950       = "red-950"		// color: rgb(69 10 10);
+	self.ORANGE_50     = "orange-50"	// color: rgb(255 247 237);
+	self.ORANGE_100    = "orange-100"	// color: rgb(255 237 213);
+	self.ORANGE_200    = "orange-200"	// color: rgb(254 215 170);
+	self.ORANGE_300    = "orange-300"	// color: rgb(253 186 116);
+	self.ORANGE_400    = "orange-400"	// color: rgb(251 146 60);
+	self.ORANGE_500    = "orange-500"	// color: rgb(249 115 22);
+	self.ORANGE_600    = "orange-600"	// color: rgb(234 88 12);
+	self.ORANGE_700    = "orange-700"	// color: rgb(194 65 12);
+	self.ORANGE_800    = "orange-800"	// color: rgb(154 52 18);
+	self.ORANGE_900    = "orange-900"	// color: rgb(124 45 18);
+	self.ORANGE_950    = "orange-950"	// color: rgb(67 20 7);
+	self.AMBER_50      = "amber-50"		// color: rgb(255 251 235);
+	self.AMBER_100     = "amber-100"	// color: rgb(254 243 199);
+	self.AMBER_200     = "amber-200"	// color: rgb(253 230 138);
+	self.AMBER_300     = "amber-300"	// color: rgb(252 211 77);
+	self.AMBER_400     = "amber-400"	// color: rgb(251 191 36);
+	self.AMBER_500     = "amber-500"	// color: rgb(245 158 11);
+	self.AMBER_600     = "amber-600"	// color: rgb(217 119 6);
+	self.AMBER_700     = "amber-700"	// color: rgb(180 83 9);
+	self.AMBER_800     = "amber-800"	// color: rgb(146 64 14);
+	self.AMBER_900     = "amber-900"	// color: rgb(120 53 15);
+	self.AMBER_950     = "amber-950"	// color: rgb(69 26 3);
+	self.YELLOW_50     = "yellow-50"	// color: rgb(254 252 232);
+	self.YELLOW_100    = "yellow-100"	// color: rgb(254 249 195);
+	self.YELLOW_200    = "yellow-200"	// color: rgb(254 240 138);
+	self.YELLOW_300    = "yellow-300"	// color: rgb(253 224 71);
+	self.YELLOW_400    = "yellow-400"	// color: rgb(250 204 21);
+	self.YELLOW_500    = "yellow-500"	// color: rgb(234 179 8);
+	self.YELLOW_600    = "yellow-600"	// color: rgb(202 138 4);
+	self.YELLOW_700    = "yellow-700"	// color: rgb(161 98 7);
+	self.YELLOW_800    = "yellow-800"	// color: rgb(133 77 14);
+	self.YELLOW_900    = "yellow-900"	// color: rgb(113 63 18);
+	self.YELLOW_950    = "yellow-950"	// color: rgb(66 32 6);
+	self.LIME_50       = "lime-50"		// color: rgb(247 254 231);
+	self.LIME_100      = "lime-100"		// color: rgb(236 252 203);
+	self.LIME_200      = "lime-200"		// color: rgb(217 249 157);
+	self.LIME_300      = "lime-300"		// color: rgb(190 242 100);
+	self.LIME_400      = "lime-400"		// color: rgb(163 230 53);
+	self.LIME_500      = "lime-500"		// color: rgb(132 204 22);
+	self.LIME_600      = "lime-600"		// color: rgb(101 163 13);
+	self.LIME_700      = "lime-700"		// color: rgb(77 124 15);
+	self.LIME_800      = "lime-800"		// color: rgb(63 98 18);
+	self.LIME_900      = "lime-900"		// color: rgb(54 83 20);
+	self.LIME_950      = "lime-950"		// color: rgb(26 46 5);
+	self.GREEN_50      = "green-50"		// color: rgb(240 253 244);
+	self.GREEN_100     = "green-100"	// color: rgb(220 252 231);
+	self.GREEN_200     = "green-200"	// color: rgb(187 247 208);
+	self.GREEN_300     = "green-300"	// color: rgb(134 239 172);
+	self.GREEN_400     = "green-400"	// color: rgb(74 222 128);
+	self.GREEN_500     = "green-500"	// color: rgb(34 197 94);
+	self.GREEN_600     = "green-600"	// color: rgb(22 163 74);
+	self.GREEN_700     = "green-700"	// color: rgb(21 128 61);
+	self.GREEN_800     = "green-800"	// color: rgb(22 101 52);
+	self.GREEN_900     = "green-900"	// color: rgb(20 83 45);
+	self.GREEN_950     = "green-950"	// color: rgb(5 46 22);
+	self.EMERALD_50    = "emerald-50"	// color: rgb(236 253 245);
+	self.EMERALD_100   = "emerald-100"	// color: rgb(209 250 229);
+	self.EMERALD_200   = "emerald-200"	// color: rgb(167 243 208);
+	self.EMERALD_300   = "emerald-300"	// color: rgb(110 231 183);
+	self.EMERALD_400   = "emerald-400"	// color: rgb(52 211 153);
+	self.EMERALD_500   = "emerald-500"	// color: rgb(16 185 129);
+	self.EMERALD_600   = "emerald-600"	// color: rgb(5 150 105);
+	self.EMERALD_700   = "emerald-700"	// color: rgb(4 120 87);
+	self.EMERALD_800   = "emerald-800"	// color: rgb(6 95 70);
+	self.EMERALD_900   = "emerald-900"	// color: rgb(6 78 59);
+	self.EMERALD_950   = "emerald-950"	// color: rgb(2 44 34);
+	self.TEAL_50       = "teal-50"		// color: rgb(240 253 250);
+	self.TEAL_100      = "teal-100"		// color: rgb(204 251 241);
+	self.TEAL_200      = "teal-200"		// color: rgb(153 246 228);
+	self.TEAL_300      = "teal-300"		// color: rgb(94 234 212);
+	self.TEAL_400      = "teal-400"		// color: rgb(45 212 191);
+	self.TEAL_500      = "teal-500"		// color: rgb(20 184 166);
+	self.TEAL_600      = "teal-600"		// color: rgb(13 148 136);
+	self.TEAL_700      = "teal-700"		// color: rgb(15 118 110);
+	self.TEAL_800      = "teal-800"		// color: rgb(17 94 89);
+	self.TEAL_900      = "teal-900"		// color: rgb(19 78 74);
+	self.TEAL_950      = "teal-950"		// color: rgb(4 47 46);
+	self.CYAN_50       = "cyan-50"		// color: rgb(236 254 255);
+	self.CYAN_100      = "cyan-100"		// color: rgb(207 250 254);
+	self.CYAN_200      = "cyan-200"		// color: rgb(165 243 252);
+	self.CYAN_300      = "cyan-300"		// color: rgb(103 232 249);
+	self.CYAN_400      = "cyan-400"		// color: rgb(34 211 238);
+	self.CYAN_500      = "cyan-500"		// color: rgb(6 182 212);
+	self.CYAN_600      = "cyan-600"		// color: rgb(8 145 178);
+	self.CYAN_700      = "cyan-700"		// color: rgb(14 116 144);
+	self.CYAN_800      = "cyan-800"		// color: rgb(21 94 117);
+	self.CYAN_900      = "cyan-900"		// color: rgb(22 78 99);
+	self.CYAN_950      = "cyan-950"		// color: rgb(8 51 68);
+	self.SKY_50        = "sky-50"		// color: rgb(240 249 255);
+	self.SKY_100       = "sky-100"		// color: rgb(224 242 254);
+	self.SKY_200       = "sky-200"		// color: rgb(186 230 253);
+	self.SKY_300       = "sky-300"		// color: rgb(125 211 252);
+	self.SKY_400       = "sky-400"		// color: rgb(56 189 248);
+	self.SKY_500       = "sky-500"		// color: rgb(14 165 233);
+	self.SKY_600       = "sky-600"		// color: rgb(2 132 199);
+	self.SKY_700       = "sky-700"		// color: rgb(3 105 161);
+	self.SKY_800       = "sky-800"		// color: rgb(7 89 133);
+	self.SKY_900       = "sky-900"		// color: rgb(12 74 110);
+	self.SKY_950       = "sky-950"		// color: rgb(8 47 73);
+	self.BLUE_50       = "blue-50"		// color: rgb(239 246 255);
+	self.BLUE_100      = "blue-100"		// color: rgb(219 234 254);
+	self.BLUE_200      = "blue-200"		// color: rgb(191 219 254);
+	self.BLUE_300      = "blue-300"		// color: rgb(147 197 253);
+	self.BLUE_400      = "blue-400"		// color: rgb(96 165 250);
+	self.BLUE_500      = "blue-500"		// color: rgb(59 130 246);
+	self.BLUE_600      = "blue-600"		// color: rgb(37 99 235);
+	self.BLUE_700      = "blue-700"		// color: rgb(29 78 216);
+	self.BLUE_800      = "blue-800"		// color: rgb(30 64 175);
+	self.BLUE_900      = "blue-900"		// color: rgb(30 58 138);
+	self.BLUE_950      = "blue-950"		// color: rgb(23 37 84);
+	self.INDIGO_50     = "indigo-50"	// color: rgb(238 242 255);
+	self.INDIGO_100    = "indigo-100"	// color: rgb(224 231 255);
+	self.INDIGO_200    = "indigo-200"	// color: rgb(199 210 254);
+	self.INDIGO_300    = "indigo-300"	// color: rgb(165 180 252);
+	self.INDIGO_400    = "indigo-400"	// color: rgb(129 140 248);
+	self.INDIGO_500    = "indigo-500"	// color: rgb(99 102 241);
+	self.INDIGO_600    = "indigo-600"	// color: rgb(79 70 229);
+	self.INDIGO_700    = "indigo-700"	// color: rgb(67 56 202);
+	self.INDIGO_800    = "indigo-800"	// color: rgb(55 48 163);
+	self.INDIGO_900    = "indigo-900"	// color: rgb(49 46 129);
+	self.INDIGO_950    = "indigo-950"	// color: rgb(30 27 75);
+	self.VIOLET_50     = "violet-50"	// color: rgb(245 243 255);
+	self.VIOLET_100    = "violet-100"	// color: rgb(237 233 254);
+	self.VIOLET_200    = "violet-200"	// color: rgb(221 214 254);
+	self.VIOLET_300    = "violet-300"	// color: rgb(196 181 253);
+	self.VIOLET_400    = "violet-400"	// color: rgb(167 139 250);
+	self.VIOLET_500    = "violet-500"	// color: rgb(139 92 246);
+	self.VIOLET_600    = "violet-600"	// color: rgb(124 58 237);
+	self.VIOLET_700    = "violet-700"	// color: rgb(109 40 217);
+	self.VIOLET_800    = "violet-800"	// color: rgb(91 33 182);
+	self.VIOLET_900    = "violet-900"	// color: rgb(76 29 149);
+	self.VIOLET_950    = "violet-950"	// color: rgb(46 16 101);
+	self.PURPLE_50     = "purple-50"	// color: rgb(250 245 255);
+	self.PURPLE_100    = "purple-100"	// color: rgb(243 232 255);
+	self.PURPLE_200    = "purple-200"	// color: rgb(233 213 255);
+	self.PURPLE_300    = "purple-300"	// color: rgb(216 180 254);
+	self.PURPLE_400    = "purple-400"	// color: rgb(192 132 252);
+	self.PURPLE_500    = "purple-500"	// color: rgb(168 85 247);
+	self.PURPLE_600    = "purple-600"	// color: rgb(147 51 234);
+	self.PURPLE_700    = "purple-700"	// color: rgb(126 34 206);
+	self.PURPLE_800    = "purple-800"	// color: rgb(107 33 168);
+	self.PURPLE_900    = "purple-900"	// color: rgb(88 28 135);
+	self.PURPLE_950    = "purple-950"	// color: rgb(59 7 100);
+	self.FUCHSIA_50    = "fuchsia-50"	// color: rgb(253 244 255);
+	self.FUCHSIA_100   = "fuchsia-100"	// color: rgb(250 232 255);
+	self.FUCHSIA_200   = "fuchsia-200"	// color: rgb(245 208 254);
+	self.FUCHSIA_300   = "fuchsia-300"	// color: rgb(240 171 252);
+	self.FUCHSIA_400   = "fuchsia-400"	// color: rgb(232 121 249);
+	self.FUCHSIA_500   = "fuchsia-500"	// color: rgb(217 70 239);
+	self.FUCHSIA_600   = "fuchsia-600"	// color: rgb(192 38 211);
+	self.FUCHSIA_700   = "fuchsia-700"	// color: rgb(162 28 175);
+	self.FUCHSIA_800   = "fuchsia-800"	// color: rgb(134 25 143);
+	self.FUCHSIA_900   = "fuchsia-900"	// color: rgb(112 26 117);
+	self.FUCHSIA_950   = "fuchsia-950"	// color: rgb(74 4 78);
+	self.PINK_50       = "pink-50"		// color: rgb(253 242 248);
+	self.PINK_100      = "pink-100"		// color: rgb(252 231 243);
+	self.PINK_200      = "pink-200"		// color: rgb(251 207 232);
+	self.PINK_300      = "pink-300"		// color: rgb(249 168 212);
+	self.PINK_400      = "pink-400"		// color: rgb(244 114 182);
+	self.PINK_500      = "pink-500"		// color: rgb(236 72 153);
+	self.PINK_600      = "pink-600"		// color: rgb(219 39 119);
+	self.PINK_700      = "pink-700"		// color: rgb(190 24 93);
+	self.PINK_800      = "pink-800"		// color: rgb(157 23 77);
+	self.PINK_900      = "pink-900"		// color: rgb(131 24 67);
+	self.PINK_950      = "pink-950"		// color: rgb(80 7 36);
+	self.ROSE_50       = "rose-50"		// color: rgb(255 241 242);
+	self.ROSE_100      = "rose-100"		// color: rgb(255 228 230);
+	self.ROSE_200      = "rose-200"		// color: rgb(254 205 211);
+	self.ROSE_300      = "rose-300"		// color: rgb(253 164 175);
+	self.ROSE_400      = "rose-400"		// color: rgb(251 113 133);
+	self.ROSE_500      = "rose-500"		// color: rgb(244 63 94);
+	self.ROSE_600      = "rose-600"		// color: rgb(225 29 72);
+	self.ROSE_700      = "rose-700"		// color: rgb(190 18 60);
+	self.ROSE_800      = "rose-800"		// color: rgb(159 18 57);
+	self.ROSE_900      = "rose-900"		// color: rgb(136 19 55);
+	self.ROSE_950      = "rose-950"		// color: rgb(76 5 25);
+}
+
+// // Setting the font size
+// // Control the font size of an element using the text-{size} utilities
+
+// obj:cTextSize(){
+// 	self.TEXT_XS 	= "text-xs" 	// 12px 
+// 	self.TEXT_SM 	= "text-sm"		// 14px 
+// 	self.TEXT_BASE 	= "text-base"	// 16px 
+// 	self.TEXT_LG 	= "text-lg"		// 18px 
+// 	self.TEXT_XL 	= "text-xl"		// 20px 
+// 	self.TEXT_2XL 	= "text-2xl"	// 24px 
+// 	self.TEXT_3XL 	= "text-3xl"	// 30px 
+// 	self.TEXT_4XL 	= "text-4xl"	// 36px 
+// 	self.TEXT_5XL 	= "text-5xl"	// 48px 
+// 	self.TEXT_6XL 	= "text-6xl"	// 60px 
+// 	self.TEXT_7XL 	= "text-7xl"	// 72px 
+// 	self.TEXT_8XL 	= "text-8xl"	// 96px 
+// 	self.TEXT_9XL 	= "text-9xl"	// 128px 
+// }
+
+// obj:cTextFontSize(){
+// 	self.FONT_THIN 			= "font-thin" 	        // 12px 
+// 	self.FONT_EXTRALIGHT 	= "font-extralight"		// 14px 
+// 	self.FONT_LIGHT 		= "font-light"	        // 16px 
+// 	self.FONT_NORMAL 		= "font-normal"		    // 18px 
+// 	self.FONT_MEDIUM 		= "font-medium"		    // 20px 
+// 	self.FONT_SEMIBOLD 		= "font-semibold"	    // 24px 
+// 	self.FONT_BOLD 			= "font-bold"	        // 30px 
+// 	self.FONT_EXTRABOLD 	= "font-extrabold"	    // 36px 
+// 	self.FONT_BLACK 		= "font-black"	        // 48px 
+// }
+
+// // Utilities for controlling the alignment of text.
+
+// obj:cTextAlign(){
+// 	self.TEXT_LEFT 			= "text-left" 	        // text-align: left 
+// 	self.TEXT_CENTER 		= "text-center"			// text-align: center; 
+// 	self.TEXT_RIGHT 		= "text-right"	        // text-align: right 
+// 	self.TEXT_JUSTIFY 		= "text-justify"		// text-align: justify 
+// 	self.TEXT_START 		= "text-start"		    // text-align: start 
+// 	self.TEXT_END 			= "text-end"	    	// text-align: end 
+// }
+
+// // Italicizing text
+// // The italic utility can be used to make text italic. Likewise, the not-italic utility can be used 
+// // to display text normally — typically to reset italic text at different breakpoints.
+
+// obj:cTextItalic(){
+// 	self.ITALIC 	= "italic"
+// 	self.NOT_ITALIC = "not-italic"
+// }
+
+// obj:cTextUnderline(){
+// 	self.UNDERLINE 		= "underline" 		// 12px 
+// 	self.OVERLINE 		= "overline"		// 14px 
+// 	self.LINE_THROUGH 	= "line-through"	// 16px 
+// 	self.NO_UNDERLINE 	= "no-underline"	// 18px 
+// }
+
+// // Applying font smoothing
+// // Use the subpixel-antialiased utility to render text using subpixel antialiasing and the antialiased 
+// // utility to render text using grayscale antialiasing.
+
+// obj:cTextSmoothing(){
+// 	self.ANTIALISED = "antialiased"
+// 	self.SUBPIXEL 	= "subpixel-antialiased"
+// }
+
+// obj:cText(){
+// 	self.color 		= cTextColor().TEXT_CURRENT
+// 	self.size 		= cTextSize().TEXT_BASE
+// 	self.fsize 		= cTextFontSize().FONT_NORMAL
+// 	self.align 		= cTextAlign().TEXT_LEFT
+// 	self.italic 	= cTextItalic().NOT_ITALIC
+// 	self.underline 	= cTextUnderline().NO_UNDERLINE
+// 	self.smooth 	= cTextSmoothing().ANTIALISED
+
+// 	func:ToClass(self){
+// 		wopt = null()
+// 		wopt = wopt $ " " $ self.color 
+// 		wopt = wopt $ " " $ self.size 
+// 		wopt = wopt $ " " $ self.fsize
+// 		wopt = wopt $ " " $ self.align
+// 		wopt = wopt $ " " $ self.italic 
+// 		wopt = wopt $ " " $ self.underline
+// 		wopt = wopt $ " " $ self.smooth
+// 		return(wopt)
+// 	}
+// }
+
+obj:cJustify(){
+	self.NORMAL 	= "justify-normal"
+	self.START 		= "justify-start"
+	self.END 		= "justify-end"
+	self.AROUND 	= "justify-around"
+	self.CENTER 	= "justify-center"
+	self.BETWEEN 	= "justify-between"
+	self.STRETCH 	= "justify-stretch"
+	self.EVENLY 	= "justify-evenly"
+}
+
+obj:cJustifySelf(){
+	self.AUTO 		= "justify-self-auto"
+	self.START 		= "justify-self-start"
+	self.END 		= "justify-self-end"
+	self.CENTER 	= "justify-self-center"
+	self.STRETCH 	= "justify-self-stretch"
+}
+
+obj:cAlignSelf(){
+	self.AUTO 		= "self-auto"
+	self.START 		= "self-start"
+	self.END 		= "self-end"
+	self.CENTER 	= "self-center"
+	self.STRETCH 	= "self-stretch"
+	self.BASELINE 	= "self-baseline"
+}
+
+obj:cPlaceSelf(){
+	self.AUTO 		= "place-self-auto"
+	self.START 		= "place-self-start"
+	self.END 		= "place-self-end"
+	self.CENTER 	= "place-self-center"
+	self.STRETCH 	= "place-self-stretch"
+}
+
+
+obj:cBoxShadow(){
+
+	self.NONE 		= 	OptCls("shadow-none")
+	self.SMALL 		= 	OptCls("shadow-sm")
+	self.NORMAL 	= 	OptCls("shadow")
+	self.MIDDLE 	= 	OptCls("shadow-md")
+	self.LARGE 		= 	OptCls("shadow-lg")
+	self.XL 		= 	OptCls("shadow-xl")
+	self.XXL 		= 	OptCls("shadow-2xl")
+	self.INNER 		= 	OptCls("shadow-inner")
+	self.list		= 	OptGet()
+
+	func:get(self){
+		return(self.list)}
+
+	func:has(self, item){
+		return(item <> self.list)}
+}
+
+
+// obj:cBlur(){
+// 	self.NONE	=	"blur-none"		//filter: blur(0);
+// 	self.SMALL	=	"blur-sm"		//filter: blur(4px);
+// 	self.NORMAL	=	"blur"			//filter: blur(8px);
+// 	self.MIDDLE	=	"blur-md"		//filter: blur(12px);
+// 	self.LARGE	=	"blur-lg"		//filter: blur(16px);
+// 	self.XL		=	"blur-xl"		//filter: blur(24px);
+// 	self.XXL	=	"blur-2xl"		//filter: blur(40px);
+// 	self.XXXL	=	"blur-3xl"		//filter: blur(64px);
+// }
+
+
+// // Utilities for controlling how a background image behaves when scrolling.
+
+// obj:cBackgroundAttachment(){
+// 	self.FIXED	=	"bg-fixed"	//background-attachment: fixed;
+// 	self.LOCAL	=	"bg-local"	//background-attachment: local;
+// 	self.SCROLL	=	"bg-scroll"	//background-attachment: scroll;
+// }
+
+// // Utilities for controlling the bounding box of an element's background.
+
+// obj:cBackgroundClip(){
+// 	self.BORDER		=	"bg-clip-border"	//background-clip: border-box;
+// 	self.PADDING	=	"bg-clip-padding"	//background-clip: padding-box;
+// 	self.CONTENT	=	"bg-clip-content"	//background-clip: content-box;
+// 	self.TEXT		=	"bg-clip-text"		//background-clip: text;
+// }
+
+
+// // Utilities for controlling how an element's background is positioned relative to borders, padding, and content.
+
+// obj:cBackgroundOrigin(){
+// 	self.BORDER		=	"bg-origin-border"	//background-attachment: fixed;
+// 	self.PADDING	=	"bg-origin-padding"	//background-attachment: local;
+// 	self.CONTENT	=	"bg-origin-content"	//background-attachment: scroll;
+// }
+
+
+// // Utilities for controlling the repetition of an element's background image.
+
+// obj:cBackgroundRepeat(){
+// 	self.NORMAL			=	"bg-repeat"			//background-repeat: repeat;
+// 	self.NONE			=	"bg-no-repeat"		//background-repeat: no-repeat;
+// 	self.HORIZONTAL		=	"bg-repeat-x"		//background-repeat: repeat-x;
+// 	self.VERTICAL		=	"bg-repeat-y"		//background-repeat: repeat-y;
+// 	self.ROUND			=	"bg-repeat-round"	//background-repeat: round;
+// 	self.SPACE			=	"bg-repeat-space"	//background-repeat: space;
+// }
+
+// // Utilities for controlling the background size of an element's background image.
+
+// obj:cBackgroundSize(){
+// 	self.AUTO		=	"bg-auto"		//background-size: auto;
+// 	self.COVER		=	"bg-cover"		//background-size: cover;
+// 	self.CONTAIN	=	"bg-contain"	//background-size: contain;
+// }
+
+// obj:cBackgroundGadient(){
+// 	self.NONE				=	"bg-none"				//background-image: none;
+// 	self.TO_TOP				=	"bg-gradient-to-t"		//background-image: linear-gradient(to top, var(--tw-gradient-stops));
+// 	self.TO_TOP_RIGHT		=	"bg-gradient-to-tr"		//background-image: linear-gradient(to top right, var(--tw-gradient-stops));
+// 	self.TO_RIGHT			=	"bg-gradient-to-r"		//background-image: linear-gradient(to right, var(--tw-gradient-stops));
+// 	self.TO_BOTTOM_RIGHT	=	"bg-gradient-to-br"		//background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+// 	self.TO_BOTTOM			=	"bg-gradient-to-b"		//background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+// 	self.TO_BOTTOM_LEFT		=	"bg-gradient-to-bl"		//background-image: linear-gradient(to bottom left, var(--tw-gradient-stops));
+// 	self.TO_LEFT			=	"bg-gradient-to-l"		//background-image: linear-gradient(to left, var(--tw-gradient-stops));
+// 	self.TO_TOP_LEFT		=	"bg-gradient-to-tl"		//background-image: linear-gradient(to top left, var(--tw-gradient-stops));
+// }
+
+obj:cOpacity(){
+	
+	self.OPACITY_0		=	OptCls("opacity-0")			//opacity: 0;
+	self.OPACITY_5		=	OptCls("opacity-5")			//opacity: 0.05;
+	self.OPACITY_10		=	OptCls("opacity-10")		//opacity: 0.1;
+	self.OPACITY_20		=	OptCls("opacity-20")		//opacity: 0.2;
+	self.OPACITY_25		=	OptCls("opacity-25")		//opacity: 0.25;
+	self.OPACITY_30		=	OptCls("opacity-30")		//opacity: 0.3;
+	self.OPACITY_40		=	OptCls("opacity-40")		//opacity: 0.4;
+	self.OPACITY_50		=	OptCls("opacity-50")		//opacity: 0.5;
+	self.OPACITY_60		=	OptCls("opacity-60")		//opacity: 0.6;
+	self.OPACITY_70		=	OptCls("opacity-70")		//opacity: 0.7;
+	self.OPACITY_75		=	OptCls("opacity-75")		//opacity: 0.75;
+	self.OPACITY_80		=	OptCls("opacity-80")		//opacity: 0.8;
+	self.OPACITY_90		=	OptCls("opacity-90")		//opacity: 0.9;
+	self.OPACITY_95		=	OptCls("opacity-95")		//opacity: 0.95;
+	self.OPACITY_100	=	OptCls("opacity-100")		//opacity: 1;
+	self.list			= 	OptGet()
+
+	func:get(self){
+		return(self.list)}
+
+	func:has(self, item){
+		return(item <> self.list)}
+}
+
+
+
+// Utilities for controlling how an element should blend with the background.
+
+// obj:cMixBlendMode(){
+	
+// 	self.NORMAL			=	"mix-blend-normal"			//mix-blend-mode: normal;
+// 	self.MULTIPLY		=	"mix-blend-multiply"		//mix-blend-mode: multiply;
+// 	self.SCREEN			=	"mix-blend-screen"			//mix-blend-mode: screen;
+// 	self.OVERLAY		=	"mix-blend-overlay"			//mix-blend-mode: overlay;
+// 	self.DARKEN			=	"mix-blend-darken"			//mix-blend-mode: darken;
+// 	self.LIGHTEN		=	"mix-blend-lighten"			//mix-blend-mode: lighten;
+// 	self.COLOR_DODGE	=	"mix-blend-color-dodge"		//mix-blend-mode: color-dodge;
+// 	self.COLOR_BURN		=	"mix-blend-color-burn"		//mix-blend-mode: color-burn;
+// 	self.HARD_LIGHT		=	"mix-blend-hard-light"		//mix-blend-mode: hard-light;
+// 	self.SOFT_LIGHT		=	"mix-blend-soft-light"		//mix-blend-mode: soft-light;
+// 	self.DIFFERENCE		=	"mix-blend-difference"		//mix-blend-mode: difference;
+// 	self.EXCLUSION		=	"mix-blend-exclusion"		//mix-blend-mode: exclusion;
+// 	self.HUE			=	"mix-blend-hue"				//mix-blend-mode: hue;
+// 	self.SATURATION		=	"mix-blend-saturation"		//mix-blend-mode: saturation;
+// 	self.COLOR			=	"mix-blend-color"			//mix-blend-mode: color;
+// 	self.LUMINOSITY		=	"mix-blend-luminosity"		//mix-blend-mode: luminosity;
+// 	self.PLUS_LIGHTER	=	"mix-blend-plus-lighter"	//mix-blend-mode: plus-lighter;
+// }
+
+
+// Utilities for controlling which CSS properties transition.
+
+// obj:cTransitionProperty(){
+// 	self.NONE		=	"transition-none"		//none;
+// 	self.ALL		=	"transition-all"		//all;transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+// 	self.NORMAL		=	"transition"			//color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+// 	self.COLORS		=	"transition-colors"		//color, background-color, border-color, text-decoration-color, fill, stroke;transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+// 	self.OPACITY	=	"transition-opacity"	//opacity;transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+// 	self.SHADOW		=	"transition-shadow"		//box-shadow;transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+// 	self.TRANSFORM	=	"transition-transform"	//transform;transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+// }
+
+
+//	Utilities for controlling the duration of CSS transitions.
+
+// obj:cTransitionDuration(){
+// 	self.DURATION_0		=	"duration-0"		//transition-duration: 0s;
+// 	self.DURATION_75	=	"duration-75"		//transition-duration: 75ms;
+// 	self.DURATION_100	=	"duration-100"		//transition-duration: 100ms;
+// 	self.DURATION_150	=	"duration-150"		//transition-duration: 150ms;
+// 	self.DURATION_200	=	"duration-200"		//transition-duration: 200ms;
+// 	self.DURATION_300	=	"duration-300"		//transition-duration: 300ms;
+// 	self.DURATION_500	=	"duration-500"		//transition-duration: 500ms;
+// 	self.DURATION_700	=	"duration-700"		//transition-duration: 700ms;
+// 	self.DURATION_1000	=	"duration-1000"		//transition-duration: 1000ms;
+// }
+
+
+// Utilities for controlling the easing of CSS transitions.
+
+// obj:cTransitionTimingFunction(){
+// 	self.EASE_LINEAR	=	"ease-linear"		//transition-timing-function: linear;
+// 	self.EASE_IN		=	"ease-in"			//transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+// 	self.EASE_OUT		=	"ease-out"			//transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+// 	self.EASE_IN_OUT	=	"ease-in-out"		//transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+// }
+
+
+// Utilities for controlling the delay of CSS transitions.
+
+// obj:cTransitionDelay(){
+// 	self.DELAY_0		"delay-0"		//transition-delay: 0s;
+// 	self.DELAY_75		"delay-75"		//transition-delay: 75ms;
+// 	self.DELAY_100		"delay-100"		//transition-delay: 100ms;
+// 	self.DELAY_150		"delay-150"		//transition-delay: 150ms;
+// 	self.DELAY_200		"delay-200"		//transition-delay: 200ms;
+// 	self.DELAY_300		"delay-300"		//transition-delay: 300ms;
+// 	self.DELAY_500		"delay-500"		//transition-delay: 500ms;
+// 	self.DELAY_700		"delay-700"		//transition-delay: 700ms;
+// 	self.DELAY_1000		"delay-1000"	//transition-delay: 1000ms;
+// }
+
+// Utilities for scaling elements with transform.
+
+// obj:cScale(){
+// 	self.SCALE_0		=	"scale-0"		//transform: scale(0);
+// 	self.SCALE_X_0		=	"scale-x-0"		//transform: scaleX(0);
+// 	self.SCALE_Y_0		=	"scale-y-0"		//transform: scaleY(0);
+// 	self.SCALE_50		=	"scale-50"		//transform: scale(.5);
+// 	self.SCALE_X_50		=	"scale-x-50"	//transform: scaleX(.5);
+// 	self.SCALE_Y_50		=	"scale-y-50"	//transform: scaleY(.5);
+// 	self.SCALE_75		=	"scale-75"		//transform: scale(.75);
+// 	self.SCALE_X_75		=	"scale-x-75"	//transform: scaleX(.75);
+// 	self.SCALE_Y_75		=	"scale-y-75"	//transform: scaleY(.75);
+// 	self.SCALE_90		=	"scale-90"		//transform: scale(.9);
+// 	self.SCALE_X_90		=	"scale-x-90"	//transform: scaleX(.9);
+// 	self.SCALE_Y_90		=	"scale-y-90"	//transform: scaleY(.9);
+// 	self.SCALE_95		=	"scale-95"		//transform: scale(.95);
+// 	self.SCALE_X_95		=	"scale-x-95"	//transform: scaleX(.95);
+// 	self.SCALE_Y_95		=	"scale-y-95"	//transform: scaleY(.95);
+// 	self.SCALE_100		=	"scale-100"		//transform: scale(1);
+// 	self.SCALE_X_100	=	"scale-x-100"	//transform: scaleX(1);
+// 	self.SCALE_Y_100	=	"scale-y-100"	//transform: scaleY(1);
+// 	self.SCALE_105		=	"scale-105"		//transform: scale(1.05);
+// 	self.SCALE_X_105	=	"scale-x-105"	//transform: scaleX(1.05);
+// 	self.SCALE_Y_105	=	"scale-y-105"	//transform: scaleY(1.05);
+// 	self.SCALE_110		=	"scale-110"		//transform: scale(1.1);
+// 	self.SCALE_X_110	=	"scale-x-110"	//transform: scaleX(1.1);
+// 	self.SCALE_Y_110	=	"scale-y-110"	//transform: scaleY(1.1);
+// 	self.SCALE_125		=	"scale-125"		//transform: scale(1.25);
+// 	self.SCALE_X_125	=	"scale-x-125"	//transform: scaleX(1.25);
+// 	self.SCALE_Y_125	=	"scale-y-125"	//transform: scaleY(1.25);
+// 	self.SCALE_150		=	"scale-150"		//transform: scale(1.5);
+// 	self.SCALE_X_150	=	"scale-x-150"	//transform: scaleX(1.5);
+// 	self.SCALE_Y_150	=	"scale-y-150"	//transform: scaleY(1.5);
+// }
+
+// Utilities for rotating elements with transform.
+
+// obj:cRotate(){
+// 	self.ROTATE_0		=	"rotate-0"		//transform: rotate(0deg);
+// 	self.ROTATE_1		=	"rotate-1"		//transform: rotate(1deg);
+// 	self.ROTATE_2		=	"rotate-2"		//transform: rotate(2deg);
+// 	self.ROTATE_3		=	"rotate-3"		//transform: rotate(3deg);
+// 	self.ROTATE_6		=	"rotate-6"		//transform: rotate(6deg);
+// 	self.ROTATE_12		=	"rotate-12"		//transform: rotate(12deg);
+// 	self.ROTATE_45		=	"rotate-45"		//transform: rotate(45deg);
+// 	self.ROTATE_90		=	"rotate-90"		//transform: rotate(90deg);
+// 	self.ROTATE_180		=	"rotate-180"	//transform: rotate(180deg);
+	
+// }
+
+// Utilities for translating elements with transform.
+
+// obj:cTranslate(){
+// 	self.TRANSLATE_X_0		=	"translate-x-0"			//transform: translateX(0px);
+// 	self.TRANSLATE_Y_0		=	"translate-y-0"			//transform: translateY(0px);
+// 	self.TRANSLATE_X_PX		=	"translate-x-px"		//transform: translateX(1px);
+// 	self.TRANSLATE_Y_PX		=	"translate-y-px"		//transform: translateY(1px);
+// 	self.TRANSLATE_X_0p5	=	"translate-x-0.5"		//transform: translateX(0.125rem);
+// 	self.TRANSLATE_Y_0p5	=	"translate-y-0.5"		//transform: translateY(0.125rem);
+// 	self.TRANSLATE_X_1		=	"translate-x-1"			//transform: translateX(0.25rem);
+// 	self.TRANSLATE_Y_1		=	"translate-y-1"			//transform: translateY(0.25rem);
+// 	self.TRANSLATE_X_1p5	=	"translate-x-1.5"		//transform: translateX(0.375rem);
+// 	self.TRANSLATE_Y_1p5	=	"translate-y-1.5"		//transform: translateY(0.375rem);
+// 	self.TRANSLATE_X_2		=	"translate-x-2"			//transform: translateX(0.5rem);
+// 	self.TRANSLATE_Y_2		=	"translate-y-2"			//transform: translateY(0.5rem);
+// 	self.TRANSLATE_X_2p5	=	"translate-x-2.5"		//transform: translateX(0.625rem);
+// 	self.TRANSLATE_Y_2p5	=	"translate-y-2.5"		//transform: translateY(0.625rem);
+// 	self.TRANSLATE_X_3		=	"translate-x-3"			//transform: translateX(0.75rem);
+// 	self.TRANSLATE_Y_3		=	"translate-y-3"			//transform: translateY(0.75rem);
+// 	self.TRANSLATE_X_3p5	=	"translate-x-3.5"		//transform: translateX(0.875rem);
+// 	self.TRANSLATE_Y_3p5	=	"translate-y-3.5"		//transform: translateY(0.875rem);
+// 	self.TRANSLATE_X_4		=	"translate-x-4"			//transform: translateX(1rem);
+// 	self.TRANSLATE_Y_4		=	"translate-y-4"			//transform: translateY(1rem);
+// 	self.TRANSLATE_X_5		=	"translate-x-5"			//transform: translateX(1.25rem);
+// 	self.TRANSLATE_Y_5		=	"translate-y-5"			//transform: translateY(1.25rem);
+// 	self.TRANSLATE_X_6		=	"translate-x-6"			//transform: translateX(1.5rem);
+// 	self.TRANSLATE_Y_6		=	"translate-y-6"			//transform: translateY(1.5rem);
+// 	self.TRANSLATE_X_7		=	"translate-x-7"			//transform: translateX(1.75rem);
+// 	self.TRANSLATE_Y_7		=	"translate-y-7"			//transform: translateY(1.75rem);
+// 	self.TRANSLATE_X_8		=	"translate-x-8"			//transform: translateX(2rem);
+// 	self.TRANSLATE_Y_8		=	"translate-y-8"			//transform: translateY(2rem);
+// 	self.TRANSLATE_X_9		=	"translate-x-9"			//transform: translateX(2.25rem);
+// 	self.TRANSLATE_Y_9		=	"translate-y-9"			//transform: translateY(2.25rem);
+// 	self.TRANSLATE_X_10		=	"translate-x-10"		//transform: translateX(2.5rem);
+// 	self.TRANSLATE_Y_10		=	"translate-y-10"		//transform: translateY(2.5rem);
+// 	self.TRANSLATE_X_11		=	"translate-x-11"		//transform: translateX(2.75rem);
+// 	self.TRANSLATE_Y_11		=	"translate-y-11"		//transform: translateY(2.75rem);
+// 	self.TRANSLATE_X_12		=	"translate-x-12"		//transform: translateX(3rem);
+// 	self.TRANSLATE_Y_12		=	"translate-y-12"		//transform: translateY(3rem);
+// 	self.TRANSLATE_X_14		=	"translate-x-14"		//transform: translateX(3.5rem);
+// 	self.TRANSLATE_Y_14		=	"translate-y-14"		//transform: translateY(3.5rem);
+// 	self.TRANSLATE_X_16		=	"translate-x-16"		//transform: translateX(4rem);
+// 	self.TRANSLATE_Y_16		=	"translate-y-16"		//transform: translateY(4rem);
+// 	self.TRANSLATE_X_20		=	"translate-x-20"		//transform: translateX(5rem);
+// 	self.TRANSLATE_Y_20		=	"translate-y-20"		//transform: translateY(5rem);
+// 	self.TRANSLATE_X_24		=	"translate-x-24"		//transform: translateX(6rem);
+// 	self.TRANSLATE_Y_24		=	"translate-y-24"		//transform: translateY(6rem);
+// 	self.TRANSLATE_X_28		=	"translate-x-28"		//transform: translateX(7rem);
+// 	self.TRANSLATE_Y_28		=	"translate-y-28"		//transform: translateY(7rem);
+// 	self.TRANSLATE_X_32		=	"translate-x-32"		//transform: translateX(8rem);
+// 	self.TRANSLATE_Y_32		=	"translate-y-32"		//transform: translateY(8rem);
+// 	self.TRANSLATE_X_36		=	"translate-x-36"		//transform: translateX(9rem);
+// 	self.TRANSLATE_Y_36		=	"translate-y-36"		//transform: translateY(9rem);
+// 	self.TRANSLATE_X_40		=	"translate-x-40"		//transform: translateX(10rem);
+// 	self.TRANSLATE_Y_40		=	"translate-y-40"		//transform: translateY(10rem);
+// 	self.TRANSLATE_X_44		=	"translate-x-44"		//transform: translateX(11rem);
+// 	self.TRANSLATE_Y_44		=	"translate-y-44"		//transform: translateY(11rem);
+// 	self.TRANSLATE_X_48		=	"translate-x-48"		//transform: translateX(12rem);
+// 	self.TRANSLATE_Y_48		=	"translate-y-48"		//transform: translateY(12rem);
+// 	self.TRANSLATE_X_52		=	"translate-x-52"		//transform: translateX(13rem);
+// 	self.TRANSLATE_Y_52		=	"translate-y-52"		//transform: translateY(13rem);
+// 	self.TRANSLATE_X_56		=	"translate-x-56"		//transform: translateX(14rem);
+// 	self.TRANSLATE_Y_56		=	"translate-y-56"		//transform: translateY(14rem);
+// 	self.TRANSLATE_X_60		=	"translate-x-60"		//transform: translateX(15rem);
+// 	self.TRANSLATE_Y_60		=	"translate-y-60"		//transform: translateY(15rem);
+// 	self.TRANSLATE_X_64		=	"translate-x-64"		//transform: translateX(16rem);
+// 	self.TRANSLATE_Y_64		=	"translate-y-64"		//transform: translateY(16rem);
+// 	self.TRANSLATE_X_72		=	"translate-x-72"		//transform: translateX(18rem);
+// 	self.TRANSLATE_Y_72		=	"translate-y-72"		//transform: translateY(18rem);
+// 	self.TRANSLATE_X_80		=	"translate-x-80"		//transform: translateX(20rem);
+// 	self.TRANSLATE_Y_80		=	"translate-y-80"		//transform: translateY(20rem);
+// 	self.TRANSLATE_X_96		=	"translate-x-96"		//transform: translateX(24rem);
+// 	self.TRANSLATE_Y_96		=	"translate-y-96"		//transform: translateY(24rem);
+// 	self.TRANSLATE_X_1d2	=	"translate-x-1/2"		//transform: translateX(50%);
+// 	self.TRANSLATE_X_1d3	=	"translate-x-1/3"		//transform: translateX(33.333333%);
+// 	self.TRANSLATE_X_2d3	=	"translate-x-2/3"		//transform: translateX(66.666667%);
+// 	self.TRANSLATE_X_1d4	=	"translate-x-1/4"		//transform: translateX(25%);
+// 	self.TRANSLATE_X_2d4	=	"translate-x-2/4"		//transform: translateX(50%);
+// 	self.TRANSLATE_X_3d4	=	"translate-x-3/4"		//transform: translateX(75%);
+// 	self.TRANSLATE_X_FULL	=	"translate-x-full"		//transform: translateX(100%);
+// 	self.TRANSLATE_Y_1d2	=	"translate-y-1/2"		//transform: translateY(50%);
+// 	self.TRANSLATE_Y_1d3	=	"translate-y-1/3"		//transform: translateY(33.333333%);
+// 	self.TRANSLATE_Y_2d3	=	"translate-y-2/3"		//transform: translateY(66.666667%);
+// 	self.TRANSLATE_Y_1d4	=	"translate-y-1/4"		//transform: translateY(25%);
+// 	self.TRANSLATE_Y_2d4	=	"translate-y-2/4"		//transform: translateY(50%);
+// 	self.TRANSLATE_Y_3d4	=	"translate-y-3/4"		//transform: translateY(75%);
+// 	self.TRANSLATE_Y_FULL	=	"translate-y-full"		//transform: translateY(100%);
+// }
+
+
+// Utilities for skewing elements with transform.
+
+// obj:cSkew(){
+// 	self.SKEW_X_0	=	"skew-x-0"	//transform: skewX(0deg);
+// 	self.SKEW_Y_0	=	"skew-y-0"	//transform: skewY(0deg);
+// 	self.SKEW_X_1	=	"skew-x-1"	//transform: skewX(1deg);
+// 	self.SKEW_Y_1	=	"skew-y-1"	//transform: skewY(1deg);
+// 	self.SKEW_X_2	=	"skew-x-2"	//transform: skewX(2deg);
+// 	self.SKEW_Y_2	=	"skew-y-2"	//transform: skewY(2deg);
+// 	self.SKEW_X_3	=	"skew-x-3"	//transform: skewX(3deg);
+// 	self.SKEW_Y_3	=	"skew-y-3"	//transform: skewY(3deg);
+// 	self.SKEW_X_6	=	"skew-x-6"	//transform: skewX(6deg);
+// 	self.SKEW_Y_6	=	"skew-y-6"	//transform: skewY(6deg);
+// 	self.SKEW_X_12	=	"skew-x-12"	//transform: skewX(12deg);
+// 	self.SKEW_Y_12	=	"skew-y-12"	//transform: skewY(12deg);
+	
+// }
+
+
+// Utilities for specifying the origin for an element's transformations.
+
+// obj:cTransformOrigin(){
+// 	self.ORIGIN_CENTER			=	"origin-center"			//transform-origin: center;
+// 	self.ORIGIN_TOP				=	"origin-top"			//transform-origin: top;
+// 	self.ORIGIN_TOP_RIGHT		=	"origin-top-right"		//transform-origin: top right;
+// 	self.ORIGIN_RIGHT			=	"origin-right"			//transform-origin: right;
+// 	self.ORIGIN_BOTTOM_RIGHT	=	"origin-bottom-right"	//transform-origin: bottom right;
+// 	self.ORIGIN_BOTTOM			=	"origin-bottom"			//transform-origin: bottom;
+// 	self.ORIGIN_BOTTOM_LEFT		=	"origin-bottom-left"	//transform-origin: bottom left;
+// 	self.ORIGIN_LEFT			=	"origin-left"			//transform-origin: left;
+// 	self.ORIGIN_TOP_LEFT		=	"origin-top-left"		//transform-origin: top left;
+// }
+
+
+
+// obj:cButton(){
+// 	self.BTN_ACCENT		=	"btn-accent"	//Modifier	Button with `accent` color
+// 	self.BTN_INFO		=	"btn-info"		//Modifier	Button with `info` color
+// 	self.BTN_SUCCESS	=	"btn-success"	//Modifier	Button with `success` color
+// 	self.BTN_WARNING	=	"btn-warning"	//Modifier	Button with `warning` color
+// 	self.BTN_ERROR		=	"btn-error"		//Modifier	Button with `error` color
+// 	self.BTN_GHOST		=	"btn-ghost"		//Modifier	Button with ghost style
+// 	self.BTN_LINK		=	"btn-link"		//Modifier	Button styled as a link
+// 	self.BTN_OUTLINE	=	"btn-outline"	//Modifier	Transparent Button with colored border
+// 	self.BTN_ACTIVE		=	"btn-active"	//Modifier	Force button to show active state
+// 	self.BTN_DISABLED	=	"btn-disabled"	//Modifier	Force button to show disabled state
+// 	self.GLASS			=	"glass"			//Modifier	Button with a glass effect
+// 	self.NO_ANIMATION	=	"no-animation"	//Modifier	Disables click animation
+// 	self.BTN_LG			=	"btn-lg"		//Responsive	Large button
+// 	self.BTN_MD			=	"btn-md"		//Responsive	Medium button (default)
+// 	self.BTN_SM			=	"btn-sm"		//Responsive	Small button
+// 	self.BTN_XS			=	"btn-xs"		//Responsive	Extra small button
+// 	self.BTN_WIDE		=	"btn-wide"		//Responsive	Wide button (more horizontal padding)
+// 	self.BTN_BLOCK		=	"btn-block"		//Responsive	Full width button
+// 	self.BTN_CIRCLE		=	"btn-circle"	//Responsive	Circle button with a 1:1 ratio
+// 	self.BTN_SQUARE		=	"btn-square"	//Responsive	Square button with a 1:1 ratio
+// }
+
+obj:cThemeColor(){
+	self.PRIMARY 			= 	"primary"
+	self.PRIMARY_FOCUS 		= 	"primary-focus"
+	self.PRIMARY_CONTENT 	= 	"primary-content"
+	self.SECONDARY 			= 	"secondary"
+	self.SECONDARY_FOCUS 	= 	"secondary-focus"
+	self.SECONDARY_CONTENT 	= 	"secondary-content"
+	self.ACCENT 			= 	"accent"
+	self.ACCENT_FOCUS 		= 	"accent-focus"
+	self.ACCENT_CONTENT 	= 	"accent-content"
+	self.NEUTRAL 			= 	"neutral"
+	self.NEUTRAL_FOCUS 		= 	"neutral-focus"
+	self.NEUTRAL_CONTENT 	= 	"neutral-content"
+	self.BASE_100 			= 	"base-100"
+	self.BASE_200 			= 	"base-200"
+	self.BASE_300 			= 	"base-300"
+	self.BASE_CONTENT 		= 	"base-content"
+	self.INFO 				= 	"info"
+	self.INFO_CONTENT 		= 	"info-content"
+	self.SUCCESS 			= 	"success"
+	self.SUCCESS_CONTENT 	= 	"success-content"
+	self.WARNING 			= 	"warning"
+	self.WARNING_CONTENT 	= 	"warning-content"
+	self.ERROR 				= 	"error"
+	self.ERROR_CONTENT 		= 	"error-content"
+}
+
+obj:cColorItem(){
+	self.BG 			= "bg-"
+	self.TO 		    = "to-"
+	self.VIA 	        = "via-"
+	self.FROM 			= "from-"
+	self.TEXT 	        = "text-"
+	self.RING 	        = "ring-"
+	self.FILL 			= "fill-"
+	self.CARET 		    = "caret-"
+	self.STROKE 	    = "stroke-"
+	self.BORDER 		= "border-"
+	self.DIVIDE 		= "divide-"
+	self.ACCENT 	    = "accent-"
+	self.SHADOW 		= "shadow-"
+    self.OUTLINE 		= "outline-"
+	self.DECORATION 	= "decoration-"
+	self.PLACEHOLDER 	= "placeholder-"
+	self.RING_OFFSET 	= "ring-offset-"
+    self.PROGRESS 	    = "progress-"
+	self.BADGE 	    	= "badge-"
+}
+
+// func:MakeColor(coloritem, color){
+// 	return(coloritem $ color)
+// }
+
+
+obj:cCursor(){
+	self.AUTO			=		OptCls("cursor-auto")			// cursor: auto;
+	self.DEFAULT		=		OptCls("cursor-default")		// cursor: default;
+	self.POINTER		=		OptCls("cursor-pointer")		// cursor: pointer;
+	self.WAIT			=		OptCls("cursor-wait")			// cursor: wait;
+	self.TEXT			=		OptCls("cursor-text")			// cursor: text;
+	self.MOVE			=		OptCls("cursor-move")			// cursor: move;
+	self.HELP			=		OptCls("cursor-help")			// cursor: help;
+	self.NOT_ALLOWED	=		OptCls("cursor-not-allowed")	// cursor: not-allowed;
+	self.NONE			=		OptCls("cursor-none")			// cursor: none;
+	self.CONTEXT_MENU	=		OptCls("cursor-context-menu")	// cursor: context-menu;
+	self.PROGRESS		=		OptCls("cursor-progress")		// cursor: progress;
+	self.CELL			=		OptCls("cursor-cell")			// cursor: cell;
+	self.CROSSHAIR	    =		OptCls("cursor-crosshair")		// cursor: crosshair;
+	self.VERTICAL_TEXT  =		OptCls("cursor-vertical-text")	// cursor: vertical-text;
+	self.ALIAS		    =		OptCls("cursor-alias")			// cursor: alias;
+	self.COPY			=		OptCls("cursor-copy")			// cursor: copy;
+	self.NO_DROP		=		OptCls("cursor-no-drop")		// cursor: no-drop;
+	self.GRAB			=		OptCls("cursor-grab")			// cursor: grab;
+	self.GRABBING		=		OptCls("cursor-grabbing")		// cursor: grabbing;
+	self.ALL_SCROLL	    =		OptCls("cursor-all-scroll")		// cursor: all-scroll;
+	self.COL_RESIZE	    =		OptCls("cursor-col-resize")		// cursor: col-resize;
+	self.ROW_RESIZE	    =		OptCls("cursor-row-resize")		// cursor: row-resize;
+	self.N_RESIZE		=		OptCls("cursor-n-resize")		// cursor: n-resize;
+	self.E_RESIZE		=		OptCls("cursor-e-resize")		// cursor: e-resize;
+	self.S_RESIZE		=		OptCls("cursor-s-resize")		// cursor: s-resize;
+	self.W_RESIZE		=		OptCls("cursor-w-resize")		// cursor: w-resize;
+	self.NE_RESIZE	    =		OptCls("cursor-ne-resize")		// cursor: ne-resize;
+	self.NW_RESIZE	    =		OptCls("cursor-nw-resize")		// cursor: nw-resize;
+	self.SE_RESIZE	    =		OptCls("cursor-se-resize")		// cursor: se-resize;
+	self.SW_RESIZE	    =		OptCls("cursor-sw-resize")		// cursor: sw-resize;
+	self.EW_RESIZE	    =		OptCls("cursor-ew-resize")		// cursor: ew-resize;
+	self.NS_RESIZE	    =		OptCls("cursor-ns-resize")		// cursor: ns-resize;
+	self.NESW_RESIZE	=		OptCls("cursor-nesw-resize")	// cursor: nesw-resize;
+	self.NWSE_RESIZE	=		OptCls("cursor-nwse-resize")	// cursor: nwse-resize;
+	self.ZOOM_IN		=		OptCls("cursor-zoom-in")		// cursor: zoom-in;
+	self.ZOOM_OUT		=		OptCls("cursor-zoom-out")		// cursor: zoom-out;
+	self.list			=       OptGet()
+
+	func:get(self){
+		return(self.list)}
+
+	func:has(self, item){
+		return(item <> self.list)}
+
+}
+
+obj:cAnimate(){
+	self.NONE    = "animate-none"
+	self.PING    = "animate-ping"
+	self.SPIN    = "animate-spin"
+	self.PULSE   = "animate-pulse"
+	self.BOUNCE  = "animate-bounce"
+}
+
+obj:cWidth(){
+	self.W_0               = "w-0" 		//0px;
+	self.W_PX              = "w-px" 	//1px;
+	self.W_0p5             = "w-0.5"	//0.125rem;2px
+	self.W_1               = "w-1"		//0.25rem;4px
+	self.W_1p5             = "w-1.5"	//0.375rem;6px
+	self.W_2               = "w-2"		//0.5rem;8px
+	self.W_2p5             = "w-2.5"	//0.625rem;10px
+	self.W_3               = "w-3"		//0.75rem;12px
+	self.W_3p5             = "w-3.5"	//0.875rem;14px
+	self.W_4               = "w-4"		//1rem;16px
+	self.W_5               = "w-5"		//1.25rem;20px
+	self.W_6               = "w-6"		//1.5rem;24px
+	self.W_7               = "w-7"		//1.75rem;28px
+	self.W_8               = "w-8"		//2rem;32px
+	self.W_9               = "w-9"		//2.25rem;36px
+	self.W_10              = "w-10"		//2.5rem;40px
+	self.W_11              = "w-11"		//2.75rem;44px
+	self.W_12              = "w-12"		//3rem;48px
+	self.W_14              = "w-14"		//3.5rem;56px
+	self.W_16              = "w-16"		//4rem;64px
+	self.W_20              = "w-20"		//5rem;80px
+	self.W_24              = "w-24"		//6rem;96px
+	self.W_28              = "w-28"		//7rem;112px
+	self.W_32              = "w-32"		//8rem;128px
+	self.W_36              = "w-36"		//9rem;144px
+	self.W_40              = "w-40"		//10rem;160px
+	self.W_44              = "w-44"		//11rem;176px
+	self.W_48              = "w-48"		//12rem;192px
+	self.W_52              = "w-52"		//13rem;208px
+	self.W_56              = "w-56"		//14rem;224px
+	self.W_60              = "w-60"		//15rem;240px
+	self.W_64              = "w-64"		//16rem;256px
+	self.W_72              = "w-72"		//18rem;288px
+	self.W_80              = "w-80"		//20rem;320px
+	self.W_96              = "w-96"		//24rem;384px
+	self.W_AUTO            = "w-auto"	//auto;
+	self.W_1d2             = "w-1/2"	//50%;
+	self.W_1d3             = "w-1/3"	//33.333333%;
+	self.W_2d3             = "w-2/3"	//66.666667%;
+	self.W_1d4             = "w-1/4"	//25%;
+	self.W_2d4             = "w-2/4"	//50%;
+	self.W_3d4             = "w-3/4"	//75%;
+	self.W_1d5             = "w-1/5"	//20%;
+	self.W_2d5             = "w-2/5"	//40%;
+	self.W_3d5             = "w-3/5"	//60%;
+	self.W_4d5             = "w-4/5"	//80%;
+	self.W_1d6             = "w-1/6"	//16.666667%;
+	self.W_2d6             = "w-2/6"	//33.333333%;
+	self.W_3d6             = "w-3/6"	//50%;
+	self.W_4d6             = "w-4/6"	//66.666667%;
+	self.W_5d6             = "w-5/6"	//83.333333%;
+	self.W_1d12            = "w-1/12"	//8333333%;
+	self.W_2d12            = "w-2/12"	//16.666667%;
+	self.W_3d12            = "w-3/12"	//25%;
+	self.W_4d12            = "w-4/12"	//33.333333%;
+	self.W_5d12            = "w-5/12"	//41.666667%;
+	self.W_6d12            = "w-6/12"	//50%;
+	self.W_7d12            = "w-7/12"	//58.333333%;
+	self.W_8d12            = "w-8/12"	//66.666667%;
+	self.W_9d12            = "w-9/12"	//75%;
+	self.W_10d12           = "w-10/12"	//83.333333%;
+	self.W_11d12           = "w-11/12"	//91.666667%;
+	self.W_FULL            = "w-full"	//100%;
+	self.W_SCREEN          = "w-screen"	//100vw;
+	self.W_MIN             = "w-min"	//min-content;
+	self.W_MAX             = "w-max"	//max-content;
+	self.W_FIT             = "w-fit"	//fit-content;
+}
+
+obj:cHeight(){
+	self.H_0               = "h-0" 		//0px;
+	self.H_PX              = "h-px" 	//1px;
+	self.H_0p5             = "h-0.5"	//0.125rem;2px
+	self.H_1               = "h-1"		//0.25rem;4px
+	self.H_1p5             = "h-1.5"	//0.375rem;6px
+	self.H_2               = "h-2"		//0.5rem;8px
+	self.H_2p5             = "h-2.5"	//0.625rem;10px
+	self.H_3               = "h-3"		//0.75rem;12px
+	self.H_3p5             = "h-3.5"	//0.875rem;14px
+	self.H_4               = "h-4"		//1rem;16px
+	self.H_5               = "h-5"		//1.25rem;20px
+	self.H_6               = "h-6"		//1.5rem;24px
+	self.H_7               = "h-7"		//1.75rem;28px
+	self.H_8               = "h-8"		//2rem;32px
+	self.H_9               = "h-9"		//2.25rem;36px
+	self.H_10              = "h-10"		//2.5rem;40px
+	self.H_11              = "h-11"		//2.75rem;44px
+	self.H_12              = "h-12"		//3rem;48px
+	self.H_14              = "h-14"		//3.5rem;56px
+	self.H_16              = "h-16"		//4rem;64px
+	self.H_20              = "h-20"		//5rem;80px
+	self.H_24              = "h-24"		//6rem;96px
+	self.H_28              = "h-28"		//7rem;112px
+	self.H_32              = "h-32"		//8rem;128px
+	self.H_36              = "h-36"		//9rem;144px
+	self.H_40              = "h-40"		//10rem;160px
+	self.H_44              = "h-44"		//11rem;176px
+	self.H_48              = "h-48"		//12rem;192px
+	self.H_52              = "h-52"		//13rem;208px
+	self.H_56              = "h-56"		//14rem;224px
+	self.H_60              = "h-60"		//15rem;240px
+	self.H_64              = "h-64"		//16rem;256px
+	self.H_72              = "h-72"		//18rem;288px
+	self.H_80              = "h-80"		//20rem;320px
+	self.H_96              = "h-96"		//24rem;384px
+	self.H_AUTO            = "h-auto"	//auto;
+	self.H_1d2             = "h-1/2"	//50%;
+	self.H_1d3             = "h-1/3"	//33.333333%;
+	self.H_2d3             = "h-2/3"	//66.666667%;
+	self.H_1d4             = "h-1/4"	//25%;
+	self.H_2d4             = "h-2/4"	//50%;
+	self.H_3d4             = "h-3/4"	//75%;
+	self.H_1d5             = "h-1/5"	//20%;
+	self.H_2d5             = "h-2/5"	//40%;
+	self.H_3d5             = "h-3/5"	//60%;
+	self.H_4d5             = "h-4/5"	//80%;
+	self.H_1d6             = "h-1/6"	//16.666667%;
+	self.H_2d6             = "h-2/6"	//33.333333%;
+	self.H_3d6             = "h-3/6"	//50%;
+	self.H_4d6             = "h-4/6"	//66.666667%;
+	self.H_5d6             = "h-5/6"	//83.333333%;
+	self.H_1d12            = "h-1/12"	//8.333333%;
+	self.H_2d12            = "h-2/12"	//16.666667%;
+	self.H_3d12            = "h-3/12"	//25%;
+	self.H_4d12            = "h-4/12"	//33.333333%;
+	self.H_5d12            = "h-5/12"	//41.666667%;
+	self.H_6d12            = "h-6/12"	//50%;
+	self.H_7d12            = "h-7/12"	//58.333333%;
+	self.H_8d12            = "h-8/12"	//66.666667%;
+	self.H_9d12            = "h-9/12"	//75%;
+	self.H_10d12           = "h-10/12"	//83.333333%;
+	self.H_11d12           = "h-11/12"	//91.666667%;
+	self.H_FULL            = "h-full"	//100%;
+	self.H_SCREEN          = "h-screen"	//100vh;
+	self.H_MIN             = "h-min"	//min-content;
+	self.H_MAX             = "h-max"	//max-content;
+	self.H_FIT             = "h-fit"	//fit-content;
+}
+
+obj:cMinWidth(){
+	self.MIN_W_0           = "min-w-0"			//0px;
+	self.MIN_W_FULL        = "min-w-full"		//100%;
+	self.MIN_W_MIN         = "min-w-min"		//min-content;
+	self.MIN_W_MAX         = "min-w-max"		//max-content;
+	self.MIN_W_FIT         = "min-w-fit"		//fit-content;
+}
+
+obj:cMaxWidth(){
+	self.MAX_W_0           = "max-w-0"			//0rem;  0px
+	self.MAX_W_NONE        = "max-w-none"		//none;
+	self.MAX_W_XS          = "max-w-xs"			//20rem;  320px
+	self.MAX_W_SM          = "max-w-sm"			//24rem;  384px
+	self.MAX_W_MD          = "max-w-md"			//28rem;  448px
+	self.MAX_W_LG          = "max-w-lg"			//32rem;  512px
+	self.MAX_W_XL          = "max-w-xl"			//36rem;  576px
+	self.MAX_W_2XL         = "max-w-2xl"		//42rem;  672px
+	self.MAX_W_3XL         = "max-w-3xl"		//48rem;  768px
+	self.MAX_W_4XL         = "max-w-4xl"		//56rem;  896px
+	self.MAX_W_5XL         = "max-w-5xl"		//64rem;  1024px
+	self.MAX_W_6XL         = "max-w-6xl"		//72rem;  1152px
+	self.MAX_W_7XL         = "max-w-7xl"		//80rem;  1280px
+	self.MAX_W_FULL        = "max-w-full"		//100%;
+	self.MAX_W_MIN         = "max-w-min"		//min-content;
+	self.MAX_W_MAX         = "max-w-max"		//max-content;
+	self.MAX_W_FIT         = "max-w-fit"		//fit-content;
+	self.MAX_W_PROSE       = "max-w-prose"		//65ch;
+	self.MAX_W_SCREEN_SM   = "max-w-screen-sm"	//640px;
+	self.MAX_W_SCREEN_MD   = "max-w-screen-md"	//768px;
+	self.MAX_W_SCREEN_LG   = "max-w-screen-lg"	//1024px;
+	self.MAX_W_SCREEN_XL   = "max-w-screen-xl"	//1280px;
+	self.MAX_W_SCREEN_2XL  = "max-w-screen-2xl"	//1536px;
+}
+
+obj:cMinHeight(){
+	self.MIN_H_0           = "min-h-0"			//0px;
+	self.MIN_H_FULL        = "min-h-full"		//100%;
+	self.MIN_H_MIN         = "min-h-min"		//min-content;
+	self.MIN_H_MAX         = "min-h-max"		//max-content;
+	self.MIN_H_FIT         = "min-h-fit"		//fit-content;
+}
+
+obj:cMaxHeight(){
+	self.MAX_H_0           = "max-h-0"			//0rem;  0px
+	self.MAX_H_NONE        = "max-h-none"		//none;
+	self.MAX_H_XS          = "max-h-xs"			//20rem;  320px
+	self.MAX_H_SM          = "max-h-sm"			//24rem;  384px
+	self.MAX_H_MD          = "max-h-md"			//28rem;  448px
+	self.MAX_H_LG          = "max-h-lg"			//32rem;  512px
+	self.MAX_H_XL          = "max-h-xl"			//36rem;  576px
+	self.MAX_H_2XL         = "max-h-2xl"		//42rem;  672px
+	self.MAX_H_3XL         = "max-h-3xl"		//48rem;  768px
+	self.MAX_H_4XL         = "max-h-4xl"		//56rem;  896px
+	self.MAX_H_5XL         = "max-h-5xl"		//64rem;  1024px
+	self.MAX_H_6XL         = "max-h-6xl"		//72rem;  1152px
+	self.MAX_H_7XL         = "max-h-7xl"		//80rem;  1280px
+	self.MAX_H_FULL        = "max-h-full"		//100%;
+	self.MAX_H_MIN         = "max-h-min"		//min-content;
+	self.MAX_H_MAX         = "max-h-max"		//max-content;
+	self.MAX_H_FIT         = "max-h-fit"		//fit-content;
+	self.MAX_H_PROSE       = "max-h-prose"		//65ch;
+	self.MAX_H_SCREEN_SM   = "max-h-screen-sm"	//640px;
+	self.MAX_H_SCREEN_MD   = "max-h-screen-md"	//768px;
+	self.MAX_H_SCREEN_LG   = "max-h-screen-lg"	//1024px;
+	self.MAX_H_SCREEN_XL   = "max-h-screen-xl"	//1280px;
+	self.MAX_H_SCREEN_2XL  = "max-h-screen-2xl"	//1536px;
+}
+
+// obj:cSize(){
+// 	self.width 		= cWidth().W_AUTO
+// 	self.height 	= cHeight().H_AUTO
+// 	self.minwidth 	= cMinWidth().MIN_W_0
+// 	self.minheight 	= cMinHeight().MIN_H_0
+// 	self.maxwidth 	= cMaxWidth().MAX_W_FULL
+// 	self.maxheight 	= cMaxHeight().MAX_H_FULL
+
+// 	func:ToClass(self){
+// 		wopt = null()
+// 		wopt = wopt $ " " $ self.width 
+// 		wopt = wopt $ " " $ self.height 
+// 		wopt = wopt $ " " $ self.minwidth
+// 		wopt = wopt $ " " $ self.minheight
+// 		wopt = wopt $ " " $ self.maxwidth
+// 		wopt = wopt $ " " $ self.maxheight
+// 		return(wopt)
+// 	}
+// }
+
+
+
+obj:cMargin(){
+	self.ALL_0           = "m-0"		//margin: 0px;
+	self.HORIZONTAL_0    = "mx-0"		//margin-left: 0px;margin-right: 0px;
+	self.VERTICAL_0      = "my-0"		//margin-top: 0px;margin-bottom: 0px;
+	self.START_0         = "ms-0"		//margin-inline-start: 0px;
+	self.END_0           = "me-0"		//margin-inline-end: 0px;
+	self.TOP_0           = "mt-0"		//margin-top: 0px;
+	self.RIGHT_0         = "mr-0"		//margin-right: 0px;
+	self.BOTTOM_0        = "mb-0"		//margin-bottom: 0px;
+	self.LEFT_0          = "ml-0"		//margin-left: 0px;
+	self.ALL_PX          = "m-px"		//margin: 1px;
+	self.HORIZONTAL_PX   = "mx-px"		//margin-left: 1px;margin-right: 1px;
+	self.VERTICAL_PX     = "my-px"		//margin-top: 1px;margin-bottom: 1px;
+	self.START_PX        = "ms-px"		//margin-inline-start: 1px;
+	self.END_PX          = "me-px"		//margin-inline-end: 1px;
+	self.TOP_PX          = "mt-px"		//margin-top: 1px;
+	self.RIGHT_PX        = "mr-px"		//margin-right: 1px;
+	self.BOTTOM_PX       = "mb-px"		//margin-bottom: 1px;
+	self.LEFT_PX         = "ml-px"		//margin-left: 1px;
+	self.ALL_0P5         = "m-0.5"		//margin: 0.125rem; // 2px 
+	self.HORIZONTAL_0P5  = "mx-0.5"		//margin-left: 0.125rem; // 2px margin-right: 0.125rem; // 2px 
+	self.VERTICAL_0P5    = "my-0.5"		//margin-top: 0.125rem; // 2px margin-bottom: 0.125rem; // 2px 
+	self.START_0P5       = "ms-0.5"		//margin-inline-start: 0.125rem; // 2px 
+	self.END_0P5         = "me-0.5"		//margin-inline-end: 0.125rem; // 2px 
+	self.TOP_0P5         = "mt-0.5"		//margin-top: 0.125rem; // 2px 
+	self.RIGHT_0P5       = "mr-0.5"		//margin-right: 0.125rem; // 2px 
+	self.BOTTOM_0P5      = "mb-0.5"		//margin-bottom: 0.125rem; // 2px 
+	self.LEFT_0P5        = "ml-0.5"		//margin-left: 0.125rem; // 2px m-1	margin: 0.25rem; // 4px 
+	self.HORIZONTAL_1    = "mx-1"		//margin-left: 0.25rem; // 4px margin-right: 0.25rem; // 4px 
+	self.VERTICAL_1      = "my-1"		//margin-top: 0.25rem; // 4px margin-bottom: 0.25rem; // 4px 
+	self.START_1         = "ms-1"		//margin-inline-start: 0.25rem; // 4px 
+	self.END_1           = "me-1"		//margin-inline-end: 0.25rem; // 4px 
+	self.TOP_1           = "mt-1"		//margin-top: 0.25rem; // 4px 
+	self.RIGHT_1         = "mr-1"		//margin-right: 0.25rem; // 4px 
+	self.BOTTOM_1        = "mb-1"		//margin-bottom: 0.25rem; // 4px 
+	self.LEFT_1          = "ml-1"		//margin-left: 0.25rem; // 4px 
+	self.ALL_1P5         = "m-1.5"		//margin: 0.375rem; // 6px 
+	self.HORIZONTAL_1P5  = "mx-1.5"		//margin-left: 0.375rem; // 6px margin-right: 0.375rem; // 6px 
+	self.VERTICAL_1P5    = "my-1.5"		//margin-top: 0.375rem; // 6px margin-bottom: 0.375rem; // 6px 
+	self.START_1P5       = "ms-1.5"		//margin-inline-start: 0.375rem; // 6px 
+	self.END_1P5         = "me-1.5"		//margin-inline-end: 0.375rem; // 6px 
+	self.TOP_1P5         = "mt-1.5"		//margin-top: 0.375rem; // 6px 
+	self.RIGHT_1P5       = "mr-1.5"		//margin-right: 0.375rem; // 6px 
+	self.BOTTOM_1P5      = "mb-1.5"		//margin-bottom: 0.375rem; // 6px 
+	self.LEFT_1P5        = "ml-1.5"		//margin-left: 0.375rem; // 6px m-2	margin: 0.5rem; // 8px 
+	self.HORIZONTAL_2    = "mx-2"		//margin-left: 0.5rem; // 8px margin-right: 0.5rem; // 8px 
+	self.VERTICAL_2      = "my-2"		//margin-top: 0.5rem; // 8px margin-bottom: 0.5rem; // 8px 
+	self.START_2         = "ms-2"		//margin-inline-start: 0.5rem; // 8px 
+	self.END_2           = "me-2"		//margin-inline-end: 0.5rem; // 8px 
+	self.TOP_2           = "mt-2"		//margin-top: 0.5rem; // 8px 
+	self.RIGHT_2         = "mr-2"		//margin-right: 0.5rem; // 8px 
+	self.BOTTOM_2        = "mb-2"		//margin-bottom: 0.5rem; // 8px 
+	self.LEFT_2          = "ml-2"		//margin-left: 0.5rem; // 8px 
+	self.ALL_2P5         = "m-2.5"		//margin: 0.625rem; // 10px 
+	self.HORIZONTAL_2P5  = "mx-2.5"		//margin-left: 0.625rem; // 10px margin-right: 0.625rem; // 10px 
+	self.VERTICAL_2P5    = "my-2.5"		//margin-top: 0.625rem; // 10px margin-bottom: 0.625rem; // 10px 
+	self.START_2P5       = "ms-2.5"		//margin-inline-start: 0.625rem; // 10px 
+	self.END_2P5         = "me-2.5"		//margin-inline-end: 0.625rem; // 10px 
+	self.TOP_2P5         = "mt-2.5"		//margin-top: 0.625rem; // 10px 
+	self.RIGHT_2P5       = "mr-2.5"		//margin-right: 0.625rem; // 10px 
+	self.BOTTOM_2P5      = "mb-2.5"		//margin-bottom: 0.625rem; // 10px 
+	self.LEFT_2P5        = "ml-2.5"		//margin-left: 0.625rem; // 10px 
+	self.ALL_3           = "m-3"		//margin: 0.75rem; // 12px 
+	self.HORIZONTAL_3    = "mx-3"		//margin-left: 0.75rem; // 12px margin-right: 0.75rem; // 12px 
+	self.VERTICAL_3      = "my-3"		//margin-top: 0.75rem; // 12px margin-bottom: 0.75rem; // 12px 
+	self.START_3         = "ms-3"		//margin-inline-start: 0.75rem; // 12px 
+	self.END_3           = "me-3"		//margin-inline-end: 0.75rem; // 12px 
+	self.TOP_3           = "mt-3"		//margin-top: 0.75rem; // 12px 
+	self.RIGHT_3         = "mr-3"		//margin-right: 0.75rem; // 12px 
+	self.BOTTOM_3        = "mb-3"		//margin-bottom: 0.75rem; // 12px 
+	self.LEFT_3          = "ml-3"		//margin-left: 0.75rem; // 12px 
+	self.ALL_3P5         = "m-3.5"		//margin: 0.875rem; // 14px 
+	self.HORIZONTAL_3P5  = "mx-3.5"		//margin-left: 0.875rem; // 14px margin-right: 0.875rem; // 14px 
+	self.VERTICAL_3P5    = "my-3.5"		//margin-top: 0.875rem; // 14px margin-bottom: 0.875rem; // 14px 
+	self.START_3P5       = "ms-3.5"		//margin-inline-start: 0.875rem; // 14px 
+	self.END_3P5         = "me-3.5"		//margin-inline-end: 0.875rem; // 14px 
+	self.TOP_3P5         = "mt-3.5"		//margin-top: 0.875rem; // 14px 
+	self.RIGHT_3P5       = "mr-3.5"		//margin-right: 0.875rem; // 14px 
+	self.BOTTOM_3P5      = "mb-3.5"		//margin-bottom: 0.875rem; // 14px 
+	self.LEFT_3P5        = "ml-3.5"		//margin-left: 0.875rem; // 14px 
+	self.ALL_4           = "m-4"		//margin: 1rem; // 16px 
+	self.HORIZONTAL_4    = "mx-4"		//margin-left: 1rem; // 16px margin-right: 1rem; // 16px 
+	self.VERTICAL_4      = "my-4"		//margin-top: 1rem; // 16px margin-bottom: 1rem; // 16px 
+	self.START_4         = "ms-4"		//margin-inline-start: 1rem; // 16px 
+	self.END_4           = "me-4"		//margin-inline-end: 1rem; // 16px 
+	self.TOP_4           = "mt-4"		//margin-top: 1rem; // 16px 
+	self.RIGHT_4         = "mr-4"		//margin-right: 1rem; // 16px 
+	self.BOTTOM_4        = "mb-4"		//margin-bottom: 1rem; // 16px 
+	self.LEFT_4          = "ml-4"		//margin-left: 1rem; // 16px m-5	margin: 1.25rem; // 20px 
+	self.HORIZONTAL_5    = "mx-5"		//margin-left: 1.25rem; // 20px margin-right: 1.25rem; // 20px 
+	self.VERTICAL_5      = "my-5"		//margin-top: 1.25rem; // 20px margin-bottom: 1.25rem; // 20px 
+	self.START_5         = "ms-5"		//margin-inline-start: 1.25rem; // 20px 
+	self.END_5           = "me-5"		//margin-inline-end: 1.25rem; // 20px 
+	self.TOP_5           = "mt-5"		//margin-top: 1.25rem; // 20px 
+	self.RIGHT_5         = "mr-5"		//margin-right: 1.25rem; // 20px 
+	self.BOTTOM_5        = "mb-5"		//margin-bottom: 1.25rem; // 20px 
+	self.LEFT_5          = "ml-5"		//margin-left: 1.25rem; // 20px 
+	self.ALL_6           = "m-6"		//margin: 1.5rem; // 24px 
+	self.HORIZONTAL_6    = "mx-6"		//margin-left: 1.5rem; // 24px margin-right: 1.5rem; // 24px 
+	self.VERTICAL_6      = "my-6"		//margin-top: 1.5rem; // 24px margin-bottom: 1.5rem; // 24px 
+	self.START_6         = "ms-6"		//margin-inline-start: 1.5rem; // 24px 
+	self.END_6           = "me-6"		//margin-inline-end: 1.5rem; // 24px 
+	self.TOP_6           = "mt-6"		//margin-top: 1.5rem; // 24px 
+	self.RIGHT_6         = "mr-6"		//margin-right: 1.5rem; // 24px 
+	self.BOTTOM_6        = "mb-6"		//margin-bottom: 1.5rem; // 24px 
+	self.LEFT_6          = "ml-6"		//margin-left: 1.5rem; // 24px 
+	self.ALL_7           = "m-7"		//margin: 1.75rem; // 28px 
+	self.HORIZONTAL_7    = "mx-7"		//margin-left: 1.75rem; // 28px margin-right: 1.75rem; // 28px 
+	self.VERTICAL_7      = "my-7"		//margin-top: 1.75rem; // 28px margin-bottom: 1.75rem; // 28px 
+	self.START_7         = "ms-7"		//margin-inline-start: 1.75rem; // 28px 
+	self.END_7           = "me-7"		//margin-inline-end: 1.75rem; // 28px 
+	self.TOP_7           = "mt-7"		//margin-top: 1.75rem; // 28px 
+	self.RIGHT_7         = "mr-7"		//margin-right: 1.75rem; // 28px 
+	self.BOTTOM_7        = "mb-7"		//margin-bottom: 1.75rem; // 28px 
+	self.LEFT_7          = "ml-7"		//margin-left: 1.75rem; // 28px 
+	self.ALL_8           = "m-8"		//margin: 2rem; // 32px 
+	self.HORIZONTAL_8    = "mx-8"		//margin-left: 2rem; // 32px margin-right: 2rem; // 32px 
+	self.VERTICAL_8      = "my-8"		//margin-top: 2rem; // 32px margin-bottom: 2rem; // 32px 
+	self.START_8         = "ms-8"		//margin-inline-start: 2rem; // 32px 
+	self.END_8           = "me-8"		//margin-inline-end: 2rem; // 32px 
+	self.TOP_8           = "mt-8"		//margin-top: 2rem; // 32px 
+	self.RIGHT_8         = "mr-8"		//margin-right: 2rem; // 32px 
+	self.BOTTOM_8        = "mb-8"		//margin-bottom: 2rem; // 32px 
+	self.LEFT_8          = "ml-8"		//margin-left: 2rem; // 32px 
+	self.ALL_9           = "m-9"		//margin: 2.25rem; // 36px 
+	self.HORIZONTAL_9    = "mx-9"		//margin-left: 2.25rem; // 36px margin-right: 2.25rem; // 36px 
+	self.VERTICAL_9      = "my-9"		//margin-top: 2.25rem; // 36px margin-bottom: 2.25rem; // 36px 
+	self.START_9         = "ms-9"		//margin-inline-start: 2.25rem; // 36px 
+	self.END_9           = "me-9"		//margin-inline-end: 2.25rem; // 36px 
+	self.TOP_9           = "mt-9"		//margin-top: 2.25rem; // 36px 
+	self.RIGHT_9         = "mr-9"		//margin-right: 2.25rem; // 36px 
+	self.BOTTOM_9        = "mb-9"		//margin-bottom: 2.25rem; // 36px 
+	self.LEFT_9          = "ml-9"		//margin-left: 2.25rem; // 36px 
+	self.ALL_10          = "m-10"		//margin: 2.5rem; // 40px 
+	self.HORIZONTAL_10   = "mx-10"		//margin-left: 2.5rem; // 40px margin-right: 2.5rem; // 40px 
+	self.VERTICAL_10     = "my-10"		//margin-top: 2.5rem; // 40px margin-bottom: 2.5rem; // 40px 
+	self.START_10        = "ms-10"		//margin-inline-start: 2.5rem; // 40px 
+	self.END_10          = "me-10"		//margin-inline-end: 2.5rem; // 40px 
+	self.TOP_10          = "mt-10"		//margin-top: 2.5rem; // 40px 
+	self.RIGHT_10        = "mr-10"		//margin-right: 2.5rem; // 40px 
+	self.BOTTOM_10       = "mb-10"		//margin-bottom: 2.5rem; // 40px 
+	self.LEFT_10         = "ml-10"		//margin-left: 2.5rem; // 40px 
+	self.ALL_11          = "m-11"		//margin: 2.75rem; // 44px 
+	self.HORIZONTAL_11   = "mx-11"		//margin-left: 2.75rem; // 44px margin-right: 2.75rem; // 44px 
+	self.VERTICAL_11     = "my-11"		//margin-top: 2.75rem; // 44px margin-bottom: 2.75rem; // 44px 
+	self.START_11        = "ms-11"		//margin-inline-start: 2.75rem; // 44px 
+	self.END_11          = "me-11"		//margin-inline-end: 2.75rem; // 44px 
+	self.TOP_11          = "mt-11"		//margin-top: 2.75rem; // 44px 
+	self.RIGHT_11        = "mr-11"		//margin-right: 2.75rem; // 44px 
+	self.BOTTOM_11       = "mb-11"		//margin-bottom: 2.75rem; // 44px 
+	self.LEFT_11         = "ml-11"		//margin-left: 2.75rem; // 44px 
+	self.ALL_12          = "m-12"		//margin: 3rem; // 48px 
+	self.HORIZONTAL_12   = "mx-12"		//margin-left: 3rem; // 48px margin-right: 3rem; // 48px 
+	self.VERTICAL_12     = "my-12"		//margin-top: 3rem; // 48px margin-bottom: 3rem; // 48px 
+	self.START_12        = "ms-12"		//margin-inline-start: 3rem; // 48px 
+	self.END_12          = "me-12"		//margin-inline-end: 3rem; // 48px 
+	self.TOP_12          = "mt-12"		//margin-top: 3rem; // 48px 
+	self.RIGHT_12        = "mr-12"		//margin-right: 3rem; // 48px 
+	self.BOTTOM_12       = "mb-12"		//margin-bottom: 3rem; // 48px 
+	self.LEFT_12         = "ml-12"		//margin-left: 3rem; // 48px 
+	self.ALL_14          = "m-14"		//margin: 3.5rem; // 56px 
+	self.HORIZONTAL_14   = "mx-14"		//margin-left: 3.5rem; // 56px margin-right: 3.5rem; // 56px 
+	self.VERTICAL_14     = "my-14"		//margin-top: 3.5rem; // 56px margin-bottom: 3.5rem; // 56px 
+	self.START_14        = "ms-14"		//margin-inline-start: 3.5rem; // 56px 
+	self.END_14          = "me-14"		//margin-inline-end: 3.5rem; // 56px 
+	self.TOP_14          = "mt-14"		//margin-top: 3.5rem; // 56px 
+	self.RIGHT_14        = "mr-14"		//margin-right: 3.5rem; // 56px 
+	self.BOTTOM_14       = "mb-14"		//margin-bottom: 3.5rem; // 56px 
+	self.LEFT_14         = "ml-14"		//margin-left: 3.5rem; // 56px 
+	self.ALL_16          = "m-16"		//margin: 4rem; // 64px 
+	self.HORIZONTAL_16   = "mx-16"		//margin-left: 4rem; // 64px margin-right: 4rem; // 64px 
+	self.VERTICAL_16     = "my-16"		//margin-top: 4rem; // 64px margin-bottom: 4rem; // 64px 
+	self.START_16        = "ms-16"		//margin-inline-start: 4rem; // 64px 
+	self.END_16          = "me-16"		//margin-inline-end: 4rem; // 64px 
+	self.TOP_16          = "mt-16"		//margin-top: 4rem; // 64px 
+	self.RIGHT_16        = "mr-16"		//margin-right: 4rem; // 64px 
+	self.BOTTOM_16       = "mb-16"		//margin-bottom: 4rem; // 64px 
+	self.LEFT_16         = "ml-16"		//margin-left: 4rem; // 64px 
+	self.ALL_20          = "m-20"		//margin: 5rem; // 80px 
+	self.HORIZONTAL_20   = "mx-20"		//margin-left: 5rem; // 80px margin-right: 5rem; // 80px 
+	self.VERTICAL_20     = "my-20"		//margin-top: 5rem; // 80px margin-bottom: 5rem; // 80px 
+	self.START_20        = "ms-20"		//margin-inline-start: 5rem; // 80px 
+	self.END_20          = "me-20"		//margin-inline-end: 5rem; // 80px 
+	self.TOP_20          = "mt-20"		//margin-top: 5rem; // 80px 
+	self.RIGHT_20        = "mr-20"		//margin-right: 5rem; // 80px 
+	self.BOTTOM_20       = "mb-20"		//margin-bottom: 5rem; // 80px 
+	self.LEFT_20         = "ml-20"		//margin-left: 5rem; // 80px 
+	self.ALL_24          = "m-24"		//margin: 6rem; // 96px 
+	self.HORIZONTAL_24   = "mx-24"		//margin-left: 6rem; // 96px margin-right: 6rem; // 96px 
+	self.VERTICAL_24     = "my-24"		//margin-top: 6rem; // 96px margin-bottom: 6rem; // 96px 
+	self.START_24        = "ms-24"		//margin-inline-start: 6rem; // 96px 
+	self.END_24          = "me-24"		//margin-inline-end: 6rem; // 96px 
+	self.TOP_24          = "mt-24"		//margin-top: 6rem; // 96px 
+	self.RIGHT_24        = "mr-24"		//margin-right: 6rem; // 96px 
+	self.BOTTOM_24       = "mb-24"		//margin-bottom: 6rem; // 96px 
+	self.LEFT_24         = "ml-24"		//margin-left: 6rem; // 96px 
+	self.ALL_28          = "m-28"		//margin: 7rem; // 112px 
+	self.HORIZONTAL_28   = "mx-28"		//margin-left: 7rem; // 112px margin-right: 7rem; // 112px 
+	self.VERTICAL_28     = "my-28"		//margin-top: 7rem; // 112px margin-bottom: 7rem; // 112px 
+	self.START_28        = "ms-28"		//margin-inline-start: 7rem; // 112px 
+	self.END_28          = "me-28"		//margin-inline-end: 7rem; // 112px 
+	self.TOP_28          = "mt-28"		//margin-top: 7rem; // 112px 
+	self.RIGHT_28        = "mr-28"		//margin-right: 7rem; // 112px 
+	self.BOTTOM_28       = "mb-28"		//margin-bottom: 7rem; // 112px 
+	self.LEFT_28         = "ml-28"		//margin-left: 7rem; // 112px 
+	self.ALL_32          = "m-32"		//margin: 8rem; // 128px 
+	self.HORIZONTAL_32   = "mx-32"		//margin-left: 8rem; // 128px margin-right: 8rem; // 128px 
+	self.VERTICAL_32     = "my-32"		//margin-top: 8rem; // 128px margin-bottom: 8rem; // 128px 
+	self.START_32        = "ms-32"		//margin-inline-start: 8rem; // 128px 
+	self.END_32          = "me-32"		//margin-inline-end: 8rem; // 128px 
+	self.TOP_32          = "mt-32"		//margin-top: 8rem; // 128px 
+	self.RIGHT_32        = "mr-32"		//margin-right: 8rem; // 128px 
+	self.BOTTOM_32       = "mb-32"		//margin-bottom: 8rem; // 128px 
+	self.LEFT_32         = "ml-32"		//margin-left: 8rem; // 128px 
+	self.ALL_36          = "m-36"		//margin: 9rem; // 144px 
+	self.HORIZONTAL_36   = "mx-36"		//margin-left: 9rem; // 144px margin-right: 9rem; // 144px 
+	self.VERTICAL_36     = "my-36"		//margin-top: 9rem; // 144px margin-bottom: 9rem; // 144px 
+	self.START_36        = "ms-36"		//margin-inline-start: 9rem; // 144px 
+	self.END_36          = "me-36"		//margin-inline-end: 9rem; // 144px 
+	self.TOP_36          = "mt-36"		//margin-top: 9rem; // 144px 
+	self.RIGHT_36        = "mr-36"		//margin-right: 9rem; // 144px 
+	self.BOTTOM_36       = "mb-36"		//margin-bottom: 9rem; // 144px 
+	self.LEFT_36         = "ml-36"		//margin-left: 9rem; // 144px 
+	self.ALL_40          = "m-40"		//margin: 10rem; // 160px 
+	self.HORIZONTAL_40   = "mx-40"		//margin-left: 10rem; // 160px margin-right: 10rem; // 160px 
+	self.VERTICAL_40     = "my-40"		//margin-top: 10rem; // 160px margin-bottom: 10rem; // 160px 
+	self.START_40        = "ms-40"		//margin-inline-start: 10rem; // 160px 
+	self.END_40          = "me-40"		//margin-inline-end: 10rem; // 160px 
+	self.TOP_40          = "mt-40"		//margin-top: 10rem; // 160px 
+	self.RIGHT_40        = "mr-40"		//margin-right: 10rem; // 160px 
+	self.BOTTOM_40       = "mb-40"		//margin-bottom: 10rem; // 160px 
+	self.LEFT_40         = "ml-40"		//margin-left: 10rem; // 160px 
+	self.ALL_44          = "m-44"		//margin: 11rem; // 176px 
+	self.HORIZONTAL_44   = "mx-44"		//margin-left: 11rem; // 176px margin-right: 11rem; // 176px 
+	self.VERTICAL_44     = "my-44"		//margin-top: 11rem; // 176px margin-bottom: 11rem; // 176px 
+	self.START_44        = "ms-44"		//margin-inline-start: 11rem; // 176px 
+	self.END_44          = "me-44"		//margin-inline-end: 11rem; // 176px 
+	self.TOP_44          = "mt-44"		//margin-top: 11rem; // 176px 
+	self.RIGHT_44        = "mr-44"		//margin-right: 11rem; // 176px 
+	self.BOTTOM_44       = "mb-44"		//margin-bottom: 11rem; // 176px 
+	self.LEFT_44         = "ml-44"		//margin-left: 11rem; // 176px 
+	self.ALL_48          = "m-48"		//margin: 12rem; // 192px 
+	self.HORIZONTAL_48   = "mx-48"		//margin-left: 12rem; // 192px margin-right: 12rem; // 192px 
+	self.VERTICAL_48     = "my-48"		//margin-top: 12rem; // 192px margin-bottom: 12rem; // 192px 
+	self.START_48        = "ms-48"		//margin-inline-start: 12rem; // 192px 
+	self.END_48          = "me-48"		//margin-inline-end: 12rem; // 192px 
+	self.TOP_48          = "mt-48"		//margin-top: 12rem; // 192px 
+	self.RIGHT_48        = "mr-48"		//margin-right: 12rem; // 192px 
+	self.BOTTOM_48       = "mb-48"		//margin-bottom: 12rem; // 192px 
+	self.LEFT_48         = "ml-48"		//margin-left: 12rem; // 192px 
+	self.ALL_52          = "m-52"		//margin: 13rem; // 208px 
+	self.HORIZONTAL_52   = "mx-52"		//margin-left: 13rem; // 208px margin-right: 13rem; // 208px 
+	self.VERTICAL_52     = "my-52"		//margin-top: 13rem; // 208px margin-bottom: 13rem; // 208px 
+	self.START_52        = "ms-52"		//margin-inline-start: 13rem; // 208px 
+	self.END_52          = "me-52"		//margin-inline-end: 13rem; // 208px 
+	self.TOP_52          = "mt-52"		//margin-top: 13rem; // 208px 
+	self.RIGHT_52        = "mr-52"		//margin-right: 13rem; // 208px 
+	self.BOTTOM_52       = "mb-52"		//margin-bottom: 13rem; // 208px 
+	self.LEFT_52         = "ml-52"		//margin-left: 13rem; // 208px 
+	self.ALL_56          = "m-56"		//margin: 14rem; // 224px 
+	self.HORIZONTAL_56   = "mx-56"		//margin-left: 14rem; // 224px margin-right: 14rem; // 224px 
+	self.VERTICAL_56     = "my-56"		//margin-top: 14rem; // 224px margin-bottom: 14rem; // 224px 
+	self.START_56        = "ms-56"		//margin-inline-start: 14rem; // 224px 
+	self.END_56          = "me-56"		//margin-inline-end: 14rem; // 224px 
+	self.TOP_56          = "mt-56"		//margin-top: 14rem; // 224px 
+	self.RIGHT_56        = "mr-56"		//margin-right: 14rem; // 224px 
+	self.BOTTOM_56       = "mb-56"		//margin-bottom: 14rem; // 224px 
+	self.LEFT_56         = "ml-56"		//margin-left: 14rem; // 224px 
+	self.ALL_60          = "m-60"		//margin: 15rem; // 240px 
+	self.HORIZONTAL_60   = "mx-60"		//margin-left: 15rem; // 240px margin-right: 15rem; // 240px 
+	self.VERTICAL_60     = "my-60"		//margin-top: 15rem; // 240px margin-bottom: 15rem; // 240px 
+	self.START_60        = "ms-60"		//margin-inline-start: 15rem; // 240px 
+	self.END_60          = "me-60"		//margin-inline-end: 15rem; // 240px 
+	self.TOP_60          = "mt-60"		//margin-top: 15rem; // 240px 
+	self.RIGHT_60        = "mr-60"		//margin-right: 15rem; // 240px 
+	self.BOTTOM_60       = "mb-60"		//margin-bottom: 15rem; // 240px 
+	self.LEFT_60         = "ml-60"		//margin-left: 15rem; // 240px 
+	self.ALL_64          = "m-64"		//margin: 16rem; // 256px 
+	self.HORIZONTAL_64   = "mx-64"		//margin-left: 16rem; // 256px margin-right: 16rem; // 256px 
+	self.VERTICAL_64     = "my-64"		//margin-top: 16rem; // 256px margin-bottom: 16rem; // 256px 
+	self.START_64        = "ms-64"		//margin-inline-start: 16rem; // 256px 
+	self.END_64          = "me-64"		//margin-inline-end: 16rem; // 256px 
+	self.TOP_64          = "mt-64"		//margin-top: 16rem; // 256px 
+	self.RIGHT_64        = "mr-64"		//margin-right: 16rem; // 256px 
+	self.BOTTOM_64       = "mb-64"		//margin-bottom: 16rem; // 256px 
+	self.LEFT_64         = "ml-64"		//margin-left: 16rem; // 256px 
+	self.ALL_72          = "m-72"		//margin: 18rem; // 288px 
+	self.HORIZONTAL_72   = "mx-72"		//margin-left: 18rem; // 288px margin-right: 18rem; // 288px 
+	self.VERTICAL_72     = "my-72"		//margin-top: 18rem; // 288px margin-bottom: 18rem; // 288px 
+	self.START_72        = "ms-72"		//margin-inline-start: 18rem; // 288px 
+	self.END_72          = "me-72"		//margin-inline-end: 18rem; // 288px 
+	self.TOP_72          = "mt-72"		//margin-top: 18rem; // 288px 
+	self.RIGHT_72        = "mr-72"		//margin-right: 18rem; // 288px 
+	self.BOTTOM_72       = "mb-72"		//margin-bottom: 18rem; // 288px 
+	self.LEFT_72         = "ml-72"		//margin-left: 18rem; // 288px 
+	self.ALL_80          = "m-80"		//margin: 20rem; // 320px 
+	self.HORIZONTAL_80   = "mx-80"		//margin-left: 20rem; // 320px margin-right: 20rem; // 320px 
+	self.VERTICAL_80     = "my-80"		//margin-top: 20rem; // 320px margin-bottom: 20rem; // 320px 
+	self.START_80        = "ms-80"		//margin-inline-start: 20rem; // 320px 
+	self.END_80          = "me-80"		//margin-inline-end: 20rem; // 320px 
+	self.TOP_80          = "mt-80"		//margin-top: 20rem; // 320px 
+	self.RIGHT_80        = "mr-80"		//margin-right: 20rem; // 320px 
+	self.BOTTOM_80       = "mb-80"		//margin-bottom: 20rem; // 320px 
+	self.LEFT_80         = "ml-80"		//margin-left: 20rem; // 320px 
+	self.ALL_96          = "m-96"		//margin: 24rem; // 384px 
+	self.HORIZONTAL_96   = "mx-96"		//margin-left: 24rem; // 384px margin-right: 24rem; // 384px 
+	self.VERTICAL_96     = "my-96"		//margin-top: 24rem; // 384px margin-bottom: 24rem; // 384px 
+	self.START_96        = "ms-96"		//margin-inline-start: 24rem; // 384px 
+	self.END_96          = "me-96"		//margin-inline-end: 24rem; // 384px 
+	self.TOP_96          = "mt-96"		//margin-top: 24rem; // 384px 
+	self.RIGHT_96        = "mr-96"		//margin-right: 24rem; // 384px 
+	self.BOTTOM_96       = "mb-96"		//margin-bottom: 24rem; // 384px 
+	self.LEFT_96         = "ml-96"		//margin-left: 24rem; // 384px 
+	self.ALL_AUTO        = "m-auto"		//margin: auto;
+	self.HORIZONTAL_AUTO = "mx-auto"	//margin-left: auto;margin-right: auto;
+	self.VERTICAL_AUTO   = "my-auto"	//margin-top: auto;margin-bottom: auto;
+	self.START_AUTO      = "ms-auto"	//margin-inline-start: auto;
+	self.END_AUTO        = "me-auto"	//margin-inline-end: auto;
+	self.TOP_AUTO        = "mt-auto"	//margin-top: auto;
+	self.RIGHT_AUTO      = "mr-auto"	//margin-right: auto;
+	self.BOTTOM_AUTO     = "mb-auto"	//margin-bottom: auto;
+	self.LEFT_AUTO       = "ml-auto"	//margin-left: auto;
+}
+
+
+
+CursorCls = cCursor()
+OpacityCls = cOpacity()
+BoxShadowCls = cBoxShadow()

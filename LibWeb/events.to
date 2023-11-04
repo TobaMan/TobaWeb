@@ -1,0 +1,79 @@
+import : LibWeb / webdevice
+
+enum:eEVENTS{\
+	CHANGE;\
+	CLICK;\		 // The user clicks an HTML element
+	DBLCLICK;\	
+	MOUSEOVER;\ 	// The user moves the mouse over an HTML element
+	MOUSEOUT;\ 
+	MOUSEENTER;\	
+	MOUSELEAVE;\	
+	MOUSEMOVE;\	
+	MOUSEUP;\		 
+	MOUSEDOWN;\
+	TOUCHCANCEL;\ //A touch is interrupted
+	TOUCHEND;\	  //A finger is removed from a touch screen
+	TOUCHMOVE;\	  //A finger is dragged across the screen
+	TOUCHSTART;\  //A finger is placed on a touch screen	 
+	KEYDOWN;\
+	TIMEOUT;\
+	ANIMATIONEND;\
+	NEVENT;\
+	EVENTNAME;\ 			
+}
+
+EVENTNAME = (\
+    "change",\
+    "click",\
+    "dblclick",\
+    "mouseover",\
+    "mouseout",\
+    "mouseenter",\
+    "mouseleave",\
+    "mousemove",\
+    "mouseup",\
+    "mousedown",\
+	"touchcancel",\
+	"touchend",\
+	"touchmove",\
+	"touchstart",\
+    "keydown",\
+	"timeout",\
+	"animationend"\
+)
+
+obj:cEvent(){
+	
+	self.evtcallback = map(NEVENT, 0)
+
+	func:GetCallback(self, evtid){
+		return(self.evtcallback[evtid])
+	}
+
+	func:SetCallback(self, evtid, fcall){
+		self.evtcallback[evtid]   = fcall
+	}
+
+	func:GetEventName(self, evtid){
+		return(EVENTNAME[evtid])
+	}
+
+}
+
+func:AddEvent(item, event){
+	//Add event for item
+	CallJs((ADDEVENT, item, event))
+}
+
+func:LastEvent(){
+	//Retrive the last registered event
+	return(CallJs((LASTEVENT, 0)))
+}
+
+
+
+
+
+
+
+

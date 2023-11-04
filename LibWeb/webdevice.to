@@ -1,0 +1,80 @@
+
+enum:eCST{FALSE; TRUE}
+
+enum:eDEVICE{ 
+    START_MAINLOOP;\
+    STOP_MAINLOOP;\ 
+    RUNJS_SCRPIT;\ 
+    CALLJS; PRGHANDLE }
+
+
+enum:eIMPORTJS{ \
+	DOMAPPEND; DOMREMOVE; DOMBEFORE; DOMAFTER; DOMWRAP; DOMWRAPALL;\
+	DOMHASCLASS; DOMADDCLASS; DOMREMOVECLASS; DOMTOGGLECLASS;\
+	DOMGETATTR; DOMSETATTR; DOMREMOVEATTR;\
+	DOMWIDTH; DOMHEIGHT; DOMGETPOSITION; DOMSETPOSITION;\
+	DOMGETTEXT; DOMSETTEXT; DOMVAL; DOMPROP; DOMHTML; DOMGETCSS; DOMSETCSS;\
+	SHOWMODAL; TRIGGER; ADDEVENT; LASTEVENT; ISTOUCHDEVICE; TRIGGERINGREFLOW;\
+	SETLOCALSTORAGE; GETLOCALSTORAGE; CLEARITEMLOCALSTORAGE; CLEARLOCALSTORAGE; SIZELOCALSTORAGE; KEYSLOCALSTORAGE;\
+	SPLITITEM; SORTITEM; CODEEDITOR; OBJECTREF; REDIRECTCONSOLE; READFILE}
+
+
+
+
+
+func:PrgHandle( ){
+    device(PRGHANDLE, null()) 
+}
+
+func:CallJs( args ){
+    //Calling a function written in javascript
+	//args: [MAPTYPE] The list of paramters (jsfunction_Id, param_1, param_2, param_n, ...)
+	//out: [MAPTYPE] The list of the dreturned data
+    return( device(CALLJS, args) )
+}
+
+func:RunJsString(code){
+	//Run js code as string (ex: RunJsString("console.log('hello world !')"))
+	device(RUNJS_SCRPIT, code)
+}
+
+func:ObjectRef(item, fnc, param){
+	return(CallJs((OBJECTREF, item, fnc, param)))
+}
+
+func:MainLoop(fcontent){
+	//Call a function in the threaded main loop at 60fps
+	f = (fcontent, 0);f[0]()
+	device(START_MAINLOOP, fcontent)
+}
+func:StopMainLoop(){
+	//Stop the main loop
+	device(STOP_MAINLOOP, null())
+}
+
+func:IsTouchDevice(){
+	//Is working on touch device
+	return(CallJs((ISTOUCHDEVICE, 0))[0])
+}
+
+func:RedirectConsole(item){
+	//Message redirection in console
+	CallJs((REDIRECTCONSOLE, item))
+}
+
+func:ReadFile(item, file){
+	//Read a file
+	CallJs((READFILE, item, file))
+}
+
+func:Trigger(item, fnc){
+	//Execute all handlers and behaviors attached to the matched elements for the given event type.
+	CallJs((TRIGGER, item, fnc))
+}
+
+func:ShowModal(item){
+	//Show modal window
+	CallJs((SHOWMODAL, item))
+}
+
+

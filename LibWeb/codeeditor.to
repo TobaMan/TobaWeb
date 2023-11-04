@@ -1,0 +1,75 @@
+import : LibWeb / webdevice
+import : LibWeb / dom
+
+obj:CodeEditor(id){
+
+	self.id = id
+    self.object = self._Create()
+    self._Init()
+
+    func:_Create(self){
+        return(CallJs((CODEEDITOR, self.id))[0])}
+
+    func:_Init(self){
+        dom::SetCss(".CodeMirror", "height", "auto")
+        dom::SetCss(".CodeMirror", "font-size", "14px")
+        // dom::SetCss(".cm-matchhighlight", "background", "red !important")
+    }
+
+    func:LoadFile(self, file){
+        webdevice::ReadFile(self.object, file)
+    }
+
+    func:GetValue(self){
+       return(ObjectRef(self.object, "getValue", "undefined")[0])
+    }
+
+    func:LineCount(self){
+       return(ObjectRef(self.object, "lineCount", "undefined")[0])
+    }
+
+    func:SetValue(self, value){
+        return(ObjectRef(self.object, "setValue", map(1, value)))
+    }
+
+    func:SetOption(self, opt, status){
+        return(ObjectRef(self.object, "setOption", (opt, status)))
+    }
+
+    func:ShowLineNumbers(self, status){
+        return(ObjectRef(self.object, "setOption", ("lineNumbers", status)))
+    }
+
+    func:AutoCloseBrackets(self, status){
+        return(ObjectRef(self.object, "setOption", ("autoCloseBrackets", status)))
+    }
+
+    func:Matchbrackets(self, status){
+        return(ObjectRef(self.object, "setOption", ("matchbrackets", status)))
+    }
+
+    func:StyleActiveLine(self, status){
+        return(self.SetOption("styleActiveLine", status))}
+
+    func:SelectAll(self){
+        return(ObjectRef(self.object, "selectAll", "undefined"))
+    }
+
+    func:IndentMore(self){
+        
+        // return(ObjectRef(self.object, "CodeMirror.commands", "indentMore", "undefined"))
+        return(ObjectRef(self.object, "indentMore", "undefined"))
+    }
+
+    func:IndentLess(self){
+        return(ObjectRef(self.object, "indentLess", "undefined"))
+    }
+
+    func:IndentAuto(self){
+        return(ObjectRef(self.object, "indentAuto", "undefined"))
+    }
+
+    
+    
+
+}

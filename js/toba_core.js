@@ -24,6 +24,29 @@ var jsEvents = [
     "animationend",
 ];
 
+var ObjectReferences = {
+
+};
+
+function StoreObject(obj){
+    var newid = Date.now().toString();
+    ObjectReferences[newid] = obj;
+    return newid;
+}
+
+function ObjectRef(item, fnc, args){
+    var retvalue = 0;
+    var obj = ObjectReferences[item];
+    // if (obj[fnc] instanceof Function) { 
+    //     fnc = obj[fnc];}
+    if(args == "undefined"){
+        retvalue = obj[fnc]();}
+    else{
+        if(!IsArray(args)){args = [args];}
+        retvalue = obj[fnc](...args);}
+    return toTobaMap(retvalue);
+}
+
 
 function ListToF32Ptr(data){
     var data_ptr = Module._malloc(data.length * 4);
@@ -49,6 +72,9 @@ function DeletePtr(ptr){
     Module._free(ptr);
 }
 
+function PtrU8(ptr, index){
+    return Module.HEAP8[ptr + index];
+}
 function PtrI32(ptr, index){
     return Module.HEAP32[(ptr + index*4) >> 2];
 }
@@ -57,6 +83,29 @@ function PtrF32(ptr, index){
 }
 function PtrF64(ptr, index){
     return Module.HEAPF64[(ptr + index*8) >> 3];
+}
+
+var jsStr = "";
+function jsPrintf(data){
+
+    
+
+    // console.log(Module.HEAP8[data]);
+    // console.log(Module.HEAP8[data + 1]);
+    // var size = 0;
+    // while (PtrU8(data, size)) {size++;}
+    // var str = new Uint8Array(
+    //     Module.HEAP8.buffer, data, size);
+    // str = String.fromCharCode.apply(null, str);
+
+
+    var str = Module.AsciiToString(data);
+    jsStr = jsStr.concat(str);
+    if (jsStr.includes("\n")){
+        console.log(jsStr);
+        jsStr = "";}
+
+    // DeletePtr(data);
 }
 
 function IsUndefined(item){
@@ -116,12 +165,10 @@ function _TobaInit_() {
 
 
 function JsReadMapVar(data){
-    //dic = {};
     var dsize = PtrF64(data, 0);
     let listvar = new Array(dsize);
     //console.log("\nReadMapVar lenght:", dsize);
     for(i=2; i<2+dsize; i++){
-        //var id = String(i - 2);
         var id = i - 2;
         var pitem = PtrF64(data, i);
         var startv = pitem + 2;
@@ -132,7 +179,10 @@ function JsReadMapVar(data){
         if(titem == 8){//MAP type
             var mdata = data+pitem*8;
             var jsdata = JsReadMapVar(mdata);
-            // console.log(listvar, jsdata);
+            // console.log(listvar, jsdata, jsWriteMapVar(jsdata));
+            i = i + jsWriteMapVar(jsdata).length;
+            listvar[id] = jsdata;
+            continue;
         }
         else{//NUM STR type
             if(sitem >= 1){
@@ -140,6 +190,8 @@ function JsReadMapVar(data){
                     Module.HEAPF64.buffer, 
                     data+startv*8, sitem);
                 jsdata = Array.from(jsdata);
+                if(jsdata.length == 1){
+                    jsdata = jsdata[0];}
             }
             if(titem == 3){//STR type
                 jsdata = String.fromCharCode.apply(
@@ -220,6 +272,9 @@ function DomWrap(item, data){
 function DomWrapAll(item, data){
     $( item ).wrapAll( data );
 }
+function DomHasClass(item, data){
+    return toTobaMap($( item ).hasClass(data));
+}
 function DomAddClass(item, data){
     $( item ).addClass(data);
 }
@@ -273,8 +328,11 @@ function DomGetCss(item, key){
 function DomSetCss(item, key, value){
     $( item ).css( key, value );
 }
-function DomShow(item){
+function ShowModal(item){
     $( item )[0].showModal();
+}
+function Trigger(item, fnc){
+    $( item ).trigger(fnc);
 }
 function SetLocalStorage(item, value){
     value = JSON.stringify(value);
@@ -312,6 +370,34 @@ function isTouchDevice(){
 function TriggeringReflow(item){
     void $( item )[0].offsetWidth;
 }
+
+function ReadFile(item, file){
+    fetch(file)
+    .then(response => response.text())
+    .then(text => ObjectReferences[item].setValue(text))
+   
+}
+
+function RedirectConsole(item){
+    (function () {
+        // var old = console.log;
+        var logger = $( item )[0];
+        console.log = function (message) {
+            // if (typeof message == 'object') {
+            //     logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';} 
+            // else {logger.innerHTML += message + '<br />';}
+            logger.innerHTML += message + '<br />';
+            // $( item ).trigger("change", message);
+            // var event = new Event('change');
+            // logger.dispatchEvent(event);
+
+            // jsEvtList.push([item, message, 0]);
+            // ScriptCallBack();
+
+        }
+    })();
+}
+
 function SplitItem(item1, item2, split_direction){
     Split([item1, item2], {
         direction: split_direction,
@@ -325,6 +411,36 @@ function SortItem(item){
     new Sortable(item);
 }
 
+function CodeEditor(item){
+    var editor = CodeMirror($( item )[0], {
+        value:"Cur = css::cCursor();print(Cur.get())",
+        // mode: "text/x-csrc",
+        //mode: "text/x-go",
+        mode: "text/x-toba",
+        theme: 'ayu-dark',
+        // theme: 'monokai',
+        // theme: 'ambiance',
+        // theme: 'mbo',
+        // theme: 'dracula',
+        styleActiveLine: true,
+        autoCloseBrackets: true,
+        matchbrackets: true,
+        // highlightSelectionMatches: true,
+        //highlightSelectionMatches: {showToken: /\w/, annotateScrollbar: true},
+    //     highlightSelectionMatches: { 
+    //         minChars: 2,
+    //         showToken: /\w/,
+    //         style:'matchhighlight',
+    //         annotateScrollbar: true
+    //   },
+        autoRefresh: true
+    });
+    editor.refresh();
+    return toTobaMap(StoreObject(editor));
+}
+
+
+
 function NumFromId(id){
     id = id.replace("_", "");
     id = id.replace("id", "");
@@ -334,6 +450,11 @@ function NumFromId(id){
 
 function GetEventInfo(event){
 
+    if(event.type == 'change'){
+        // console.log(event.target.files[0]);
+        //return [event.target.data, 0];
+        return [0, 0];
+    }
     if(event.type == 'animationend'){
         return [event.animationName, event.elapsedTime];
     }
@@ -412,6 +533,7 @@ function jsEmFunctionMap(data){
     if(id == index++){DomAfter(jsdata[1], jsdata[2]);}
     if(id == index++){DomWrap(jsdata[1], jsdata[2]);}
     if(id == index++){DomWrapAll(jsdata[1], jsdata[2]);}
+    if(id == index++){return DomHasClass(jsdata[1], jsdata[2]);} 
     if(id == index++){DomAddClass(jsdata[1], jsdata[2]);}
     if(id == index++){DomRemoveClass(jsdata[1], jsdata[2]);}
     if(id == index++){DomToggleClass(jsdata[1], jsdata[2]);}
@@ -432,7 +554,8 @@ function jsEmFunctionMap(data){
     if(id == index++){return DomGetCss(jsdata[1], jsdata[2]);}
     if(id == index++){DomSetCss(jsdata[1], jsdata[2], jsdata[3]);}
 
-    if(id == index++){DomShow(jsdata[1]);}
+    if(id == index++){ShowModal(jsdata[1]);}
+    if(id == index++){Trigger(jsdata[1], jsdata[2]);}
     if(id == index++){AddEvent(jsdata[1], jsdata[2]);}
     if(id == index++){return LastEvent();}
 
@@ -448,6 +571,11 @@ function jsEmFunctionMap(data){
 
     if(id == index++){SplitItem(jsdata[1], jsdata[2], jsdata[3]);}
     if(id == index++) {SortItem(jsdata[1]);}
+    if(id == index++) {return CodeEditor(jsdata[1]);}
+    if(id == index++) {return ObjectRef(jsdata[1], jsdata[2], jsdata[3]);}
+    if(id == index++) {RedirectConsole(jsdata[1]);}
+    if(id == index++) {ReadFile(jsdata[1], jsdata[2]);}
+    
 
     return Null();
 }

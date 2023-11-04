@@ -1,0 +1,32 @@
+
+obj:Dict(){
+
+    self.keys = 0
+    self.values = 0
+
+    func:GetValue(self, key){
+        idx = find(self.keys, key)
+        value = self.values[idx]
+        return(value)
+    }
+    func:SetValue(self, key, value){
+        if(ismap(self.keys)){
+            if(key <> self.keys){
+                idx = find(self.keys, key)
+                self.values[idx] = value}
+            else{
+                self.keys = self.keys $ map(1, key)
+                self.values = self.values $ map(1, value)}}
+        else{
+            self.keys = map(1, key)
+            self.values = map(1, value)}     
+    }
+
+    func:Print(self){
+        i = for(0, size(self.keys), 1){
+			key = self.keys[i]
+			value = self.values[i]
+            print(key, ":", value)
+		}
+	}
+}

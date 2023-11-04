@@ -1,0 +1,45 @@
+import : LibWeb / webdevice
+
+
+// Example : 
+// storage::Clear()
+// storage::Set("data1", (1, 2, 3, 4))
+// storage::Set("data2", "toba")
+// key = foreach(storage::Keys()){
+//     print(key, ":", storage::Get(key))
+// }
+
+
+func:Set(item, data){
+	//Save Data to Local Storage 
+	CallJs((SETLOCALSTORAGE, item, data))
+}
+
+func:Get(item){
+	//Read Data from Local Storage
+	data = CallJs((GETLOCALSTORAGE, item))
+    if(ismap(data)){
+        if(size(data) == 1){
+            data = data[0]}}
+    return(data)
+}
+
+func:ClearItem(item){
+	//Remove Data from Local Storage 
+	CallJs((CLEARITEMLOCALSTORAGE, item))
+}
+
+func:Clear(){
+	//Remove All (Clear Local Storage)
+	CallJs((CLEARLOCALSTORAGE, 0))
+}
+
+func:Lenght(){
+	//Get the size of the Local Storage 
+	return(CallJs((SIZELOCALSTORAGE, 0))[0])
+}
+
+func:Keys(){
+	//Get all the keys of the Local Storage 
+	return(CallJs((KEYSLOCALSTORAGE, 0)))
+}
