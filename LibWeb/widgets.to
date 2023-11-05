@@ -726,6 +726,10 @@ func:Button(parent){
 func:wButton(parent){
 	return(Widget(parent, Button))}
 
+func:wTextButton(parent, text){
+	button = wButton(parent)
+	button.Text(text)
+	return(button)}
 
 
 func:Select(parent){
