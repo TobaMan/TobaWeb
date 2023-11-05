@@ -731,6 +731,11 @@ func:wTextButton(parent, text){
 	button.Text(text)
 	return(button)}
 
+// func:wImageButton(parent, image){
+// 	button = wButton(parent)
+// 	p = wPngAssets(button, image)
+// 	return(button)}
+
 
 func:Select(parent){
 	return(NewWidget(parent, "<select id='_ID_' class='select'>"))

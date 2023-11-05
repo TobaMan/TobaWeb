@@ -157,9 +157,16 @@ func:Playground(){
     bar = hlayout(barp)
     bar.Overflow().AutoX()
     bar.Margin("m-2")
+
+    brun = wButton(bar)
+    p = wPngAssets(brun, "run")
+    brun.Small()
+    brun.Margin("m-1")
+    brun.BorderColor("base-300")
+    brun.EventMouseClick(OnRun)
+
     optfile = wInputFile(Option(bar,"opt1", "file-code"))
     optfile.EventChange(OnOpen)
-
 
     Option(bar,"opt2", "list-check")
     Option(bar,"opt3", "list-check")
@@ -171,15 +178,6 @@ func:Playground(){
     cb.Small()
     cb.EventMouseClick(OnCombo)
 
-
-    t = wButton(bar)
-    wImageSource(t, "assets/toba.png")
-    t.Text("Run ...")
-    t.Small()
-    t.Margin("m-1")
-    t.BorderColor("base-300")
-    t.EventMouseClick(OnRun)
-    
 
     lph = hlayout(lpv)
     lph.Overflow().AutoY()
