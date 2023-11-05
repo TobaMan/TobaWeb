@@ -160,6 +160,7 @@ func:Playground(){
 
     brun = wButton(bar)
     p = wPngAssets(brun, "run")
+    p.PointerEventNone()
     brun.Small()
     brun.Margin("m-1")
     brun.BorderColor("base-300")
