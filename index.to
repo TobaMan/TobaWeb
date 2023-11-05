@@ -94,9 +94,11 @@ func:OnConfig(wdg, data){
 }
 
 func:InfoDialog(){
-    diag = wDialog(dom::IdRoot())
+    diag = wModalDialog(dom::IdRoot())
+    diag.ScreenWidth()
+    diag.ScreenHeight()
     diag.BorderColor("base-300")
-    mb = wDialogBox(diag)
+    mb = wModalBox(diag)
     llayout = wVerticalLayout(mb)
     tlayout = wHorizontalLayout(llayout)
     icon = wPngAssets(tlayout, "settings")
@@ -117,6 +119,8 @@ func:InfoDialog(){
         tgl.SetUserInfo(idcf)
         tgl.EventMouseClick(OnConfig)
     }
+    ma = wForm(wModalAction(mb))
+    quit = wTextButton(ma, "Close")
     return(diag)
 }
 
@@ -131,7 +135,8 @@ func:Option(parent, txt, icon){
     t.Small()
     t.Ghost()
     t.BorderColor("base-300")
-    wPngAssets(t, icon)
+    p = wPngAssets(t, icon)
+    p.PointerEventNone()
     t.Margin("m-1")
     t.SetUserInfo(txt)
     t.EventMouseClick(OnOption)
