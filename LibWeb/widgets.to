@@ -749,26 +749,33 @@ func:Combo(parent, data){
     return(sel)
 }
 
-func:Dialog(parent){
+func:ModalDialog(parent){
 	return(NewWidget(parent, "<dialog id='_ID_' class='modal'></dialog>"))
 }
-func:wDialog(parent){
-	return(Widget(parent, Dialog))}
+func:wModalDialog(parent){
+	return(Widget(parent, ModalDialog))}
+
+func:ModalBox(parent){
+	return(NewWidget(parent, "<div id='_ID_' class='modal-box'></div>"))
+}
+func:wModalBox(parent){
+	return(Widget(parent, ModalBox))}
+
+func:ModalAction(parent){
+	return(NewWidget(parent, "<div id='_ID_' class='modal-action'></div>"))
+}
+func:wModalAction(parent){
+	return(Widget(parent, ModalAction))}
 
 func:Form(parent){
-	return(NewWidget(parent, "<form id='_ID_' method='dialog' class='modal-backdrop'></form>"))
+	return(NewWidget(parent, "<form id='_ID_' method='dialog'></form>"))
 }
 func:wForm(parent){
 	return(Widget(parent, Form))}
 
-func:DialogBox(parent){
-	return(NewWidget(parent, "<div id='_ID_' class='modal-box'></div>"))
-}
-func:wDialogBox(parent){
-	return(Widget(parent, DialogBox))}
 
 
-	
+
 
 func:Divider(parent){
 	return(NewWidget(parent, "<div  id='_ID_' class='divider'></div>"))
