@@ -471,6 +471,12 @@ obj:Widget(parent, constructor){
 	func:EventAnimationEnd(self, fcallback){
 		AddEvent(self, events::ANIMATIONEND, fcallback)}
 
+	func:PointerEventNone(self){
+		self.AddClass("pointer-events-none")}
+
+	func:PointerEventAuto(self){
+		self.AddClass("pointer-events-auto")}
+
 	func:Ping(self){
 		cls = css::cAnimate().PING
 		self.AddClass(cls)}
@@ -760,6 +766,9 @@ func:DialogBox(parent){
 }
 func:wDialogBox(parent){
 	return(Widget(parent, DialogBox))}
+
+
+	
 
 func:Divider(parent){
 	return(NewWidget(parent, "<div  id='_ID_' class='divider'></div>"))
