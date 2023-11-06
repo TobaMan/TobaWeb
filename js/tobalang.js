@@ -18,6 +18,8 @@ CodeMirror.defineMode("toba", function(config) {
 
   var keywords = {
     "null": true,
+    "sizeof" : true, 
+    "eval" : true, 
     "type": true,
     "reverse": true,
     "fill": true,
