@@ -17,6 +17,11 @@ CodeMirror.defineMode("toba", function(config) {
 
 
   var keywords = {
+    "version" : true, 
+    "main" : true, 
+    "runproc" : true, 
+    "arglist" : true, 
+    "dtime" : true, 
     "ismap" : true, 
     "isnum" : true, 
     "isstr" : true, 
@@ -40,6 +45,7 @@ CodeMirror.defineMode("toba", function(config) {
     "remove": true,
     "insert": true,
     "replace": true,
+    "freplace": true, 
     "find": true,
     "print": true,
     "input": true,
