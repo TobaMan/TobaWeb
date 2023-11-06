@@ -17,6 +17,11 @@ CodeMirror.defineMode("toba", function(config) {
 
 
   var keywords = {
+    "ismap" : true, 
+    "isnum" : true, 
+    "isstr" : true, 
+    "isarch" : true, 
+    "isinst" : true, 
     "null": true,
     "sizeof" : true, 
     "eval" : true, 
