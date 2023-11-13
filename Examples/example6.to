@@ -1,0 +1,3 @@
+func:Test(data){
+    print(Test, data)}
+webdevice::TimeOutEvent(3000, Test, 3000)

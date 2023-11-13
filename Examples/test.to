@@ -1,0 +1,98 @@
+//Bienvenue dans le tutoriel\n de creation d'interface\nhomme machine du language Toba pour le web !"
+
+func:ShowText(text){
+  label = widgets::wLabel(panel, text)
+  label.TextColor("primary")
+  label.FontSize().Bold()
+  label.PlaceCenter()
+  //label.Animate().rotateIn()
+  label.Animate().backInDown()
+}
+
+panel.Show()
+ShowText("My first Example !")
+ShowText("Toba " $ version())
+
+
+
+
+
+//Bienvenue dans le tutoriel\n de creation d'interface\nhomme machine du language Toba pour le web !"
+
+func:Wait(ms){
+  code = "await new Promise(r => setTimeout(r, " $ strnum(ms) $ "));"
+  webdevice::RunJsString(code)
+}
+
+func:ShowText(parent, text){
+  label = widgets::wLabel(parent, text)
+  label.TextColor("primary")
+  label.FontSize().Bold()
+  label.PlaceCenter()
+  //label.Animate().rotateIn()
+  //label.Animate().backInDown()
+  return(label.Animate())
+}
+
+panel.Show()
+vl = widgets::wVerticalWindowLayout(panel)
+vl.PlaceCenter()
+ShowText(vl, "My first Example !").backInDown()
+ShowText(vl, "Toba v" $ version()).slideInDown()
+
+
+
+
+a = clock()
+loop{
+  
+  if((clock() - a) > 1000){
+    label.Hide()
+    break
+  }
+}
+
+
+
+
+func:Wait(ms){
+  //code = "await new Promise(r => setTimeout(r, " $ strnum(ms) $ "));"
+  code = "function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));}
+  await sleep(" $ strnum(ms * 1000) $ ");
+  "
+  webdevice::RunJsString(code)
+}
+
+
+
+
+//Bienvenue dans le tutoriel\n de creation d'interface\nhomme machine du language Toba pour le web !"
+
+
+func:ShowText(parent, text){
+  label = widgets::wLabel(parent, text)
+  label.TextColor("primary")
+  label.FontSize().Bold()
+  label.PlaceCenter()
+  //label.Animate().rotateIn()
+  //label.Animate().backInDown()
+  return(label.Animate())
+}
+
+panel.Show()
+vl = widgets::wVerticalWindowLayout(panel)
+vl.PlaceCenter()
+ShowText(vl, "My first Example !").backInDown()
+ShowText(vl, "Toba v" $ version()).slideInDown()
+
+
+func:ClosePanel(){
+  code = "
+  function sleep (time) {return new Promise((resolve) => setTimeout(resolve, time));}
+  sleep(3000).then(() => {$('#_id55_').toggle({ direction: 'right' }, 4000);});
+  "
+  webdevice::RunJsString(code)
+}
+
+ClosePanel()

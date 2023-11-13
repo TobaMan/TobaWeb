@@ -148,6 +148,21 @@ func:EventManager(){
 			if(isfunc(evtfunc)){
 				evtfunc(cls, evtdata)}
 		}
+
+		 
+		 // if(sizeof(wdg)){
+    //     webdevice::TimeOutEvent(3000, Run, data)
+    // }
+		// if(numid == events::TIMEOUT){
+		// 	evtfunc = evt[1]
+		// 	evtdata = evt[2]
+		// 	evtfunc = frombyte(evtfunc)[0]
+		// 	print(evtfunc, evtdata)
+		// 	// if(isfunc(evtfunc)){
+		// 	// 	evtfunc(evtdata)
+		// 	// }
+		// }
+
 	}
 }
 
@@ -357,6 +372,9 @@ obj:Widget(parent, constructor){
 
 	func:GetUserInfo(self){
 		return(self.userinfo)}
+
+	func:SetName(self, name){
+		dom::SetAttribute(self.id, "name", name)}
 
 	func:Source(self, data){
 		dom::SetAttribute(self.id, "src", data)}
@@ -662,6 +680,14 @@ obj:Widget(parent, constructor){
 		CallJs((SORTITEM, self.id))
 	}
 
+	func:Split(self, item, direction){
+		// layoutcode.AddClass("split")
+		// panedit.Split(panlogger, "vertical")
+		// lph.AddClass("split")
+		// layoutcode.Split(panel, "horizontal")
+		CallJs((SPLITITEM, self.id, item.id, direction))
+	}
+
 	func:CodeEditor(self){
 		return(CodeEditor(self.id))
 	}
@@ -786,11 +812,17 @@ func:wForm(parent){
 
 
 
-func:Divider(parent){
-	return(NewWidget(parent, "<div  id='_ID_' class='divider'></div>"))
+func:HDivider(parent){
+	return(NewWidget(parent, "<div  id='_ID_' class='divider divider-horizontal'></div>"))
 }
-func:wDivider(parent){
-	return(Widget(parent, Divider))}
+func:VDivider(parent){
+	return(NewWidget(parent, "<div  id='_ID_' class='divider divider-vertical'></div>"))
+}
+func:wHorizontalDivider(parent){
+	return(Widget(parent, HDivider))}
+
+func:wVerticalDivider(parent){
+	return(Widget(parent, VDivider))}
 
 func:Paragraph(parent){
 	return(NewWidget(parent, "<p id='_ID_'></p>"))

@@ -16,7 +16,7 @@ enum:eIMPORTJS{ \
 	DOMGETTEXT; DOMSETTEXT; DOMVAL; DOMPROP; DOMHTML; DOMGETCSS; DOMSETCSS;\
 	SHOWMODAL; TRIGGER; ADDEVENT; LASTEVENT; ISTOUCHDEVICE; TRIGGERINGREFLOW;\
 	SETLOCALSTORAGE; GETLOCALSTORAGE; CLEARITEMLOCALSTORAGE; CLEARLOCALSTORAGE; SIZELOCALSTORAGE; KEYSLOCALSTORAGE;\
-	SPLITITEM; SORTITEM; CODEEDITOR; OBJECTREF; REDIRECTCONSOLE; READFILE}
+	SPLITITEM; SORTITEM; CODEEDITOR; OBJECTREF; REDIRECTCONSOLE; GETLOG; READFILE; TIMEOUTEVENT}
 
 
 
@@ -62,6 +62,11 @@ func:RedirectConsole(item){
 	CallJs((REDIRECTCONSOLE, item))
 }
 
+func:GetLog(){
+	//Retrieve log Messages list
+	return(CallJs((GETLOG, 0)))
+}
+
 func:ReadFile(item, file){
 	//Read a file
 	CallJs((READFILE, item, file))
@@ -70,6 +75,11 @@ func:ReadFile(item, file){
 func:Trigger(item, fnc){
 	//Execute all handlers and behaviors attached to the matched elements for the given event type.
 	CallJs((TRIGGER, item, fnc))
+}
+
+func:TimeOutEvent(ms, fcall, data){
+	fcall = tobyte(map(1, fcall))
+	CallJs((TIMEOUTEVENT, ms, fcall, data))
 }
 
 func:ShowModal(item){

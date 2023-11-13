@@ -1,8 +1,15 @@
 
-var TobaHandle =  0;
+const TIMEOUTEVENT = -1;
+
+var TobaHandle = 0;
 var jsCallback =  Module.cwrap(
-    "CallbackFunction", null, ["number"]);
+    "WebCallbackFunction", null, []);
+var jsCallbackHandle =  Module.cwrap(
+    "WebCallbackFunctionHandle", null, ["number"]);
+
 var jsEvtList = [];
+
+var jsLog = [];
 
 var jsEvents = [
     "change",
@@ -20,7 +27,6 @@ var jsEvents = [
 	"touchmove",
 	"touchstart",
     "keydown",
-    "timeout",
     "animationend",
 ];
 
@@ -88,8 +94,6 @@ function PtrF64(ptr, index){
 var jsStr = "";
 function jsPrintf(data){
 
-    
-
     // console.log(Module.HEAP8[data]);
     // console.log(Module.HEAP8[data + 1]);
     // var size = 0;
@@ -102,10 +106,18 @@ function jsPrintf(data){
     var str = Module.AsciiToString(data);
     jsStr = jsStr.concat(str);
     if (jsStr.includes("\n")){
-        console.log(jsStr);
-        jsStr = "";}
+        if(jsStr.length > 1){
+            jsLog.push(jsStr);
+            console.log(jsStr);
+            jsStr = "";}}
 
     // DeletePtr(data);
+}
+
+function GetLog(){
+    if(jsLog.length){
+        return toTobaMap(jsLog);}
+    return Null();
 }
 
 function IsUndefined(item){
@@ -133,29 +145,25 @@ function Null(){
     return 0;
 }
 
+
 function LoadScript() {
     ccode_ptr = ListToU8Ptr(ccode);
     var jsStartProgram = Module.cwrap(
-        "StartProgram", null, ["number", "number"]);
+        "WebStartProgram", null, ["number", "number"]);
     jsStartProgram(ccode_ptr, ccode.length);
     DeletePtr(ccode_ptr);
 }
 
 function UnLoadScript() {
     var jsDeleteProgram = Module.cwrap(
-        "DeleteProgram", null, ["number"]);
-    jsDeleteProgram(TobaHandle);
+        "WebDeleteProgram", null, []);
+    jsDeleteProgram();
 }
 
 function ScriptCallBack(){
-    jsCallback(TobaHandle);}
+    jsCallbackHandle(TobaHandle);}
+    //jsCallback();}
 
-// function _TobaInit_() {
-//     window.addEventListener('load', function () {
-//         LoadScript();});
-//     window.addEventListener('beforeunload', function () {
-//         UnLoadScript()});
-// }
 
 function _TobaInit_() {
     Module.onRuntimeInitialized = () => { LoadScript(); }
@@ -204,6 +212,9 @@ function JsReadMapVar(data){
 }
 
 function jsWriteMapVar(data){ 
+
+    //bug : data = [["abc", "abc"]]
+
     var header = [];
     if(IsUndefined(data)){
         data = ["undefined"];}
@@ -241,9 +252,7 @@ function jsWriteMapVar(data){
             // else{//maptype
             // }
             var dat = [data[i].length, 2].concat(data[i]); //numtype
-            mapvar = mapvar.concat(dat);
-            
-            
+            mapvar = mapvar.concat(dat); 
         }
         
     }
@@ -379,31 +388,32 @@ function ReadFile(item, file){
 }
 
 function RedirectConsole(item){
-    (function () {
-        // var old = console.log;
-        var logger = $( item )[0];
-        console.log = function (message) {
-            // if (typeof message == 'object') {
-            //     logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';} 
-            // else {logger.innerHTML += message + '<br />';}
-            logger.innerHTML += message + '<br />';
-            // $( item ).trigger("change", message);
-            // var event = new Event('change');
-            // logger.dispatchEvent(event);
+    // (function () {
+    //     // var old = console.log;
+    //     var logger = $( item )[0];
+    //     console.log = function (message) {
+    //         // if (typeof message == 'object') {
+    //         //     logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';} 
+    //         // else {logger.innerHTML += message + '<br />';}
+    //         // logger.innerHTML += message + '<br />';
+    //         // $( item ).trigger("change", message);
+    //         // var event = new Event('change');
+    //         // logger.dispatchEvent(event);
 
-            // jsEvtList.push([item, message, 0]);
-            // ScriptCallBack();
+    //         // jsEvtList.push([item, message, 0]);
+    //         // ScriptCallBack();
 
-        }
-    })();
+    //     }
+    // })();
 }
 
 function SplitItem(item1, item2, split_direction){
     Split([item1, item2], {
         direction: split_direction,
-        gutterSize: 2,
+        minSize: 0,
+        gutterSize: 9,
         gutterAlign: 'center',
-        expandToMin: true,
+        snapOffset: 20
     })
 }
 function SortItem(item){
@@ -422,6 +432,7 @@ function CodeEditor(item){
         // theme: 'ambiance',
         // theme: 'mbo',
         // theme: 'dracula',
+        // autofocus: true,
         styleActiveLine: true,
         autoCloseBrackets: true,
         matchbrackets: true,
@@ -451,9 +462,7 @@ function NumFromId(id){
 function GetEventInfo(event){
 
     if(event.type == 'change'){
-        // console.log(event.target.files[0]);
-        //return [event.target.data, 0];
-        return [0, 0];
+        return event.target.value;
     }
     if(event.type == 'animationend'){
         return [event.animationName, event.elapsedTime];
@@ -499,6 +508,13 @@ function GetEventInfo(event){
     return [null, null];
 }
 
+function TimeOutEvent(ms, callback, data){
+    setTimeout(function() {
+        jsEvtList.push([-1, callback, data]);
+        ScriptCallBack();
+    }, ms);  
+}
+
 function AddEvent(item, evtype) {
     var index = jsEvents.indexOf(evtype);
     var _item = document.querySelector(item);
@@ -513,10 +529,16 @@ function AddEvent(item, evtype) {
 function LastEvent(){
     if(jsEvtList.length){
         var levt = jsEvtList.shift();
-        var idevt = NumFromId(levt[0]);
-        var data = levt[1];
-        var index = levt[2];
-        return toTobaMap([idevt, data, index]);
+        if(levt[0] == TIMEOUTEVENT){
+            var callback = levt[1];
+            var data = levt[2];
+            return toTobaMap(
+                [TIMEOUTEVENT, callback, data]);}
+        else{
+            var idevt = NumFromId(levt[0]);
+            var data = levt[1];
+            var index = levt[2];
+            return toTobaMap([idevt, data, index]);}
     }
     return Null();
 }
@@ -574,7 +596,9 @@ function jsEmFunctionMap(data){
     if(id == index++) {return CodeEditor(jsdata[1]);}
     if(id == index++) {return ObjectRef(jsdata[1], jsdata[2], jsdata[3]);}
     if(id == index++) {RedirectConsole(jsdata[1]);}
+    if(id == index++) {return GetLog();}
     if(id == index++) {ReadFile(jsdata[1], jsdata[2]);}
+    if(id == index++) {TimeOutEvent(jsdata[1], jsdata[2], jsdata[3]);}
     
 
     return Null();

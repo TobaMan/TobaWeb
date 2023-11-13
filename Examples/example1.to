@@ -1,0 +1,18 @@
+//Bienvenue dans le tutoriel\n de creation d'interface\nhomme machine du language Toba pour le web !"
+
+
+func:ShowText(parent, text){
+  label = widgets::wLabel(parent, text)
+  label.TextColor("primary")
+  label.FontSize().Bold()
+  label.PlaceCenter()
+  //label.Animate().rotateIn()
+  //label.Animate().backInDown()
+  return(label.Animate())
+}
+
+panel.Show()
+vl = widgets::wVerticalWindowLayout(panel)
+vl.PlaceCenter()
+ShowText(vl, "My first Example !").backInDown()
+ShowText(vl, "Toba v" $ version()).slideInDown()

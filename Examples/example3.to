@@ -1,0 +1,16 @@
+
+func:Wait(ms){
+  //code = "await new Promise(r => setTimeout(r, " $ strnum(ms) $ "));"
+  code = "function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));}
+  await sleep(" $ strnum(ms * 1000) $ ");
+  "
+  webdevice::RunJsString(code)
+}
+
+
+thlist  = widgets::GetThemeList()
+th = foreach(thlist){
+    widgets::ChangeAppTheme(th)
+    Wait(2000)
+}

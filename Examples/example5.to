@@ -1,0 +1,6 @@
+func:Test(wdg, data){
+  print(Test)
+}
+
+l = widgets::wLabel(panel, "text")
+l.EventMouseClick(Test)

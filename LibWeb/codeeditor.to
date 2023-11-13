@@ -5,6 +5,7 @@ obj:CodeEditor(id){
 
 	self.id = id
     self.object = self._Create()
+    self.themes = ("ayu-dark","monokai", "ambiance","mbo","dracula")
     self._Init()
 
     func:_Create(self){
@@ -21,55 +22,63 @@ obj:CodeEditor(id){
     }
 
     func:GetValue(self){
-       return(ObjectRef(self.object, "getValue", "undefined")[0])
-    }
-
-    func:LineCount(self){
-       return(ObjectRef(self.object, "lineCount", "undefined")[0])
-    }
+       return(ObjectRef(self.object, "getValue", "undefined")[0])}
 
     func:SetValue(self, value){
-        return(ObjectRef(self.object, "setValue", map(1, value)))
-    }
+        return(ObjectRef(self.object, "setValue", map(1, value)))}
+
+    func:LineCount(self){
+       return(ObjectRef(self.object, "lineCount", "undefined")[0])}
+
+    func:Refresh(self){
+       return(ObjectRef(self.object, "refresh", "undefined")[0])}
+
+    func:Command(self, com){
+       return(ObjectRef(self.object, "execCommand", map(1, com))[0])}
+
+    func:SelectAll(self){self.Command("selectAll")}
+
+    func:Undo(self){self.Command("undo")}
+
+    func:Redo(self){self.Command("redo")}
+
+    func:IndentAuto(self){self.Command("indentAuto")}
+
+    func:IndentMore(self){self.Command("indentMore")}
+
+    func:IndentLess(self){self.Command("indentLess")}
+
+    func:Find(self){self.Command("find")}
+
+    func:FindNext(self){self.Command("findNext")}
+
+    func:FindPrev(self){self.Command("findPrev")}
 
     func:SetOption(self, opt, status){
-        return(ObjectRef(self.object, "setOption", (opt, status)))
-    }
-
-    func:ShowLineNumbers(self, status){
-        return(ObjectRef(self.object, "setOption", ("lineNumbers", status)))
-    }
-
-    func:AutoCloseBrackets(self, status){
-        return(ObjectRef(self.object, "setOption", ("autoCloseBrackets", status)))
-    }
+        return(ObjectRef(self.object, "setOption", (opt, status)))}
 
     func:Matchbrackets(self, status){
-        return(ObjectRef(self.object, "setOption", ("matchbrackets", status)))
-    }
+        return(self.SetOption("autoCloseBrackets", "matchbrackets"))}
+
+    func:AutoCloseBrackets(self, status){
+        return(self.SetOption("autoCloseBrackets", status))}
+
+    func:ShowLineNumbers(self, status){
+        return(self.SetOption("lineNumbers", status))}
 
     func:StyleActiveLine(self, status){
         return(self.SetOption("styleActiveLine", status))}
 
-    func:SelectAll(self){
-        return(ObjectRef(self.object, "selectAll", "undefined"))
-    }
+    func:IndentWithTabs(self, status){
+        return(self.SetOption("indentWithTabs", status))}
 
-    func:IndentMore(self){
-        
-        // return(ObjectRef(self.object, "CodeMirror.commands", "indentMore", "undefined"))
-        return(ObjectRef(self.object, "indentMore", "undefined"))
-    }
+    func:IndentUnit(self, unit){
+        return(self.SetOption("indentUnit", unit))}
 
-    func:IndentLess(self){
-        return(ObjectRef(self.object, "indentLess", "undefined"))
-    }
+    func:SmartIndent(self, status){
+        return(self.SetOption("smartIndent", status))}
 
-    func:IndentAuto(self){
-        return(ObjectRef(self.object, "indentAuto", "undefined"))
-    }
-
-    
-    
+    func:Theme(self, theme){
+        return(self.SetOption("theme", theme))}
 
 }

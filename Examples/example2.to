@@ -1,0 +1,16 @@
+panel.Show()
+vl = widgets::wVerticalWindowLayout(panel)
+vl.PlaceCenter()
+ShowText(vl, "My first Example !").backInDown()
+ShowText(vl, "Toba v" $ version()).slideInDown()
+
+
+func:ClosePanel(){
+  code = "
+  function sleep (time) {return new Promise((resolve) => setTimeout(resolve, time));}
+  sleep(3000).then(() => {$('#_id55_').toggle({ direction: 'right' }, 4000);});
+  "
+  webdevice::RunJsString(code)
+}
+
+ClosePanel()

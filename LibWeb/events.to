@@ -1,6 +1,7 @@
 import : LibWeb / webdevice
 
 enum:eEVENTS{\
+	TIMEOUT = -1;\
 	CHANGE;\
 	CLICK;\		 // The user clicks an HTML element
 	DBLCLICK;\	
@@ -16,7 +17,6 @@ enum:eEVENTS{\
 	TOUCHMOVE;\	  //A finger is dragged across the screen
 	TOUCHSTART;\  //A finger is placed on a touch screen	 
 	KEYDOWN;\
-	TIMEOUT;\
 	ANIMATIONEND;\
 	NEVENT;\
 	EVENTNAME;\ 			
