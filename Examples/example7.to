@@ -1,0 +1,27 @@
+
+// Config example
+
+obj:Config(){
+	self.font_size = "14px"
+	self.editor_theme = "icecoder"
+	self.app_theme = "black"
+	
+	func:Apply(self){
+		widgets::ChangeAppTheme(self.app_theme)
+		editor.Theme(self.editor_theme)
+		dom::SetCss(".CodeMirror", "font-size", self.font_size)
+	}
+	
+	func:Save(self){
+		storage::Set("appconfig", tobyte(self))
+	}
+	
+	func:Restore(self){
+		self = frombyte(storage::Get("appconfig"))
+		self.Apply()
+	}
+}
+
+//Config().Save()
+Config().Restore()
+
