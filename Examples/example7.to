@@ -5,9 +5,9 @@
 
 obj:Config(){
 	self.name = "appconfig"
-	self.font_size = "14px"
-	self.editor_theme = "halloween"
-	self.app_theme = "black"
+	self.font_size = "10px"
+	self.editor_theme = "icecoder"
+	self.app_theme = "halloween"
 	
 	func:Apply(self){
 		widgets::ChangeAppTheme(self.app_theme)
