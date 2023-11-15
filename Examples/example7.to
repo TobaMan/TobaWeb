@@ -1,9 +1,12 @@
 
+
+
 // Config example
 
 obj:Config(){
+	self.name = "appconfig"
 	self.font_size = "14px"
-	self.editor_theme = "icecoder"
+	self.editor_theme = "halloween"
 	self.app_theme = "black"
 	
 	func:Apply(self){
@@ -13,15 +16,14 @@ obj:Config(){
 	}
 	
 	func:Save(self){
-		storage::Set("appconfig", tobyte(self))
+		storage::Set(self.name, tobyte(self))
 	}
 	
 	func:Restore(self){
-		self = frombyte(storage::Get("appconfig"))
+		self = frombyte(storage::Get(self.name))
 		self.Apply()
 	}
 }
 
 //Config().Save()
 Config().Restore()
-
