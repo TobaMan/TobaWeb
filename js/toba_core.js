@@ -151,7 +151,7 @@ function LoadScript() {
     var jsStartProgram = Module.cwrap(
         "WebStartProgram", null, ["number", "number"]);
     jsStartProgram(ccode_ptr, ccode.length);
-    //DeletePtr(ccode_ptr);//ameliore le demarage
+    DeletePtr(ccode_ptr);
 }
 
 function UnLoadScript() {
@@ -337,6 +337,16 @@ function DomGetCss(item, key){
 function DomSetCss(item, key, value){
     $( item ).css( key, value );
 }
+
+function DomGetStyle(item, key){
+    var style = getComputedStyle($( item )[0]);
+    return toTobaMap( style.getPropertyValue(key));
+}
+function DomSetStyle(item, key, value){
+    var item = $( item )[0];
+    item.style.setProperty(key, value);
+}
+
 function ShowModal(item){
     $( item )[0].showModal();
 }
@@ -429,15 +439,7 @@ function CodeEditor(item){
         styleActiveLine: true,
         autoCloseBrackets: true,
         matchbrackets: true,
-        // highlightSelectionMatches: true,
-        //highlightSelectionMatches: {showToken: /\w/, annotateScrollbar: true},
-    //     highlightSelectionMatches: { 
-    //         minChars: 2,
-    //         showToken: /\w/,
-    //         style:'matchhighlight',
-    //         annotateScrollbar: true
-    //   },
-        highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
+        highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: false },
         autoRefresh: true
     });
     editor.refresh();
@@ -569,6 +571,8 @@ function jsEmFunctionMap(data){
     if(id == index++){return DomGetHtml(jsdata[1]);}
     if(id == index++){return DomGetCss(jsdata[1], jsdata[2]);}
     if(id == index++){DomSetCss(jsdata[1], jsdata[2], jsdata[3]);}
+    if(id == index++){return DomGetStyle(jsdata[1], jsdata[2]);}
+    if(id == index++){DomSetStyle(jsdata[1], jsdata[2], jsdata[3]);}
 
     if(id == index++){ShowModal(jsdata[1]);}
     if(id == index++){Trigger(jsdata[1], jsdata[2]);}

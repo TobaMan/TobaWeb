@@ -1,0 +1,13 @@
+
+
+
+// Get daysiui style var
+
+primary = dom::GetStyleVar("--p")
+base_100 = dom::GetStyleVar("--b1")
+base_200 = dom::GetStyleVar("--b2")
+base_300 = dom::GetStyleVar("--b3")
+
+btn_focus_scale = dom::GetStyleVar("--btn-focus-scale")
+
+print(primary, base_100, base_200, base_300)

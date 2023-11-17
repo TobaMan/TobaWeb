@@ -18,6 +18,11 @@ func:IdRoot(){
 	//Get the Body content page id
 	return("body")}
 
+func:FromColor(val){
+	rgb = "oklch(" $ val $ ")"
+	return(rgb)
+}
+
 
 func:Append(item, data){
 	//Insert content, specified by the parameter, to the end of each element in the set of matched elements.
@@ -136,6 +141,23 @@ func:GetCss(item, key){
 func:SetCss(item, key, value){
 	//Set one or more CSS properties for every matched element.
 	CallJs((DOMSETCSS, item, key, value))
+}
+func:ItemGetStyleVar(item, key){
+	//The Window.getComputedStyle() method returns an object containing the values of all
+	//CSS properties of an element, after applying active stylesheets and resolving any
+	//basic computation those values may contain.
+	return(CallJs((DOMGETSTYLEVAR, item, key))[0])
+}
+func:GetStyleVar(key){
+	return(ItemGetStyleVar(IdRoot(), key))
+}
+func:ItemSetSlyleVar(item, key, value){
+	//The CSSStyleDeclaration.setProperty() method interface sets a new value for
+	//a property on a CSS style declaration object.
+	CallJs((DOMSETSTYLEVAR, item, key, value))
+}
+func:SetSlyleVar(key, value){
+	ItemSetSlyleVar(IdRoot(), key, value)
 }
 func:GetClassList(item){
 	cls = GetAttribute(item, "class")

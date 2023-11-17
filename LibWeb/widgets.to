@@ -106,8 +106,45 @@ func:GetThemeList(){
 		"business", "acid", "lemonade", "night", "coffee", "winter", "dim", "nord", "sunset"))
 }
 
+func:GetThemeColor(var){
+	return(dom::FromColor(dom::GetStyleVar(var)))}
+
+func:GetPrimaryColor(){return(GetThemeColor("--p"))}
+func:GetPrimaryContentColor(){return(GetThemeColor("--pc"))}
+func:GetSecondaryColor(){return(GetThemeColor("--s"))}
+func:GetSecondaryContentColor(){return(GetThemeColor("--sc"))}
+func:GetAccentColor(){return(GetThemeColor("--a"))}
+func:GetAccentContentColor(){return(GetThemeColor("--ac"))}
+func:GetNeutralColor(){return(GetThemeColor("--n"))}
+func:GetNeutralContentColor(){return(GetThemeColor("--nc"))}
+func:GetBase100Color(){return(GetThemeColor("--b1"))}
+func:GetBase200Color(){return(GetThemeColor("--b2"))}
+func:GetBase300Color(){return(GetThemeColor("--b3"))}
+func:GetBaseContentColor(){return(GetThemeColor("--bc"))}
+func:GetInfoColor(){return(GetThemeColor("--in"))}
+func:GetInfoContentColor(){return(GetThemeColor("--inc"))}
+func:GetSuccessColor(){return(GetThemeColor("--su"))}
+func:GetSuccessContentColor(){return(GetThemeColor("--suc"))}
+func:GetWarningColor(){return(GetThemeColor("--wa"))}
+func:GetWarningContentColor(){return(GetThemeColor("--wac"))}
+func:GetErrorColor(){return(GetThemeColor("--er"))}
+func:GetErrorContentColor(){return(GetThemeColor("--erc"))}
+
+func:ScrollBar(width, background, handle, hover){
+	style = "
+	<style>
+		::-webkit-scrollbar{width:" $ width $ ";}
+		::-webkit-scrollbar-track{background:" $ background $ ";}
+		::-webkit-scrollbar-thumb{background:" $ handle $ ";}
+		::-webkit-scrollbar-thumb:hover{background:" $ hover $ ";}
+	</style>"
+	dom::Append("html > head", style)
+}
+
 func:ChangeAppTheme(theme){
-	dom::SetAttribute(dom::IdHtml(), "data-theme", theme)}
+	dom::SetAttribute(dom::IdHtml(), "data-theme", theme)
+	ScrollBar("10px",GetBase100Color(),GetNeutralColor(),GetNeutralContentColor())
+}
 
 //--------------------------------------------------------------------------------------------------------------
 
@@ -739,6 +776,70 @@ func:wLayoutPanel(parent){
 	return(Widget(parent, LayoutPanel))}
 
 
+
+func:Collapse(parent){
+	return(NewWidget(parent, "<details id='_ID_' class='collapse'></details>"))}
+func:wCollapse(parent){
+	return(Widget(parent, Collapse))}
+
+func:CollapseHeader(parent){
+	return(NewWidget(parent, "<summary id='_ID_' class='collapse-title'></summary>"))}
+func:wCollapseHeader(parent){
+	return(Widget(parent, CollapseHeader))}
+
+func:CollapseContent(parent){
+	return(NewWidget(parent, "<div id='_ID_' class='collapse-content'></div>"))}
+func:wCollapseContent(parent){
+	return(Widget(parent, CollapseContent))}
+
+
+
+func:List(parent){
+	return(NewWidget(parent, "<ul id='_ID_' class='menu'></ul>"))}
+func:wList(parent){
+	return(Widget(parent, List))}
+
+func:ListItem(parent){
+	return(NewWidget(parent, "<li id='_ID_'></li>"))}
+func:wListItem(parent){
+	return(Widget(parent, ListItem))}
+
+func:Selectable(parent){
+	return(NewWidget(parent, "<a id='_ID_'></a>"))}
+func:wSelectable(parent){
+	return(Widget(parent, Selectable))}
+
+func:ListBox(parent, data){
+	l = wList(parent)
+	d = foreach(data){
+		litem = wListItem(l)
+		sel = wSelectable(litem)
+		sel.Text(d)}
+	return(l)
+}
+
+func:CollapseText(parent, title, content){
+	c =  wCollapse(parent)
+	ch = wCollapseHeader(c)
+	cc = wCollapseContent(c)
+	ch.Text(title)
+	ch.FontSize().Bold()
+	cc.Text(content)
+	return(c)
+}
+
+func:CollapseList(parent, title, data){
+	c =  wCollapse(parent)
+	ch = wCollapseHeader(c)
+	cc = wCollapseContent(c)
+	cc.Overflow().AutoY()
+	cc.SetHeight("h-40")
+	ch.Text(title)
+	ch.FontSize().Bold()
+	l = ListBox(cc, data)
+	return(c)
+}
+
 func:Button(parent){
 	return(NewWidget(parent, "<button id='_ID_' class='btn'></button>"))
 }
@@ -778,26 +879,22 @@ func:Combo(parent, data){
 }
 
 func:ModalDialog(parent){
-	return(NewWidget(parent, "<dialog id='_ID_' class='modal'></dialog>"))
-}
+	return(NewWidget(parent, "<dialog id='_ID_' class='modal'></dialog>"))}
 func:wModalDialog(parent){
 	return(Widget(parent, ModalDialog))}
 
 func:ModalBox(parent){
-	return(NewWidget(parent, "<div id='_ID_' class='modal-box'></div>"))
-}
+	return(NewWidget(parent, "<div id='_ID_' class='modal-box'></div>"))}
 func:wModalBox(parent){
 	return(Widget(parent, ModalBox))}
 
 func:ModalAction(parent){
-	return(NewWidget(parent, "<div id='_ID_' class='modal-action'></div>"))
-}
+	return(NewWidget(parent, "<div id='_ID_' class='modal-action'></div>"))}
 func:wModalAction(parent){
 	return(Widget(parent, ModalAction))}
 
 func:Form(parent){
-	return(NewWidget(parent, "<form id='_ID_' method='dialog'></form>"))
-}
+	return(NewWidget(parent, "<form id='_ID_' method='dialog'></form>"))}
 func:wForm(parent){
 	return(Widget(parent, Form))}
 
@@ -982,9 +1079,6 @@ func:IndicatorMiddleCenter(parent){
 
 func:IndicatorMiddleEnd(parent){
 	return(Indicator(parent, "indicator-middle indicator-end"))}
-
-
-
 
 
 // func:Container(opts){
