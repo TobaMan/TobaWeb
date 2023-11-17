@@ -7,7 +7,7 @@ import : LibWeb / storage
 import : LibWeb / widgets
 
 
-enum:gPLAYGROUND{editor; panel; panedit; panlogger; logger; optfile; codes; modules; examples; config; info_diag}
+enum:gPLAYGROUND{editor; panel; panedit; panlogger; logger; layoutcode; optfile; codes; modules; examples; config; info_diag}
 
 config = ("Show line numbers",\
         "Automatic close brackets",\
@@ -27,6 +27,9 @@ func:ToggleConsole(){
         logger.Hide()
         dom::RemoveClass(panedit.id, "h-2/3")
         dom::RemoveClass(panlogger.id, "h-1/3")
+        // layoutcode.SetHeight("h-2/3")
+        // panedit.FullHeight()//jgjgjgjgjgj
+        layoutcode.AutoHeight()
         panedit.AutoHeight()
         panlogger.SetHeight("h-0")
         isshown = 0
@@ -104,6 +107,7 @@ func:OnOption(wdg, data){
     if(option == "indent-less"){editor.IndentLess()}
     if(option == "indent-more"){editor.IndentMore()}
     if(option == "indent-auto"){editor.IndentAuto()}
+    if(option == "comment"){editor.ToggleComment()}
     if(option == "find"){editor.Find()}
     if(option == "find-next"){editor.FindNext()}
     if(option == "find-prev"){editor.FindPrev()}
@@ -139,7 +143,7 @@ func:OnApplicationTheme(wdg, data){
 }
 
 func:OnCodeEditorTheme(wdg, data){
-    editor.Theme(data)
+    editor.SetTheme(data)
 }
 
 
@@ -249,6 +253,7 @@ func:Playground(){
     Option(bar,"new", "new")
     Option(bar,"undo", "undo")
     Option(bar,"redo", "redo")
+    Option(bar,"comment", "comment")
     Option(bar,"indent-less", "indent-less")
     Option(bar,"indent-more", "indent-more")
     Option(bar,"indent-auto", "indent-auto")
@@ -288,7 +293,7 @@ func:Playground(){
     editor.IndentWithTabs(TRUE)
     editor.SmartIndent(TRUE)
     editor.IndentUnit(4)
-    editor.Theme("ayu-dark")
+    editor.SetTheme("ayu-dark")
     editor.LoadFile("index.to")
 
     panlogger = widgets::wLayoutPanel(layoutcode)

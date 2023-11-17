@@ -68,34 +68,29 @@ func:GetInfo(id){
 
 //--------------------------------------------------------------------------------------------------------------
 
-func:GetContent(id){
-	//Get the widget id content
-	return(gInfo[NumFromId(id)].content)
-}
+func : GetContent(id){
+		   // Get the widget id content
+		   return (gInfo[NumFromId(id)].content)}
 
+	   // func:Resizable(item, x, y){
+	   // 	if(x && !y){dom::AddClass(item, "resize-x overflow-auto")}
+	   // 	if(!x && y){dom::AddClass(item, "resize-y overflow-auto")}
+	   // 	if(x && y){dom::AddClass(item, "resize overflow-auto")}
+	   // 	if(!x && !y){
+	   // 		dom::RemoveClass(item, "resize")
+	   // 		dom::RemoveClass(item, "resize-x")
+	   // 		dom::RemoveClass(item, "resize-y")
+	   // 		dom::RemoveClass(item, "overflow-auto")
+	   // 	}
+	   // }
 
-// func:Resizable(item, x, y){
-// 	if(x && !y){dom::AddClass(item, "resize-x overflow-auto")}
-// 	if(!x && y){dom::AddClass(item, "resize-y overflow-auto")}
-// 	if(x && y){dom::AddClass(item, "resize overflow-auto")}
-// 	if(!x && !y){
-// 		dom::RemoveClass(item, "resize")
-// 		dom::RemoveClass(item, "resize-x")
-// 		dom::RemoveClass(item, "resize-y")
-// 		dom::RemoveClass(item, "overflow-auto")
-// 	}
-// }
+	   // func:Split(item1, item2, direction){
+	   // 	CallJs((SPLITITEM, item1, item2, direction))
+	   // }
 
-// func:Split(item1, item2, direction){
-// 	CallJs((SPLITITEM, item1, item2, direction))
-// }
-
-// func:Drag(item){
-// 	CallJs((DRAGITEM, item))
-// }
-
-
-
+	   // func:Drag(item){
+	   // 	CallJs((DRAGITEM, item))
+	   // }
 
 //--------------------------------------------------------------------------------------------------------------
 
@@ -105,18 +100,16 @@ func:GetContent(id){
 // }
 
 func:GetThemeList(){
-    return(("light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave", "retro", "cyberpunk",\
-      "valentine", "halloween", "garden", "forest", "aqua", "lofi", "pastel", "fantasy", "wireframe", "black",\
-      "luxury", "dracula", "cmyk", "autumn", "business", "acid", "lemonade", "night", "coffee", "winter"))
+	return (("light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave",\
+		"retro", "cyberpunk", "valentine", "halloween", "garden", "forest", "aqua", "lofi",\
+		"pastel", "fantasy", "wireframe", "black", "luxury", "dracula", "cmyk", "autumn",\
+		"business", "acid", "lemonade", "night", "coffee", "winter", "dim", "nord", "sunset"))
 }
 
 func:ChangeAppTheme(theme){
-	dom::SetAttribute(dom::IdHtml(), "data-theme", theme)
-}
+	dom::SetAttribute(dom::IdHtml(), "data-theme", theme)}
 
 //--------------------------------------------------------------------------------------------------------------
-
-
 
 func:AddEvent(cls, event, fcall){
 	//Set the widget event

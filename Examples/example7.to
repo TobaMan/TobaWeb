@@ -5,14 +5,14 @@
 
 obj:Config(){
 	self.name = "appconfig"
-	self.font_size = "10px"
+	self.font_size = 10
 	self.editor_theme = "icecoder"
 	self.app_theme = "halloween"
 	
 	func:Apply(self){
 		widgets::ChangeAppTheme(self.app_theme)
-		editor.Theme(self.editor_theme)
-		dom::SetCss(".CodeMirror", "font-size", self.font_size)
+		editor.SetTheme(self.editor_theme)
+		editor.SetFontPixelSize(self.font_size)
 	}
 	
 	func:Save(self){

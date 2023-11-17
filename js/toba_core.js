@@ -151,7 +151,7 @@ function LoadScript() {
     var jsStartProgram = Module.cwrap(
         "WebStartProgram", null, ["number", "number"]);
     jsStartProgram(ccode_ptr, ccode.length);
-    DeletePtr(ccode_ptr);
+    //DeletePtr(ccode_ptr);//ameliore le demarage
 }
 
 function UnLoadScript() {
@@ -423,15 +423,8 @@ function SortItem(item){
 
 function CodeEditor(item){
     var editor = CodeMirror($( item )[0], {
-        value:"Cur = css::cCursor();print(Cur.get())",
-        // mode: "text/x-csrc",
-        //mode: "text/x-go",
         mode: "text/x-toba",
         theme: 'ayu-dark',
-        // theme: 'monokai',
-        // theme: 'ambiance',
-        // theme: 'mbo',
-        // theme: 'dracula',
         // autofocus: true,
         styleActiveLine: true,
         autoCloseBrackets: true,
@@ -444,6 +437,7 @@ function CodeEditor(item){
     //         style:'matchhighlight',
     //         annotateScrollbar: true
     //   },
+        highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
         autoRefresh: true
     });
     editor.refresh();

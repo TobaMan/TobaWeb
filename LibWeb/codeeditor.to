@@ -12,14 +12,26 @@ obj:CodeEditor(id){
         return(CallJs((CODEEDITOR, self.id))[0])}
 
     func:_Init(self){
-        dom::SetCss(".CodeMirror", "height", "auto")
-        dom::SetCss(".CodeMirror", "font-size", "14px")
-        // dom::SetCss(".cm-matchhighlight", "background", "red !important")
+        // dom::SetCss(".CodeMirror", "height", "auto")
+        dom::SetCss(".CodeMirror", "height", "100%")
+
+        self.SetFontPixelSize(14)
+        
+        style = "
+        <style>
+            .CodeMirror-focused .cm-matchhighlight {background: rgba(22, 53, 8, 16)}
+            .CodeMirror-selection-highlight-scrollbar {background-color: rgb(149, 64, 206);}
+        </style>"
+        dom::Append("html > head", style)
+    
     }
 
     func:LoadFile(self, file){
         webdevice::ReadFile(self.object, file)
     }
+
+    func:SetFontPixelSize(self, fsize){
+        dom::SetCss(".CodeMirror", "font-size", strnum(fsize) $ "px")}
 
     func:GetValue(self){
        return(ObjectRef(self.object, "getValue", "undefined")[0])}
@@ -32,6 +44,12 @@ obj:CodeEditor(id){
 
     func:Refresh(self){
        return(ObjectRef(self.object, "refresh", "undefined")[0])}
+
+    func:SetWidth(self, width){
+       return(ObjectRef(self.object, "setSize", (width, "undefined"))[0])}
+
+    func:SetHeight(self, height){
+       return(ObjectRef(self.object, "setSize", ("undefined", height))[0])}
 
     func:Command(self, com){
        return(ObjectRef(self.object, "execCommand", map(1, com))[0])}
@@ -47,6 +65,8 @@ obj:CodeEditor(id){
     func:IndentMore(self){self.Command("indentMore")}
 
     func:IndentLess(self){self.Command("indentLess")}
+
+    func:ToggleComment(self){self.Command("toggleComment")}
 
     func:Find(self){self.Command("find")}
 
@@ -78,7 +98,7 @@ obj:CodeEditor(id){
     func:SmartIndent(self, status){
         return(self.SetOption("smartIndent", status))}
 
-    func:Theme(self, theme){
+    func:SetTheme(self, theme){
         return(self.SetOption("theme", theme))}
 
 }
