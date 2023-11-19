@@ -210,7 +210,7 @@ function ImportScript(src, callback, args){
 
 function _TobaInit_() {
     // ImportScript("toba_script.js", LoadScript);
-    Module.onRuntimeInitialized = () => { LoadScript(); }
+    Module.onRuntimeInitialized = () => { ImportScript("toba_script.js", LoadScript); }
     window.addEventListener('beforeunload', function () {
         UnLoadScript()});
 }
