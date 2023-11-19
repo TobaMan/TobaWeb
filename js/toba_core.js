@@ -177,18 +177,40 @@ function ScriptCallBack(){
 //         UnLoadScript()});
 // }
 
-function _TobaInit_() {
+function isIterable(obj) {
+    // checks for null and undefined
+    if (obj == null) {
+      return false;}
+    return typeof obj[Symbol.iterator] === 'function';
+  }
 
+//   function loadJS(file) {
+//     // DOM: Create the script element
+//     var jsElm = document.createElement("script");
+//     // set the type attribute
+//     jsElm.type = "application/javascript";
+//     // make the script element load file
+//     jsElm.src = file;
+//     // finally insert the element to the body element in order to load the script
+//     document.body.appendChild(jsElm);
+// }
+
+function ImportScript(src, callback, args){
     var head = document.getElementsByTagName("head")[0];
     var script = document.createElement("script"); 
     script.setAttribute("type", "text/javascript");
-    script.setAttribute("src", "toba_script.js");
+    script.setAttribute("src", src);
     head.addEventListener("load", function(event) {
         if (event.target.nodeName === "SCRIPT"){
-            LoadScript();}
+            if(isIterable(args)){callback(...args);}
+            else{callback();}}
     }, true);
     head.appendChild(script); 
+}
 
+function _TobaInit_() {
+    // ImportScript("toba_script.js", LoadScript);
+    Module.onRuntimeInitialized = () => { LoadScript(); }
     window.addEventListener('beforeunload', function () {
         UnLoadScript()});
 }
