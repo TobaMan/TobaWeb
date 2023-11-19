@@ -147,6 +147,12 @@ function Null(){
 
 
 function LoadScript() {
+
+    // var string = LZString.decompressFromBase64(ccode);
+    // ccode = Array.from(string , (x) => x.charCodeAt(0));
+    // // console.log(ccode);
+
+
     ccode_ptr = ListToU8Ptr(ccode);
     var jsStartProgram = Module.cwrap(
         "WebStartProgram", null, ["number", "number"]);
@@ -165,8 +171,24 @@ function ScriptCallBack(){
     //jsCallback();}
 
 
+// function _TobaInit_() {
+//     Module.onRuntimeInitialized = () => { LoadScript(); }
+//     window.addEventListener('beforeunload', function () {
+//         UnLoadScript()});
+// }
+
 function _TobaInit_() {
-    Module.onRuntimeInitialized = () => { LoadScript(); }
+
+    var head = document.getElementsByTagName("head")[0];
+    var script = document.createElement("script"); 
+    script.setAttribute("type", "text/javascript");
+    script.setAttribute("src", "toba_script.js");
+    head.addEventListener("load", function(event) {
+        if (event.target.nodeName === "SCRIPT"){
+            LoadScript();}
+    }, true);
+    head.appendChild(script); 
+
     window.addEventListener('beforeunload', function () {
         UnLoadScript()});
 }
