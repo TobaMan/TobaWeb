@@ -348,6 +348,8 @@ func:Playground(){
     
 }
 
+print("Start Application ...")
+
 info_diag = InfoDialog()
 
 Playground()

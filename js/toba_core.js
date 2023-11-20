@@ -171,18 +171,18 @@ function ScriptCallBack(){
     //jsCallback();}
 
 
-// function _TobaInit_() {
-//     Module.onRuntimeInitialized = () => { LoadScript(); }
-//     window.addEventListener('beforeunload', function () {
-//         UnLoadScript()});
-// }
+function _TobaInit_() {
+    Module.onRuntimeInitialized = () => { LoadScript(); }
+    window.addEventListener('beforeunload', function () {
+        UnLoadScript()});
+}
 
-function isIterable(obj) {
-    // checks for null and undefined
-    if (obj == null) {
-      return false;}
-    return typeof obj[Symbol.iterator] === 'function';
-  }
+// function isIterable(obj) {
+//     // checks for null and undefined
+//     if (obj == null) {
+//       return false;}
+//     return typeof obj[Symbol.iterator] === 'function';
+//   }
 
 //   function loadJS(file) {
 //     // DOM: Create the script element
@@ -195,25 +195,27 @@ function isIterable(obj) {
 //     document.body.appendChild(jsElm);
 // }
 
-function ImportScript(src, callback, args){
-    var head = document.getElementsByTagName("head")[0];
-    var script = document.createElement("script"); 
-    script.setAttribute("type", "text/javascript");
-    script.setAttribute("src", src);
-    head.addEventListener("load", function(event) {
-        if (event.target.nodeName === "SCRIPT"){
-            if(isIterable(args)){callback(...args);}
-            else{callback();}}
-    }, true);
-    head.appendChild(script); 
-}
+// function ImportScript(src, callback, args){
+//     var head = document.getElementsByTagName("head")[0];
+//     var script = document.createElement("script"); 
+//     script.setAttribute("type", "text/javascript");
+//     script.setAttribute("src", src);
+//     head.addEventListener("load", function(event) {
+//         if (event.target.nodeName === "SCRIPT"){
+//             if(isIterable(args)){callback(...args);}
+//             else{callback();}}
+//     }, true);
+//     head.appendChild(script); 
+// }
 
-function _TobaInit_() {
-    // ImportScript("toba_script.js", LoadScript);
-    Module.onRuntimeInitialized = () => { ImportScript("js/toba_script.js", LoadScript); }
-    window.addEventListener('beforeunload', function () {
-        UnLoadScript()});
-}
+// function _TobaInit_() {
+//     // ImportScript("toba_script.js", LoadScript);
+//     //Module.onRuntimeInitialized = () => { LoadScript(); }
+//     Module.onRuntimeInitialized = () => { ImportScript("toba_script.js", LoadScript); }
+//     //Module.onRuntimeInitialized = () => { ImportScript("js/toba_script.js", LoadScript); }
+//     window.addEventListener('beforeunload', function () {
+//         UnLoadScript()});
+// }
 
 
 function JsReadMapVar(data){
