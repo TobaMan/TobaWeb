@@ -145,13 +145,16 @@ function Null(){
     return 0;
 }
 
-
 function LoadScript() {
-
-    // var string = LZString.decompressFromBase64(ccode);
-    // ccode = Array.from(string , (x) => x.charCodeAt(0));
-    // // console.log(ccode);
-
+    var use_normal = 0;
+    var use_base64 = 1;
+    var use_comprs = 0;
+    if(use_base64){
+        const binString = atob(ccode);
+        ccode = Uint8Array.from(binString, (m) => m.codePointAt(0));}
+    if(use_comprs){
+        var string = LZString.decompressFromBase64(ccode);
+        ccode = Array.from(string , (x) => x.charCodeAt(0));}
 
     ccode_ptr = ListToU8Ptr(ccode);
     var jsStartProgram = Module.cwrap(
