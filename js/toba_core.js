@@ -146,6 +146,7 @@ function Null(){
 }
 
 function LoadScript() {
+
     var use_normal = 0;
     var use_base64 = 1;
     var use_comprs = 0;
@@ -564,9 +565,10 @@ function AddEvent(item, evtype) {
     var index = jsEvents.indexOf(evtype);
     var _item = document.querySelector(item);
     _item.addEventListener(evtype, (event) => {
+        var evtobj = StoreObject(event);
         var idevt = event.target.id
         var data = GetEventInfo(event);
-        jsEvtList.push([idevt, data, index]);
+        jsEvtList.push([idevt, data, index, evtobj]);
         ScriptCallBack();
     });
 }
@@ -583,7 +585,8 @@ function LastEvent(){
             var idevt = NumFromId(levt[0]);
             var data = levt[1];
             var index = levt[2];
-            return toTobaMap([idevt, data, index]);}
+            var evt = levt[3];
+            return toTobaMap([idevt, data, index, evt]);}
     }
     return Null();
 }
