@@ -84,19 +84,20 @@ func:PrintLog(){
 //     }
 // }
 
-func:OnRun(wdg, data){
+func:OnRun(wdg, data, evt){
     if(sizeof(wdg)){
+        //StopPropagation(evt)
         tobacode = editor.GetValue()
         eval(tobacode)
         PrintLog()
     }
 }
 
-func:OnOpen(wdg, data){
+func:OnOpen(wdg, data, evt){
     print(data)
 }
 
-func:OnOption(wdg, data){
+func:OnOption(wdg, data, evt){
     option = wdg.GetUserInfo()
     if(option == "opt1"){
         webdevice::Trigger(optfile.id, "click")
@@ -117,7 +118,7 @@ func:OnOption(wdg, data){
 
 }
 
-func:OnConfig(wdg, data){
+func:OnConfig(wdg, data, evt){
     conf = wdg.GetUserInfo()
     status = wdg.IsChecked()
     if(conf == 0){
@@ -130,23 +131,21 @@ func:OnConfig(wdg, data){
         panel.Toggle()}
 }
 
-func:OnModule(wdg, data){
+func:OnModule(wdg, data, evt){
     editor.LoadFile("LibWeb/" $ data $ ".to")
 }
 
-func:OnExample(wdg, data){
+func:OnExample(wdg, data, evt){
     editor.LoadFile("Examples/" $ data $ ".to")
 }
 
-func:OnApplicationTheme(wdg, data){
-    widgets::ChangeAppTheme(data)
+func:OnApplicationTheme(wdg, data, evt){
+    widgets::ChangeAppTheme(wdg.GetUserInfo())
 }
 
-func:OnCodeEditorTheme(wdg, data){
-    editor.SetTheme(data)
+func:OnCodeEditorTheme(wdg, data, evt){
+    editor.SetTheme(wdg.GetUserInfo())
 }
-
-
 
 
 func:InfoDialog(){
@@ -200,7 +199,9 @@ func:InfoDialog(){
     // cbedtheme.Small()
     // cbedtheme.EventChange(OnCodeEditorTheme)
 
-    collapse = CollapseList(llayout, "Code editor Themes", cedthemes)
+    collapse = CollapseList(llayout,\
+        "Code editor Themes", cedthemes,\
+        OnCodeEditorTheme)
     collapse.AddClass("collapse-arrow")
     //collapse.AddClass("collapse-plus")
     collapse.AddClass("border")
@@ -208,7 +209,9 @@ func:InfoDialog(){
     collapse.BorderColor("base-300")
     collapse.Margin("m-1")
 
-     collapse = CollapseList(llayout, "Application Themes", GetThemeList())
+    collapse = CollapseList(llayout,\
+        "Application Themes", GetThemeList(),\
+        OnApplicationTheme)
     collapse.AddClass("collapse-arrow")
     //collapse.AddClass("collapse-plus")
     collapse.AddClass("border")
@@ -348,7 +351,7 @@ func:Playground(){
     
 }
 
-print("Start Application ...")
+// print("Start Application ...")
 
 info_diag = InfoDialog()
 

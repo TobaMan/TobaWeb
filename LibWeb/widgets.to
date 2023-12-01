@@ -13,7 +13,8 @@ gInfo = map(1000, 0)
 
 //--------------------------------------------------------------------------------------------------------------
 
-​obj:Options(){
+
+obj:Options(){
     self.content = null()
 	self.classinfo = null()
 	self.event = 0
@@ -167,33 +168,33 @@ func:EventManager(){
 	//All application event manager function
 	//To be call inside the threaded main loop
 	evt = events::LastEvent()
+
 	if(size(evt)){
 		numid = evt[0]
-		evtdata = evt[1]
-		evtype = evt[2]
-		event = GetInfo(numid).event
-		cls = GetInfo(numid).classinfo
-		if(isinst(event)){
-			evtfunc = event.GetCallback(evtype)
-			if(isfunc(evtfunc)){
-				evtfunc(cls, evtdata)}
+
+		//if(numid != events::TIMEOUT){
+			evtdata = evt[1]
+			evtype = evt[2]
+			evtobj = evt[3]
+			event = GetInfo(numid).event
+			cls = GetInfo(numid).classinfo
+			if(isinst(event)){
+				evtfunc = event.GetCallback(evtype)
+				if(isfunc(evtfunc)){
+					evtfunc(cls, evtdata, evtobj)}
+			}
 		}
-
-		 
-		 // if(sizeof(wdg)){
-    //     webdevice::TimeOutEvent(3000, Run, data)
-    // }
-		// if(numid == events::TIMEOUT){
-		// 	evtfunc = evt[1]
-		// 	evtdata = evt[2]
-		// 	evtfunc = frombyte(evtfunc)[0]
-		// 	print(evtfunc, evtdata)
-		// 	// if(isfunc(evtfunc)){
-		// 	// 	evtfunc(evtdata)
-		// 	// }
-		// }
-
-	}
+		//webdevice::TimeOutEvent(3000, Run, data)
+		/* else{
+			evtfunc = evt[1]
+			evtdata = evt[2]
+			// evtfunc = frombyte(evtfunc)[0]
+			// print(evtdata)
+			if(isfunc(evtfunc)){
+				evtfunc(evtdata)
+			}
+		} */
+	//}
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -223,14 +224,14 @@ func:SetValue(key, value){
         
 }
 
-func:OnMouseDown(wdg, data){
+func:OnMouseDown(wdg, data, evt){
 	id = wdg.GetId()
     dSelf = GetValue(id)
     dSelf.down = 1
     dSelf.lastpos = data
     SetValue(id, dSelf)
 }
-func:OnMouseUp(wdg, data){
+func:OnMouseUp(wdg, data, evt){
 	id = wdg.GetId()
     dSelf = GetValue(id)
     dSelf.down = 0
@@ -239,7 +240,7 @@ func:OnMouseUp(wdg, data){
         dSelf.ondraggingstop(dSelf.widget)}
     SetValue(id, dSelf)
 }
-func:OnMouseMove(wdg, data){
+func:OnMouseMove(wdg, data, evt){
 	id = wdg.GetId()
     dSelf = GetValue(id)
     if(dSelf.down == 1){
@@ -293,6 +294,14 @@ func:Render(pooling){
 }
 
 
+//--------------------------------------------------------------------------------------------------------------
+
+obj:DataList(){
+
+	self.data = null()
+	self.events = null()
+
+}
 
 //--------------------------------------------------------------------------------------------------------------
 
@@ -809,12 +818,15 @@ func:Selectable(parent){
 func:wSelectable(parent){
 	return(Widget(parent, Selectable))}
 
-func:ListBox(parent, data){
+func:ListBox(parent, data, evt){
 	l = wList(parent)
 	d = foreach(data){
 		litem = wListItem(l)
 		sel = wSelectable(litem)
-		sel.Text(d)}
+		sel.Text(d)
+		sel.SetUserInfo(d)
+		if(sizeof(evt)){
+			sel.EventMouseClick(evt)}}
 	return(l)
 }
 
@@ -828,7 +840,7 @@ func:CollapseText(parent, title, content){
 	return(c)
 }
 
-func:CollapseList(parent, title, data){
+func:CollapseList(parent, title, data, evt){
 	c =  wCollapse(parent)
 	ch = wCollapseHeader(c)
 	cc = wCollapseContent(c)
@@ -836,7 +848,7 @@ func:CollapseList(parent, title, data){
 	cc.SetHeight("h-40")
 	ch.Text(title)
 	ch.FontSize().Bold()
-	l = ListBox(cc, data)
+	l = ListBox(cc, data, evt)
 	return(c)
 }
 

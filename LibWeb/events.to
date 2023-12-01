@@ -70,6 +70,19 @@ func:LastEvent(){
 	return(CallJs((LASTEVENT, 0)))
 }
 
+func:StopPropagation(evt){
+	ObjectRef(evt, "stopPropagation", "undefined")
+}
+
+func:StopImmediatePropagation(evt){
+	ObjectRef(evt, "stopImmediatePropagation", "undefined")
+}
+
+func:PreventDefault(evt){
+	ObjectRef(evt, "stopPropagation", "undefined")
+}
+       
+
 
 
 
